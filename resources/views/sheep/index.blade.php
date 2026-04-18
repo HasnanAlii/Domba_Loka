@@ -33,7 +33,7 @@
                             </div>
                         @endif
 
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-6">
                             <div>
                                 <h3 class="text-xl font-bold text-slate-800">Data Populasi Domba</h3>
                                 <p class="text-sm text-slate-500 mt-1">Kelola data dan informasi domba di peternakan.</p>
@@ -54,6 +54,144 @@
                                     Tambah Domba
                                 </a>
                             </div>
+                        </div>
+
+                        <!-- Filter Bar -->
+                        <div class="mb-8 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 relative z-[100]">
+                            <form id="filter-form" method="GET" action="{{ route('sheep.index') }}" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6 items-end relative z-[100]">
+                                <!-- 1. Cari Kode -->
+                                <div class="flex flex-col">
+                                    <label for="filter_search" class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Kode Domba</label>
+                                    <div class="relative group" x-data="{ value: '{{ $filters['search'] ?? '' }}' }">
+                                        <input type="text" id="filter_search" name="search" x-model="value" placeholder=" Cari kode..." class="w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] pr-10 text-[13px] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px]" :class="value ? 'text-slate-600' : 'text-slate-400'">
+                                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor font-bold"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 2. Jenis Domba -->
+                                <div class="flex flex-col">
+                                    <label class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Jenis</label>
+                                    @php
+                                        $typeOptions = $sheepTypes->map(fn($t) => [
+                                            'id' => (string) $t->id,
+                                            'name' => $t->name
+                                        ])->prepend(['id' => '', 'name' => 'Semua Jenis'])->values()->toArray();
+                                    @endphp
+                                    <x-searchable-dropdown 
+                                        name="type_id"
+                                        id="filter_type_id"
+                                        placeholder="Semua Jenis..."
+                                        :options="$typeOptions"
+                                        :value="$filters['type_id'] ?? ''"
+                                        :showFooter="false"
+                                        :compact="true"
+                                    />
+                                </div>
+
+                                <!-- 3. Status -->
+                                <div class="flex flex-col">
+                                    <label class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Status</label>
+                                    <div x-data="{ 
+                                        open: false, 
+                                        selected: '{{ ($filters['status'] ?? '') === 'tersedia' ? 'Tersedia' : (($filters['status'] ?? '') === 'terjual' ? 'Terjual' : 'Semua') }}',
+                                        options: [
+                                            { label: 'Semua', value: '' },
+                                            { label: 'Tersedia', value: 'tersedia' },
+                                            { label: 'Terjual', value: 'terjual' }
+                                        ],
+                                        select(option) {
+                                            this.selected = option.label;
+                                            this.$refs.status_input.value = option.value;
+                                            this.open = false;
+                                        }
+                                    }" class="relative">
+                                        <input type="hidden" name="status" x-ref="status_input" value="{{ $filters['status'] ?? '' }}">
+                                        <div @click="open = !open" 
+                                            class="flex items-center justify-between w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] text-[13px] font-bold text-slate-600 cursor-pointer hover:border-blue-500 transition-all shadow-sm min-h-[38px]"
+                                            :class="open ? 'border-blue-500 ring-4 ring-blue-500/10' : ''">
+                                            <span x-text="selected" class="leading-none"></span>
+                                            <svg class="w-4 h-4 text-slate-400 transition-transform" :class="open ? 'rotate-180 text-blue-500' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                        <div x-show="open" x-cloak @click.outside="open = false" 
+                                            x-transition:enter="transition ease-out duration-100"
+                                            x-transition:enter-start="opacity-0 scale-95"
+                                            x-transition:enter-end="opacity-100 scale-100"
+                                            class="absolute z-50 mt-1.5 w-full rounded-xl bg-white border border-slate-100 shadow-xl py-1 overflow-hidden">
+                                            <template x-for="option in options" :key="option.value">
+                                                <div @click="select(option)" 
+                                                    class="px-3 py-2 text-[13px] font-bold cursor-pointer hover:bg-slate-50 transition-colors flex items-center justify-between"
+                                                    :class="selected === option.label ? 'text-blue-600 bg-blue-50/30' : 'text-slate-600 group-hover:text-blue-600'">
+                                                    <span x-text="option.label"></span>
+                                                    <div x-show="selected === option.label" class="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 4. Kondisi -->
+                                <div class="flex flex-col">
+                                    <label class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Kondisi</label>
+                                    <div x-data="{ 
+                                        open: false, 
+                                        selected: '{{ ($filters['condition'] ?? '') === 'sehat' ? 'Sehat' : (($filters['condition'] ?? '') === 'sakit' ? 'Sakit' : 'Semua') }}',
+                                        options: [
+                                            { label: 'Semua', value: '' },
+                                            { label: 'Sehat', value: 'sehat' },
+                                            { label: 'Sakit', value: 'sakit' }
+                                        ],
+                                        select(option) {
+                                            this.selected = option.label;
+                                            this.$refs.condition_input.value = option.value;
+                                            this.open = false;
+                                        }
+                                    }" class="relative">
+                                        <input type="hidden" name="condition" x-ref="condition_input" value="{{ $filters['condition'] ?? '' }}">
+                                        <div @click="open = !open" 
+                                            class="flex items-center justify-between w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] text-[13px] font-bold text-slate-600 cursor-pointer hover:border-blue-500 transition-all shadow-sm min-h-[38px]"
+                                            :class="open ? 'border-blue-500 ring-4 ring-blue-500/10' : ''">
+                                            <span x-text="selected" class="leading-none"></span>
+                                            <svg class="w-4 h-4 text-slate-400 transition-transform" :class="open ? 'rotate-180 text-blue-500' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                        <div x-show="open" x-cloak @click.outside="open = false" 
+                                            x-transition:enter="transition ease-out duration-100"
+                                            x-transition:enter-start="opacity-0 scale-95"
+                                            x-transition:enter-end="opacity-100 scale-100"
+                                            class="absolute z-50 mt-1.5 w-full rounded-xl bg-white border border-slate-100 shadow-xl py-1 overflow-hidden">
+                                            <template x-for="option in options" :key="option.value">
+                                                <div @click="select(option)" 
+                                                    class="px-3 py-2 text-[13px] font-bold cursor-pointer hover:bg-slate-50 transition-colors flex items-center justify-between"
+                                                    :class="selected === option.label ? 'text-blue-600 bg-blue-50/30' : 'text-slate-600 group-hover:text-blue-600'">
+                                                    <span x-text="option.label"></span>
+                                                    <div x-show="selected === option.label" class="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="xl:col-span-1"></div>
+
+                                <!-- 5. Terapkan -->
+                                <div class="flex flex-col">
+                                    <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-[13px] font-black text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-700 hover:shadow-blue-600/40 transform hover:-translate-y-0.5 min-h-[38px]">
+                                        Terapkan
+                                    </button>
+                                </div>
+
+                                <!-- 6. Reset -->
+                                {{-- <div class="flex flex-col">
+                                    <a href="{{ route('sheep.index') }}" class="inline-flex w-full items-center justify-center rounded-xl bg-slate-100 px-4 py-2 text-[13px] font-black text-slate-500 transition hover:bg-slate-200 transform hover:-translate-y-0.5 text-center min-h-[38px]">
+                                        Reset
+                                    </a>
+                                </div> --}}
+                            </form>
                         </div>
 
                         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">

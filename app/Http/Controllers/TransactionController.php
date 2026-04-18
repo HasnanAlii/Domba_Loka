@@ -6,6 +6,7 @@ use App\Models\BankAccount;
 use App\Models\Customer;
 use App\Models\Finance;
 use App\Models\Sheep;
+use App\Models\SheepType;
 use App\Models\Supplier;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +22,7 @@ class TransactionController extends Controller
 {
     public function index(Request $request): View
     {
-        $date = $request->query('date');
+        $dateRange = $request->query('date_range');
         $selectedType = $this->resolveType($request->query('type'));
         $referenceNumber = trim((string) $request->query('reference_number', ''));
         $sheepId = $request->query('sheep_id');
@@ -31,7 +32,7 @@ class TransactionController extends Controller
         $totalPrice = is_numeric($totalPriceInput) ? (float) $totalPriceInput : null;
 
         $filters = [
-            'date' => $date,
+            'date_range' => $dateRange,
             'type' => $selectedType,
             'total_price' => $totalPriceInput,
             'reference_number' => $referenceNumber,
@@ -41,8 +42,16 @@ class TransactionController extends Controller
         ];
 
         $transactions = Transaction::with(['customer', 'supplier', 'details.sheep'])
-            ->when($date, function ($query) use ($date) {
-                $query->whereDate('created_at', $date);
+            ->when($dateRange, function ($query) use ($dateRange) {
+                if (str_contains($dateRange, ' to ')) {
+                    [$start, $end] = explode(' to ', $dateRange);
+                    $query->whereBetween('created_at', [
+                        $start.' 00:00:00',
+                        $end.' 23:59:59',
+                    ]);
+                } else {
+                    $query->whereDate('created_at', $dateRange);
+                }
             })
             ->when($selectedType !== null, function ($query) use ($selectedType) {
                 $query->where('type', $selectedType);
@@ -80,7 +89,7 @@ class TransactionController extends Controller
         $selectedType = $this->resolveType($request->query('type')) ?? 'penjualan';
 
         return $this->formView(
-            transaction: new Transaction(),
+            transaction: new Transaction,
             pageTitle: 'Tambah Transaksi',
             submitLabel: 'Simpan Transaksi',
             action: route('transactions.store'),
@@ -133,7 +142,7 @@ class TransactionController extends Controller
             'tax' => ['nullable', 'numeric', 'min:0'],
             'other_fees' => ['nullable', 'numeric', 'min:0'],
             'downpayment' => ['nullable', 'numeric', 'min:0'],
-            
+
             // New details validation
             'details' => ['required', 'array', 'min:1'],
             'details.*.sheep_id' => ['required', 'exists:sheep,id'],
@@ -143,7 +152,7 @@ class TransactionController extends Controller
         ]);
 
         if (empty($validated['reference_number'])) {
-            $validated['reference_number'] = 'SJ-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+            $validated['reference_number'] = 'SJ-'.date('Ymd').'-'.strtoupper(Str::random(4));
         }
 
         $validated['bank_account_id'] = $this->resolveBankAccountId(
@@ -157,13 +166,13 @@ class TransactionController extends Controller
             $qty = $detail['quantity'];
             $price = $detail['price'];
             $discount = $detail['discount'] ?? 0;
-            
+
             $lineTotal = ($qty * $price);
             if ($discount > 0) {
                 $lineTotal -= $lineTotal * ($discount / 100);
             }
             $subtotal += $lineTotal;
-            
+
             $detailsData[] = [
                 'sheep_id' => $detail['sheep_id'],
                 'quantity' => $qty,
@@ -177,7 +186,7 @@ class TransactionController extends Controller
         $otherFees = (float) ($validated['other_fees'] ?? 0);
         $globalDiscount = 0;
         $downpayment = (float) ($validated['downpayment'] ?? 0);
-        
+
         $total = $subtotal + $tax + $otherFees - $globalDiscount;
         $sisa = max(0, $total - $downpayment);
 
@@ -299,7 +308,7 @@ class TransactionController extends Controller
             'tax' => ['nullable', 'numeric', 'min:0'],
             'other_fees' => ['nullable', 'numeric', 'min:0'],
             'downpayment' => ['nullable', 'numeric', 'min:0'],
-            
+
             'details' => ['required', 'array', 'min:1'],
             'details.*.sheep_id' => ['required', 'exists:sheep,id'],
             'details.*.quantity' => ['required', 'numeric', 'min:1'],
@@ -308,7 +317,7 @@ class TransactionController extends Controller
         ]);
 
         if (empty($validated['reference_number'])) {
-            $validated['reference_number'] = $transaction->reference_number ?: 'SJ-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+            $validated['reference_number'] = $transaction->reference_number ?: 'SJ-'.date('Ymd').'-'.strtoupper(Str::random(4));
         }
 
         $validated['bank_account_id'] = $this->resolveBankAccountId(
@@ -322,13 +331,13 @@ class TransactionController extends Controller
             $qty = $detail['quantity'];
             $price = $detail['price'];
             $discount = $detail['discount'] ?? 0;
-            
+
             $lineTotal = ($qty * $price);
             if ($discount > 0) {
                 $lineTotal -= $lineTotal * ($discount / 100);
             }
             $subtotal += $lineTotal;
-            
+
             $detailsData[] = [
                 'sheep_id' => $detail['sheep_id'],
                 'quantity' => $qty,
@@ -342,7 +351,7 @@ class TransactionController extends Controller
         $otherFees = (float) ($validated['other_fees'] ?? 0);
         $globalDiscount = $transaction->discount;
         $downpayment = (float) ($validated['downpayment'] ?? 0);
-        
+
         $total = $subtotal + $tax + $otherFees - $globalDiscount;
         $sisa = max(0, $total - $downpayment);
 
@@ -458,7 +467,7 @@ class TransactionController extends Controller
             'suppliers' => $this->suppliers(),
             'sheep' => $this->sheep(true, $transaction),
             'bankAccounts' => $this->bankAccounts(),
-            'sheepTypes' => \App\Models\SheepType::orderBy('name')->get(),
+            'sheepTypes' => SheepType::orderBy('name')->get(),
         ]);
     }
 
@@ -479,13 +488,13 @@ class TransactionController extends Controller
 
     private function sheep(bool $onlyAvailable = false, ?Transaction $transaction = null): Collection
     {
-        $query = \App\Models\Sheep::with('sheepType')->orderBy('code');
+        $query = Sheep::with('sheepType')->orderBy('code');
 
         if ($onlyAvailable) {
             $query->where(function ($q) use ($transaction) {
                 // Return 'tersedia' sheep...
                 $q->where('status', 'tersedia');
-                
+
                 // OR sheep already attached to this very transaction (so they aren't missing when editing)
                 if ($transaction && $transaction->exists) {
                     $attachedSheepIds = $transaction->details()->pluck('sheep_id');
@@ -592,7 +601,7 @@ class TransactionController extends Controller
             [
                 'type' => $financeType,
                 'amount' => $totalAmount,
-                'description' => 'Aliran dana dari transaksi ' . $referenceNumber,
+                'description' => 'Aliran dana dari transaksi '.$referenceNumber,
                 'bank_account_id' => $bankAccountId,
             ],
         );

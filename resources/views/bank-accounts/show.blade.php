@@ -149,7 +149,7 @@
         </div>
 
         <div x-show="openMigrationModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4" style="display: none;">
-            <div @click.away="openMigrationModal = false" class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
+            <div @click.away="openMigrationModal = false" class="w-full max-w-lg rounded-2xl bg-white shadow-2xl">
                 <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
                     <h3 class="text-base font-bold text-slate-800">Migrasi Dana Antar Rekening</h3>
                     <button type="button" @click="openMigrationModal = false" class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
@@ -166,14 +166,21 @@
                         <label for="from_bank_account_id" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
                             Pilih Rekening Asal
                         </label>
-                        <select id="from_bank_account_id" name="from_bank_account_id" required class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
-                            <option value="">-- Pilih Rekening Asal --</option>
-                            @foreach($allAccounts as $account)
-                                <option value="{{ $account->id }}" {{ old('from_bank_account_id') == $account->id ? 'selected' : '' }}>
-                                    {{ $account->bank_name }} - {{ $account->account_number }} (Saldo: Rp {{ number_format($account->saldo, 0, ',', '.') }})
-                                </option>
-                            @endforeach
-                        </select>
+                        @php
+                            $accountOptions = $allAccounts->map(fn($acc) => [
+                                'id' => $acc->id,
+                                'name' => $acc->bank_name . ' - ' . $acc->account_number . ' (Saldo: Rp ' . number_format($acc->saldo, 0, ',', '.') . ')'
+                            ])->toArray();
+                        @endphp
+                        <x-searchable-dropdown 
+                            name="from_bank_account_id" 
+                            id="from_bank_account_id" 
+                            placeholder="Pilih Rekening Asal..."
+                            buttonText="Tambah Rekening"
+                            :buttonRoute="route('bank-accounts.create')"
+                            :options="$accountOptions"
+                            :value="old('from_bank_account_id')"
+                        />
                         @error('from_bank_account_id')
                             <p class="mt-1.5 text-xs text-rose-500">{{ $message }}</p>
                         @enderror

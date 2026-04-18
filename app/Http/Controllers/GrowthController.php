@@ -11,11 +11,44 @@ use Illuminate\View\View;
 
 class GrowthController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $growths = Growth::with('sheep')->latest('date')->paginate(15);
+        $filters = [
+            'date_range' => $request->query('date_range'),
+            'sheep_id' => $request->query('sheep_id'),
+            'status' => $request->query('status'), // 'reached' or 'not_reached'
+        ];
 
-        return view('growths.index', compact('growths'));
+        $query = Growth::with('sheep');
+
+        // Filter: Date Range
+        if ($filters['date_range']) {
+            $dates = explode(' to ', $filters['date_range']);
+            if (count($dates) === 2) {
+                $query->whereBetween('date', [$dates[0], $dates[1]]);
+            } else {
+                $query->whereDate('date', $dates[0]);
+            }
+        }
+
+        // Filter: Sheep ID
+        $query->when($filters['sheep_id'], function ($q, $sheepId) {
+            $q->where('sheep_id', $sheepId);
+        });
+
+        // Filter: Status
+        $query->when($filters['status'], function ($q, $status) {
+            if ($status === 'reached') {
+                $q->whereColumn('weight', '>=', 'target');
+            } elseif ($status === 'not_reached') {
+                $q->whereColumn('weight', '<', 'target');
+            }
+        });
+
+        $growths = $query->latest('date')->paginate(15)->withQueryString();
+        $sheepOptions = Sheep::orderBy('code')->get();
+
+        return view('growths.index', compact('growths', 'filters', 'sheepOptions'));
     }
 
     public function create(): View

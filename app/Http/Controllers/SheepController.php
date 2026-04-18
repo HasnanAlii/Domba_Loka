@@ -10,11 +10,34 @@ use Illuminate\Http\JsonResponse;
 
 class SheepController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $sheep = Sheep::with('sheepType')->latest()->paginate(15);
+        $filters = [
+            'search' => $request->get('search', ''),
+            'type_id' => $request->get('type_id', ''),
+            'status' => $request->get('status', ''),
+            'condition' => $request->get('condition', ''),
+        ];
 
-        return view('sheep.index', compact('sheep'));
+        $query = Sheep::with('sheepType')
+            ->when($filters['search'], function ($q, $search) {
+                return $q->where('code', 'like', "%{$search}%");
+            })
+            ->when($filters['type_id'], function ($q, $typeId) {
+                return $q->where('type_id', $typeId);
+            })
+            ->when($filters['status'], function ($q, $status) {
+                return $q->where('status', $status);
+            })
+            ->when($filters['condition'], function ($q, $condition) {
+                return $q->where('condition', $condition);
+            })
+            ->latest();
+
+        $sheep = $query->paginate(15)->withQueryString();
+        $sheepTypes = \App\Models\SheepType::orderBy('name')->get();
+
+        return view('sheep.index', compact('sheep', 'sheepTypes', 'filters'));
     }
 
     public function create(): View

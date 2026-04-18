@@ -77,82 +77,111 @@
                         </div>
 
                         <div class="mb-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
-                            <form action="{{ route('transactions.index') }}" method="GET"
+                            <form id="filter-form" action="{{ route('transactions.index') }}" method="GET"
                                 class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
                                 @if ($selectedType)
                                     <input type="hidden" name="type" value="{{ $selectedType }}">
                                 @endif
 
                                 <div>
-                                    <label for="filter_date"
-                                        class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">Tanggal</label>
-                                    <input type="date" id="filter_date" name="date" value="{{ $filters['date'] }}"
-                                        class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                                    <label for="filter_date_range"
+                                        class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Rentang Tanggal</label>
+                                    <div class="relative group">
+                                        <input type="text" id="filter_date_range" name="date_range" value="{{ request('date_range') }}"
+                                            placeholder="Pilih rentang..."
+                                            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] pr-10 text-[13px] font-bold text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px] cursor-pointer">
+                                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div>
+                                <div class="flex flex-col">
                                     <label for="filter_reference_number"
-                                        class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">No
+                                        class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">No
                                         Ref</label>
-                                    <input type="text" id="filter_reference_number" name="reference_number"
-                                        value="{{ $filters['reference_number'] }}" placeholder="Cari no referensi"
-                                        class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                                    <div x-data="{ value: '{{ $filters['reference_number'] }}' }">
+                                        <input type="text" id="filter_reference_number" name="reference_number"
+                                            x-model="value"
+                                            placeholder="Cari..."
+                                            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] text-[13px] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px]"
+                                            :class="value ? 'text-slate-700' : 'text-slate-400'">
+                                    </div>
                                 </div>
-                                <div>
-                                    <label for="filter_sheep_id"
-                                        class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">Domba</label>
-                                    <select id="filter_sheep_id" name="sheep_id"
-                                        class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
-                                        <option value="">Semua Domba</option>
-                                        @foreach ($sheepOptions as $sheep)
-                                            <option value="{{ $sheep->id }}" @selected((string) $filters['sheep_id'] === (string) $sheep->id)>
-                                                {{ $sheep->code }} ({{ $sheep->sheepType->name ?? '-' }})</option>
-                                        @endforeach
-                                    </select>
+                                <div class="relative group">
+                                    <label for="filter_sheep_id" class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Domba</label>
+                                    @php
+                                        $sheepFormatted = $sheepOptions->map(fn($s) => [
+                                            'id' => $s->id,
+                                            'name' => $s->code . ' (' . ($s->sheepType->name ?? '-') . ')'
+                                        ])->prepend(['id' => '', 'name' => 'Semua Domba'])->values()->toArray();
+                                    @endphp
+                                    <x-searchable-dropdown 
+                                        name="sheep_id" 
+                                        id="filter_sheep_id" 
+                                        placeholder="Semua..."
+                                        :options="$sheepFormatted"
+                                        :value="$filters['sheep_id']"
+                                        :showFooter="false"
+                                        :compact="true"
+                                    />
                                 </div>
-                                <div>
+
+                                <div class="flex flex-col">
                                     <label for="filter_total_price"
-                                        class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">Total
-                                        Harga</label>
-                                    <input type="number" id="filter_total_price" name="total_price" min="0"
-                                        step="0.01" value="{{ $filters['total_price'] }}"
-                                        placeholder="Masukkan Total Harga"
-                                        class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                                        class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Harga</label>
+                                    <div x-data="{ value: '{{ $filters['total_price'] }}' }">
+                                        <input type="number" id="filter_total_price" name="total_price" min="0"
+                                            step="0.01" x-model="value"
+                                            placeholder="0"
+                                            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] text-[13px] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px]"
+                                            :class="value && value != 0 ? 'text-slate-600' : 'text-slate-400'">
+                                    </div>
                                 </div>
 
                                 @if ($isPenjualan)
-                                    <div>
-                                        <label for="filter_customer_id"
-                                            class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">Pelanggan</label>
-                                        <select id="filter_customer_id" name="customer_id"
-                                            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
-                                            <option value="">Semua Pelanggan</option>
-                                            @foreach ($customerOptions as $customer)
-                                                <option value="{{ $customer->id }}" @selected((string) $filters['customer_id'] === (string) $customer->id)>
-                                                    {{ $customer->name }}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="relative group">
+                                        <label for="filter_customer_id" class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Pelanggan</label>
+                                        @php
+                                            $customerFormatted = $customerOptions->map(fn($c) => [
+                                                'id' => $c->id,
+                                                'name' => $c->name
+                                            ])->prepend(['id' => '', 'name' => 'Semua Pelanggan'])->values()->toArray();
+                                        @endphp
+                                        <x-searchable-dropdown 
+                                            name="customer_id" 
+                                            id="filter_customer_id" 
+                                            placeholder="Pelanggan..."
+                                            :options="$customerFormatted"
+                                            :value="$filters['customer_id']"
+                                            :showFooter="false"
+                                            :compact="true"
+                                        />
                                     </div>
                                 @elseif ($isPembelian)
-                                    <div>
-                                        <label for="filter_supplier_id"
-                                            class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">Supplier</label>
-                                        <select id="filter_supplier_id" name="supplier_id"
-                                            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
-                                            <option value="">Semua Supplier</option>
-                                            @foreach ($supplierOptions as $supplier)
-                                                <option value="{{ $supplier->id }}" @selected((string) $filters['supplier_id'] === (string) $supplier->id)>
-                                                    {{ $supplier->name }}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="relative group">
+                                        <label for="filter_supplier_id" class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Supplier</label>
+                                        @php
+                                            $supplierFormatted = $supplierOptions->map(fn($s) => [
+                                                'id' => $s->id,
+                                                'name' => $s->name
+                                            ])->prepend(['id' => '', 'name' => 'Semua Supplier'])->values()->toArray();
+                                        @endphp
+                                        <x-searchable-dropdown 
+                                            name="supplier_id" 
+                                            id="filter_supplier_id" 
+                                            placeholder="Supplier..."
+                                            :options="$supplierFormatted"
+                                            :value="$filters['supplier_id']"
+                                            :showFooter="false"
+                                            :compact="true"
+                                        />
                                     </div>
                                 @endif
 
-                                <div class="flex flex-col justify-end">
-                                    <span
-                                        class="mb-2 block text-xs font-bold uppercase tracking-wider text-transparent select-none">Aksi</span>
+                                <div class="flex flex-col justify-end pb-0.5">
                                     <button type="submit"
-                                        class="inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-700">Terapkan</button>
+                                        class="inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-[13px] font-black text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-700 hover:shadow-blue-600/40 transform hover:-translate-y-0.5">Terapkan</button>
                                 </div>
                             </form>
                         </div>
@@ -314,6 +343,78 @@
             </div>
         </div>
     </div>
+
+    <!-- Flatpickr Assets -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <style>
+        /* Custom Styling for Flatpickr with Sidebar */
+        .flatpickr-calendar {
+            display: flex !important;
+            flex-direction: row;
+            border-radius: 24px !important;
+            box-shadow: 0 50px 100px -20px rgba(15, 23, 42, 0.2) !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            overflow: hidden;
+            background: #fff !important;
+            width: auto !important;
+        }
+
+        /* Sidebar Presets Styling */
+        .flatpickr-sidebar {
+            width: 180px;
+            background: #f8fbff;
+            border-right: 1px solid #f1f5f9;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .preset-btn {
+            width: 100%;
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
+            border-radius: 12px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .preset-btn:hover {
+            background: #fff;
+            color: #2563eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .preset-btn.active {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25);
+        }
+
+        /* Adjust Calendar Positioning */
+        .flatpickr-months { background: white !important; }
+        .flatpickr-innerContainer { padding: 10px; }
+        .flatpickr-days { width: auto !important; }
+
+        /* Custom Hover/Selected Days */
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+            color: #fff !important;
+            border-radius: 12px !important;
+        }
+        .flatpickr-day.inRange {
+            background: #eff6ff !important;
+            box-shadow: none !important;
+            color: #1e40af !important;
+        }
+    </style>
+
 
     @include('transactions.script')
 </x-app-layout>

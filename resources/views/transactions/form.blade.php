@@ -1,4 +1,15 @@
 <x-app-layout>
+    <style>
+        /* Sembunyikan tombol naik/turun di input number */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
     <!-- Alpine.js Transaction Form Data -->
     <div x-data="transactionForm()">
         <form action="{{ $action }}" method="POST" class="min-h-screen bg-[#f8fbff] pb-12">
@@ -51,22 +62,91 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                 <!-- Metode Bayar -->
-                <div class="relative">
-                    <select name="payment_method" x-model="paymentMethod" class="w-full rounded-xl border border-gray-200 text-sm px-4 py-3.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-[#64748b] font-medium hover:border-gray-300 cursor-pointer bg-white appearance-none shadow-[0_2px_4px_rgba(0,0,0,0.02)]" required>
-                        <option value="Tunai">Tunai (Cash)</option>
-                        <option value="Transfer Bank">Transfer Bank</option>
-                    </select>
+                <!-- Metode Bayar -->
+                <div class="relative" x-data="{ open: false }">
+                    <input type="hidden" name="payment_method" :value="paymentMethod">
+                    
+                    <!-- Trigger -->
+                    <div 
+                        @click="open = !open"
+                        class="relative flex items-center bg-white border border-slate-200 rounded-xl transition-all duration-300 cursor-pointer hover:border-blue-300 shadow-sm"
+                        :class="open ? 'border-blue-400 ring-4 ring-blue-500/10' : ''"
+                    >
+                        <div class="w-full px-4 py-3 text-[16px] text-slate-700 font-medium" x-text="paymentMethod"></div>
+                        
+                        <div class="px-3.5 py-3 border-l border-slate-100 flex items-center justify-center">
+                            <svg 
+                                class="w-4 h-4 text-slate-400 transition-transform duration-300" 
+                                :class="open ? 'rotate-180 text-blue-500' : ''"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div 
+                        x-show="open" 
+                        x-cloak
+                        @click.outside="open = false"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-1"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute z-50 w-full mt-1.5 bg-white border border-slate-100 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/[0.02]"
+                    >
+                        <div class="py-1">
+                            <template x-for="option in ['Tunai', 'Transfer Bank']" :key="option">
+                                <div 
+                                    @click="paymentMethod = option; open = false"
+                                    class="px-4 py-2.5 cursor-pointer hover:bg-slate-50 transition-all duration-200 flex items-center justify-between group"
+                                >
+                                    <span 
+                                        class="text-[14px] font-bold tracking-tight transition-colors"
+                                        :class="paymentMethod === option ? 'text-blue-600' : 'text-slate-700 group-hover:text-blue-600'"
+                                        x-text="option"
+                                    ></span>
+                                    
+                                    <div x-show="paymentMethod === option" class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-2.5 h-2.5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                     @error('payment_method')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
                 </div>
 
                 <!-- Rekening Bank -->
                 <div class="relative">
-                    <select name="bank_account_id" x-model="bankAccountId" :disabled="paymentMethod !== 'Transfer Bank'" class="w-full rounded-xl border border-gray-200 text-sm px-4 py-3.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-[#64748b] font-medium hover:border-gray-300 cursor-pointer bg-white appearance-none shadow-[0_2px_4px_rgba(0,0,0,0.02)] disabled:cursor-not-allowed disabled:bg-gray-100">
-                        <option value="">Pilih Rekening Bank</option>
-                        @foreach($bankAccounts as $bank)
-                            <option value="{{ $bank->id }}">{{ $bank->bank_name }} - {{ $bank->account_number }}</option>
-                        @endforeach
-                    </select>
+                    <!-- Overlay Grey out ONLY FOR THIS FORM -->
+                    <div 
+                        x-show="paymentMethod !== 'Transfer Bank'" 
+                        class="absolute inset-0 z-[20] bg-slate-50/70 rounded-xl cursor-not-allowed border border-slate-200/50"
+                        x-transition.opacity
+                    ></div>
+
+                    @php
+                        $bankOptions = $bankAccounts->map(fn($b) => [
+                            'id' => $b->id,
+                            'name' => $b->bank_name . ' - ' . $b->account_number
+                        ])->toArray();
+                    @endphp
+                    <x-searchable-dropdown 
+                        name="bank_account_id" 
+                        id="bank_account_id" 
+                        placeholder="Pilih Rekening Bank..."
+                        buttonText="Tambah Rekening"
+                        :buttonRoute="route('bank-accounts.create')"
+                        :options="$bankOptions"
+                        limit="5"
+                        x-model="bankAccountId"
+                    />
                     @error('bank_account_id')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
                 </div>
 
@@ -84,39 +164,59 @@
                             
                             <div>
                                 <div class="flex items-center justify-between mb-3 text-blue-500">
-                                    <span class="text-sm font-extrabold text-gray-500">Oleh :</span>
+                                    <span class="text-xl font-extrabold text-gray-500">Oleh :</span>
                                     <button type="button" class="text-blue-500 hover:text-blue-600 p-1 bg-blue-50 rounded-md">
                                         <i data-feather="edit" class="w-3.5 h-3.5"></i>
                                     </button>
                                 </div>
-                                <input type="text" readonly value="{{ auth()->user()->name }}" class="w-full border-none bg-transparent p-0 text-sm text-gray-800 font-bold focus:ring-0">
-                                <p class="text-[11px] text-gray-400 mt-0.5">{{ auth()->user()->email }}</p>
+                                <input type="text" readonly value="{{ auth()->user()->name }}" class="w-full border-none bg-transparent p-0 text-md text-gray-800 font-bold focus:ring-0">
+                                <p class="text-[16px] text-gray-400 mt-0.5">{{ auth()->user()->email }}</p>
                             </div>
                             
                             <div>
                                 <div class="flex items-center justify-between mb-3 text-blue-500">
-                                    <span class="text-sm font-extrabold text-gray-500" x-text="type === 'penjualan' ? 'Pelanggan :' : 'Supplier :'"></span>
+                                    <span class="text-xl font-extrabold text-gray-500" x-text="type === 'penjualan' ? 'Pelanggan :' : 'Supplier :'"></span>
                                     <button type="button" class="text-blue-500 hover:text-blue-600 p-1 bg-blue-50 rounded-md">
                                         <i data-feather="edit" class="w-3.5 h-3.5"></i>
                                     </button>
                                 </div>
                                 
                                 <div x-show="type === 'penjualan'">
-                                    <select name="customer_id" :disabled="type !== 'penjualan'" class="w-full border-none bg-transparent p-0 text-sm text-gray-800 font-bold focus:ring-0 cursor-pointer">
-                                        <option value="">Pilih Pelanggan / Customer</option>
-                                        @foreach($customers as $c)
-                                            <option value="{{ $c->id }}" @selected(old('customer_id', $transaction->customer_id) == $c->id)>{{ $c->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    @php
+                                        $customerOptions = $customers->map(fn($c) => [
+                                            'id' => $c->id,
+                                            'name' => $c->name
+                                        ])->toArray();
+                                    @endphp
+                                    <x-searchable-dropdown 
+                                        name="customer_id" 
+                                        id="customer_id" 
+                                        placeholder="Cari Pelanggan..."
+                                        buttonText="Tambah Pelanggan"
+                                        :buttonRoute="route('customers.create')"
+                                        :options="$customerOptions"
+                                        limit="5"
+                                        :value="old('customer_id', $transaction->customer_id)"
+                                    />
                                 </div>
 
                                 <div x-show="type === 'pembelian'" style="display: none;">
-                                    <select name="supplier_id" :disabled="type !== 'pembelian'" class="w-full border-none bg-transparent p-0 text-sm text-gray-800 font-bold focus:ring-0 cursor-pointer">
-                                        <option value="">Pilih Supplier</option>
-                                        @foreach($suppliers as $s)
-                                            <option value="{{ $s->id }}" @selected(old('supplier_id', $transaction->supplier_id) == $s->id)>{{ $s->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    @php
+                                        $supplierOptions = $suppliers->map(fn($s) => [
+                                            'id' => $s->id,
+                                            'name' => $s->name
+                                        ])->toArray();
+                                    @endphp
+                                    <x-searchable-dropdown 
+                                        name="supplier_id" 
+                                        id="supplier_id" 
+                                        placeholder="Cari Supplier..."
+                                        buttonText="Tambah Supplier"
+                                        :buttonRoute="route('suppliers.create')"
+                                        :options="$supplierOptions"
+                                        limit="5"
+                                        :value="old('supplier_id', $transaction->supplier_id)"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -128,25 +228,71 @@
                             
                             <div class="relative">
                                 <label class="absolute -top-2.5 left-3 bg-white px-1.5 text-[11px] font-bold text-gray-400 border border-gray-100 rounded shadow-sm">Tanggal transaksi</label>
-                                <input type="date" name="transaction_date" value="{{ old('transaction_date', isset($transaction->transaction_date) ? $transaction->transaction_date->format('Y-m-d') : date('Y-m-d')) }}" class="w-full rounded-xl border-gray-200 text-sm px-4 py-2 bg-white text-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-medium">
+                                <input type="date" name="transaction_date" value="{{ old('transaction_date', isset($transaction->transaction_date) ? $transaction->transaction_date->format('Y-m-d') : date('Y-m-d')) }}" class="w-full rounded-xl border-gray-200 text-[16px] px-4 py-3 bg-white text-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-medium tracking-tight">
                             </div>
                             
                             <div class="relative">
                                 <label class="absolute -top-2.5 left-3 bg-white px-1.5 text-[11px] font-bold text-gray-400 border border-gray-100 rounded shadow-sm">Jatuh Tempo</label>
-                                <input type="date" name="due_date" value="{{ old('due_date', isset($transaction->due_date) ? $transaction->due_date->format('Y-m-d') : date('Y-m-d')) }}" class="w-full rounded-xl border-gray-200 text-sm px-4 py-2 bg-white text-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-medium">
+                                <input type="date" name="due_date" value="{{ old('due_date', isset($transaction->due_date) ? $transaction->due_date->format('Y-m-d') : date('Y-m-d')) }}" class="w-full rounded-xl border-gray-200 text-[16px] px-4 py-3 bg-white text-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-medium tracking-tight">
                             </div>
                             
                             <div class="relative">
                                 <label class="absolute -top-2.5 left-3 bg-white px-1.5 text-[11px] font-bold text-gray-400 border border-gray-100 rounded shadow-sm">Nomor Referensi</label>
-                                <input type="text" name="reference_number" value="{{ old('reference_number', $transaction->reference_number ?? 'SJ-'.date('Ymd').'-'.strtoupper(Str::random(4))) }}" class="w-full rounded-xl border-gray-200 text-sm px-4 py-2 bg-gray-50 text-gray-500 font-bold focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-not-allowed" readonly>
+                                <input type="text" name="reference_number" value="{{ old('reference_number', $transaction->reference_number ?? 'SJ-'.date('Ymd').'-'.strtoupper(Str::random(4))) }}" class="w-full rounded-xl border-gray-200 text-[16px] px-4 py-3 bg-gray-50 text-gray-500 font-bold focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-not-allowed" readonly>
                             </div>
 
-                            <div class="relative">
-                                <label class="absolute -top-2.5 left-3 bg-white px-1.5 text-[11px] font-bold text-gray-400 border border-gray-100 rounded shadow-sm">Kandang </label>
-                                <select name="warehouse" class="w-full rounded-xl border-gray-200 text-sm px-4 py-2.5 bg-white text-gray-700 font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none cursor-pointer">
-                                    <option value="Pusat Kandang Dombaloka" @selected(old('warehouse', $transaction->warehouse ?? '') == 'Pusat Kandang Dombaloka')>Pusat Kandang Dombaloka</option>
-                                    {{-- <option value="Kandang Cabang Utama" @selected(old('warehouse', $transaction->warehouse ?? '') == 'Kandang Cabang Utama')>Kandang Cabang Utama</option> --}}
-                                </select>
+                            <!-- Kandang -->
+                            <div class="relative group" x-data="{ open: false, selected: '{{ old('warehouse', $transaction->warehouse ?? 'Pusat Kandang Dombaloka') }}' }">
+                                <label class="absolute -top-2.5 left-3 bg-white px-1.5 text-[11px] font-bold text-gray-400 border border-gray-100 rounded shadow-sm z-10 transition-colors group-focus-within:text-blue-500">Kandang </label>
+                                <input type="hidden" name="warehouse" :value="selected">
+                                
+                                <!-- Trigger -->
+                                <div 
+                                    @click="open = !open"
+                                    class="relative flex items-center bg-white border border-slate-200 rounded-xl transition-all duration-300 cursor-pointer hover:border-blue-300 shadow-sm"
+                                    :class="open ? 'border-blue-400 ring-4 ring-blue-500/10' : ''"
+                                >
+                                    <div class="w-full px-4 py-3 text-[16px] text-slate-700 font-semibold" x-text="selected"></div>
+                                    
+                                    <div class="px-3.5 py-3 border-l border-slate-100 flex items-center justify-center">
+                                        <svg 
+                                            class="w-4 h-4 text-slate-400 transition-transform duration-300" 
+                                            :class="open ? 'rotate-180 text-blue-500' : ''"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                        >
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Dropdown Menu -->
+                                <div 
+                                    x-show="open" 
+                                    x-cloak
+                                    @click.outside="open = false"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 translate-y-1"
+                                    x-transition:enter-end="opacity-100 translate-y-0"
+                                    class="absolute z-50 w-full mt-1.5 bg-white border border-slate-100 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/[0.02]"
+                                >
+                                    <div class="py-1">
+                                        <template x-for="option in ['Pusat Kandang Dombaloka']" :key="option">
+                                            <div 
+                                                @click="selected = option; open = false"
+                                                class="px-4 py-2.5 cursor-pointer hover:bg-slate-50 transition-all duration-200 flex items-center justify-between group"
+                                            >
+                                                <span 
+                                                    class="text-[14px] font-bold tracking-tight transition-colors"
+                                                    :class="selected === option ? 'text-blue-600' : 'text-slate-700 group-hover:text-blue-600'"
+                                                    x-text="option"
+                                                ></span>
+                                                <div x-show="selected === option" class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                                                    <svg class="w-2.5 h-2.5 text-blue-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -163,6 +309,13 @@
                         </div>
                         
                         <div class="space-y-4">
+                            @php
+                                $sheepOptions = $sheep->map(fn($s) => [
+                                    'id' => $s->id,
+                                    'name' => $s->code . ' — ' . ($s->sheepType->name ?? '-')
+                                ])->toArray();
+                            @endphp
+
                             <template x-for="(item, index) in items" :key="item.id">
                                 <div class="flex flex-col md:flex-row md:items-center gap-3">
                                     
@@ -176,41 +329,48 @@
                                         </button>
                                     </div>
                                     
-                                    <!-- Domba Select -->
-                                    <div class="flex-1">
-                                        <select x-model="item.sheep_id" :name="'details['+index+'][sheep_id]'" @change="updatePrice(item)" class="w-full rounded-xl border-gray-200 text-sm text-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-2.5 cursor-pointer" required>
-                                            <option value="">Pilih Domba</option>
-                                            <template x-for="sheep in dbSheep" :key="sheep.id">
-                                                <option :value="sheep.id" x-text="sheep.code + ' — ' + (sheep.sheep_type?.name || '-')"></option>
-                                            </template>
-                                        </select>
+                                    <!-- Pilih Domba -->
+                                    <div class="flex-1" @@selected="item.sheep_id = $event.detail.id; updatePrice(item)">
+                                        <x-searchable-dropdown 
+                                            placeholder="Cari Domba..."
+                                            :options="$sheepOptions"
+                                            limit="5"
+                                            :showFooter="false"
+                                        />
+                                        <input type="hidden" :name="'details['+index+'][sheep_id]'" :value="item.sheep_id">
                                     </div>
 
                                     <!-- Jumlah -->
                                     <div class="w-full md:w-24">
-                                        <input type="number" x-model.number="item.qty" @input="calculateTotals()" :name="'details['+index+'][quantity]'" min="1" class="w-full rounded-xl border-gray-200 text-sm text-gray-600 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-2.5" placeholder="Jumlah" required>
+                                        <input type="number" x-model.number="item.qty" @input="calculateTotals()" :name="'details['+index+'][quantity]'" min="1" class="w-full rounded-xl border-gray-200 text-[16px] text-gray-600 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-3" placeholder="Jumlah" required>
                                     </div>
 
                                     <!-- Satuan -->
                                     <div class="w-full md:w-28">
-                                        <select class="w-full rounded-xl border-gray-200 bg-gray-50/50 text-sm text-gray-400 outline-none py-2.5 cursor-not-allowed">
+                                        <select disabled class="w-full rounded-xl border-gray-200 bg-gray-50/50 text-[16px] text-gray-400 outline-none py-3 cursor-not-allowed">
                                             <option>Ekor</option>
                                         </select>
                                     </div>
 
-                                    <!-- Harga Satuan -->
-                                    <div class="w-full md:w-36">
-                                        <input type="text" x-model="item.price" x-mask:dynamic="$money($input, ',', '.')" @input="calculateTotals()" :name="'details['+index+'][price]'" class="w-full rounded-xl border-gray-200 text-sm text-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-2.5 px-3" placeholder="Harga Satuan (Rp)" required>
+                                    <!-- Harga Satuan (otomatis dari harga domba) -->
+                                    <div class="w-full md:w-40">
+                                        <input type="text" x-model="item.price" :name="'details['+index+'][price]'" readonly class="w-full rounded-xl border-gray-200 text-[16px] text-gray-600 bg-gray-50/80 cursor-not-allowed focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-3 px-3" placeholder="Harga Satuan (Rp)" required>
                                     </div>
 
                                     <!-- Diskon -->
-                                    <div class="w-full md:w-24">
-                                        <input type="number" x-model.number="item.discount" @input="if(item.discount > 100) item.discount = 100; if(item.discount < 0) item.discount = 0; calculateTotals()" :name="'details['+index+'][discount]'" min="0" max="100" class="w-full rounded-xl border-gray-200 text-sm text-gray-600 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-2.5" placeholder="Diskon %">
+                                    <div class="w-full md:w-32">
+                                        <input type="number" 
+                                            :value="item.discount || ''" 
+                                            @input="item.discount = $event.target.value; if(item.discount > 100) item.discount = 100; if(item.discount < 0) item.discount = 0; calculateTotals()" 
+                                            :name="'details['+index+'][discount]'" 
+                                            min="0" max="100" 
+                                            class="w-full rounded-xl border-gray-200 text-[16px] text-gray-600 text-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-3" 
+                                            placeholder="Diskon %">
                                     </div>
-
+                                    
                                     <!-- Total Harga -->
                                     <div class="w-full md:w-40">
-                                        <input type="text" :value="formatMoney(itemTotal(item))" readonly class="w-full rounded-xl border border-transparent bg-gray-50/80 text-sm font-bold text-gray-700 outline-none py-2.5 px-3 cursor-default placeholder-gray-400" placeholder="Total Harga (Rp)">
+                                        <input type="text" :value="formatMoney(itemTotal(item))" readonly class="w-full rounded-xl border border-transparent bg-gray-50/80 text-[16px] font-bold text-gray-700 outline-none py-3 px-3 cursor-default placeholder-gray-400" placeholder="Total Harga (Rp)">
                                     </div>
 
                                     <!-- Trash Delete -->
@@ -231,34 +391,50 @@
                     </div>
 
                     <!-- Footer Summary Section -->
-                    <div class="flex flex-col lg:flex-row justify-end border-t border-dashed border-gray-200 bg-white">
-                        <!-- Right: Calculations Summary -->
-                        <div class="p-8 w-full lg:w-6/12 xl:w-5/12">
-                            <div class="space-y-4 text-sm text-gray-800">
+                    <div class="flex flex-col lg:flex-row justify-between border-t border-dashed border-gray-200 bg-white">
+                        
+                        <!-- Left Adjustments -->
+                        <div class="p-8 w-full lg:w-5/12 border-b lg:border-b-0 lg:border-r border-dashed border-gray-100">
+                            <div class="space-y-6">
+                                <h3 class="text-[13px] font-black text-gray-400 uppercase tracking-widest mb-4">Penyesuaian</h3>
+                                
+                                <div class="flex justify-between items-start">
+                                    <div class="flex flex-col">
+                                        <span class="text-[16px] font-semibold text-gray-600">Pajak (%)</span>
+                                        <span class="text-[11px] text-blue-500 font-bold" x-text="'(Nominal: ' + formatMoney(taxNominal) + ')'"></span>
+                                    </div>
+                                    <input type="number" name="tax" x-model.number="tax" @input="if(tax > 100) tax = 100; if(tax < 0) tax = 0; calculateTotals()" min="0" max="100" class="w-48 rounded-xl border-gray-200 text-[16px] text-right px-4 py-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 tracking-tight transition-all" placeholder="0 %"> 
+                                </div>
+
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm font-semibold text-gray-500">Subtotal Item</span>
-                                    <span class="text-[15px] font-extrabold text-gray-700" x-text="formatMoney(subtotal)"></span>
+                                    <span class="text-[16px] font-semibold text-gray-600">Biaya Lainnya (Rp)</span>
+                                    <input type="text" name="other_fees" x-model="otherFees" x-mask:dynamic="$money($input, ',', '.')" @input="calculateTotals()" class="w-48 rounded-xl border-gray-200 text-[16px] text-right px-4 py-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 tracking-tight transition-all">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Calculations Summary -->
+                        <div class="p-8 w-full lg:w-5/12 bg-gray-50/30">
+                            <div class="space-y-4 text-sm">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-semibold text-gray-400">Subtotal Item</span>
+                                    <span class="text-[16px] font-extrabold text-gray-700" x-text="formatMoney(subtotal)"></span>
                                     <input type="hidden" name="subtotal" :value="subtotal">
                                 </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm font-semibold text-gray-500">Pajak (Rp)</span>
-                                    <input type="text" name="tax" x-model="tax" x-mask:dynamic="$money($input, ',', '.')" @input="calculateTotals()" class="w-32 rounded-lg border-gray-200 text-sm text-right px-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+
+                                <div class="flex justify-between items-center pt-3 border-t border-gray-200">
+                                    <span class="text-[17px] font-black text-slate-800">Grand Total</span>
+                                    <span class="text-[20px] font-black text-blue-900" x-text="formatMoney(total)"></span>
                                 </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm font-semibold text-gray-500">Biaya Lainnya (Rp)</span>
-                                    <input type="text" name="other_fees" x-model="otherFees" x-mask:dynamic="$money($input, ',', '.')" @input="calculateTotals()" class="w-32 rounded-lg border-gray-200 text-sm text-right px-3 py-1.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+
+                                <div class="flex justify-between items-center pt-4">
+                                    <span class="text-[15px] font-bold text-gray-500 italic">Uang Muka / Dibayar</span>
+                                    <input type="text" name="downpayment" x-model="downpayment" x-mask:dynamic="$money($input, ',', '.')" @input="calculateTotals()" class="w-48 rounded-xl border-2 border-blue-100 text-[16px] text-right font-black text-blue-700 px-4 py-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 bg-white shadow-sm transition-all tracking-tight">
                                 </div>
-                                <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                                    <span class="text-[17px] font-extrabold text-black">Grand Total</span>
-                                    <span class="text-[19px] font-extrabold text-[#03235b]" x-text="formatMoney(total)"></span>
-                                </div>
-                                <div class="flex justify-between items-center pt-2">
-                                    <span class="text-[15px] font-semibold text-gray-500">Uang Muka / Dibayar (Rp)</span>
-                                    <input type="text" name="downpayment" x-model="downpayment" x-mask:dynamic="$money($input, ',', '.')" @input="calculateTotals()" class="w-36 rounded-lg border-gray-200 text-[15px] text-right font-bold text-gray-700 px-3 py-2 border focus:border-gray-400 focus:ring-0 bg-white">
-                                </div>
-                                <div class="flex justify-between items-center -mx-4 px-4 py-3">
-                                    <span class="text-[16px] font-extrabold text-black">Sisa Tagihan</span>
-                                    <span class="text-[19px] font-extrabold text-[#0f172a]" x-text="formatMoney(sisa)"></span>
+
+                                <div class="flex justify-between items-center pt-4 bg-white -mx-8 px-8 py-4 border-t border-gray-100">
+                                    <span class="text-[17px] font-black text-slate-900">Sisa Tagihan</span>
+                                    <span class="text-[22px] font-black text-rose-600" x-text="formatMoney(sisa)"></span>
                                     <input type="hidden" name="sisa" :value="sisa">
                                 </div>
                             </div>

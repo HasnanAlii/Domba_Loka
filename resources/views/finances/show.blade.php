@@ -6,136 +6,137 @@
                 <p class="mt-1 text-sm text-slate-500">Ringkasan lengkap data pemasukan atau pengeluaran.</p>
             </div>
 
-            <a href="{{ route('finances.index') }}" class="text-sm font-semibold text-blue-600 transition hover:text-blue-700">
+            <a href="{{ route('finances.index') }}"
+                class="text-sm font-semibold text-blue-600 transition hover:text-blue-700">
                 Kembali ke daftar
             </a>
         </div>
     </x-slot>
 
-    <div class="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-4xl rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/60 lg:p-8">
-            <dl class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div>
-                    <dt class="text-sm font-semibold text-slate-500">Jenis</dt>
-                    <dd class="mt-2 text-base font-bold text-slate-800">{{ $finance->type === 'income' ? 'Pemasukan' : 'Pengeluaran' }}</dd>
-                </div>
-                <div>
-                    <dt class="text-sm font-semibold text-slate-500">Jumlah</dt>
-                    <dd class="mt-2 text-base font-bold {{ $finance->type === 'income' ? 'text-emerald-600' : 'text-rose-600' }}">Rp {{ number_format($finance->amount, 0, ',', '.') }}</dd>
-                </div>
-                <div>
-                    <dt class="text-sm font-semibold text-slate-500">Rekening</dt>
-                    <dd class="mt-2 text-base text-slate-800">{{ $finance->bankAccount->bank_name ?? '-' }}</dd>
-                </div>
-                <div>
-                    <dt class="text-sm font-semibold text-slate-500">Referensi Transaksi</dt>
-                    <dd class="mt-2 text-base text-slate-800">{{ $finance->transaction->reference_number ?? '-' }}</dd>
-                </div>
-                <div class="md:col-span-2">
-                    <dt class="text-sm font-semibold text-slate-500">Deskripsi</dt>
-                    <dd class="mt-2 text-base text-slate-800">{{ $finance->description ?: '-' }}</dd>
-                </div>
-            </dl>
-        </div>
-    </div>
-</x-app-layout><x-app-layout>
-    <x-slot name="header">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-            <h2 class="font-extrabold text-2xl text-gray-800 leading-tight tracking-tight">
-                {{ __('Detail Kas Keuangan') }}
-            </h2>
-            <nav class="flex text-sm font-medium text-gray-500">
-                <a href="{{ route('dashboard') }}" class="hover:text-blue-600 cursor-pointer transition">Dashboard</a>
-                <span class="mx-2">/</span>
-                <a href="{{ route('finances.index') }}" class="hover:text-blue-600 cursor-pointer transition">Keuangan</a>
-                <span class="mx-2">/</span>
-                <span class="text-blue-600">Detail Kas</span>
-            </nav>
-        </div>
-    </x-slot>
-
     <div class="py-12 bg-slate-50 min-h-screen px-10">
         <div class="mx-auto sm:px-6 lg:px-8 max-w-4xl">
-            <div class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl p-6 lg:p-10 border border-slate-100 relative overflow-hidden group">
-                <div class="absolute right-0 top-0 h-40 w-40 {{ $finance->type == 'income' ? 'bg-emerald-50/50' : 'bg-rose-50/50' }} rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
-                
+            <div
+                class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl p-6 lg:p-10 border border-slate-100 relative overflow-hidden group">
+                <div
+                    class="absolute right-0 top-0 h-40 w-40 {{ $finance->type == 'income' ? 'bg-emerald-50/50' : 'bg-rose-50/50' }} rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110">
+                </div>
+
                 <div class="relative">
-                    <div class="flex items-center gap-5 mb-8 border-b border-slate-100 pb-6">
-                        <div class="p-4 {{ $finance->type == 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600' }} rounded-2xl">
-                            @if($finance->type == 'income')
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    <!-- Top Header in Card -->
+                    <div class="flex items-center gap-6 mb-12">
+                        <div
+                            class="p-5 {{ $finance->type == 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600' }} rounded-2xl shadow-inner">
+                            @if ($finance->type == 'income')
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                 </svg>
                             @else
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6 6" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M13 17h8m0 0V9m0 8l-8-8-4 4-6 6" />
                                 </svg>
                             @endif
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-slate-800">
+                            <h3 class="text-2xl font-black text-[#0f172a] tracking-tight">
                                 {{ $finance->type == 'income' ? 'Pemasukan (Income)' : 'Pengeluaran (Expense)' }}
                             </h3>
-                            <p class="text-sm text-slate-500 font-medium">Data transaksi kas peternakan</p>
+                            <p class="text-[13px] text-gray-400 font-bold uppercase tracking-[0.15em] mt-1">Status Kas
+                                Peternakan</p>
                         </div>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Tanggal Transaksi</span>
-                            <span class="text-slate-700 font-medium text-lg">{{ $finance->created_at->format('l, d F Y - H:i') }}</span>
-                        </div>
-                        
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Rekening Terkait</span>
-                            <div class="flex items-center gap-2">
-                                <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-sm font-bold ring-1 ring-blue-600/20">{{ $finance->bankAccount->bank_name ?? '-' }}</span>
-                                <span class="text-slate-600 font-medium">{{ $finance->bankAccount->account_number ?? '-' }}</span>
-                            </div>
-                        </div>
 
-                        <div class="flex flex-col bg-slate-50 p-6 rounded-2xl border border-slate-100 md:col-span-2">
-                            <span class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Total Nilai Transaksi</span>
-                            <span class="text-4xl font-extrabold {{ $finance->type == 'income' ? 'text-emerald-600' : 'text-rose-600' }} font-mono tracking-tighter">
-                                {{ $finance->type == 'income' ? '+' : '-' }} Rp {{ number_format($finance->amount, 0, ',', '.') }}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <!-- Left Big Info -->
+                        <div
+                            class="flex flex-col bg-gray-50/50 p-8 rounded-[32px] border border-gray-100/50 md:col-span-2">
+                            <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">Total
+                                Nilai Transaksi</span>
+                            <span
+                                class="text-5xl font-black {{ $finance->type == 'income' ? 'text-emerald-600' : 'text-rose-600' }} tracking-tighter">
+                                <span class="text-2xl opacity-50 font-bold">{{ $finance->type == 'income' ? '+' : '-' }}
+                                    Rp</span> {{ number_format($finance->amount, 0, ',', '.') }}
                             </span>
                         </div>
 
-                        @if($finance->transaction)
-                            <div class="flex flex-col md:col-span-2 bg-indigo-50/40 p-6 rounded-2xl border border-indigo-100">
-                                <span class="text-sm font-bold text-indigo-500 uppercase tracking-wider mb-3">Terkait Transaksi Jual-Beli DOMBA</span>
+                        <!-- Details Grid -->
+                        <div class="flex flex-col space-y-1">
+                            <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em]">Tanggal
+                                Transaksi</span>
+                            <span
+                                class="text-slate-800 font-black text-[17px] tracking-tight">{{ $finance->created_at->format('l, d F Y') }}</span>
+                            <span class="text-sm font-bold text-gray-400">{{ $finance->created_at->format('H:i') }}
+                                WIB</span>
+                        </div>
+
+                        <div class="flex flex-col space-y-1">
+                            <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em]">Rekening
+                                Terkait</span>
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-slate-800 font-black text-[17px] tracking-tight">{{ $finance->bankAccount->bank_name ?? '-' }}</span>
+                                <span
+                                    class="text-sm font-bold text-blue-600/60 uppercase tracking-widest">{{ $finance->bankAccount->account_number ?? 'KAS KECIL / TUNAI' }}</span>
+                            </div>
+                        </div>
+
+                        @if ($finance->transaction)
+                            <div
+                                class="flex flex-col md:col-span-2 bg-blue-50/30 p-6 rounded-2xl border border-blue-100/50">
                                 <div class="flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-slate-800">Nomor Ref: {{ $finance->transaction->reference_number }}</p>
-                                        <p class="text-sm text-slate-600 mt-1">Total Transaksi: Rp {{ number_format($finance->transaction->total_price, 0, ',', '.') }}</p>
+                                    <div class="flex flex-col gap-1">
+                                        <span
+                                            class="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">Terkait
+                                            Transaksi Domba</span>
+                                        <h4 class="font-black text-slate-800 text-[16px] tracking-tight">
+                                            {{ $finance->transaction->reference_number }}</h4>
                                     </div>
-                                    <a href="{{ route('transactions.show', $finance->transaction) }}" class="text-sm px-4 py-2 bg-white text-indigo-600 font-bold rounded-lg shadow-sm border border-indigo-200 hover:bg-indigo-600 hover:text-white transition-colors">
-                                        Lihat Invoice
+                                    <a href="{{ route('transactions.show', $finance->transaction) }}"
+                                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 text-xs font-black rounded-xl shadow-sm ring-1 ring-blue-200 hover:bg-blue-600 hover:text-white transition-all">
+                                        LIHAT INVOICE
+                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
                                     </a>
                                 </div>
                             </div>
                         @endif
 
-                        <div class="flex flex-col md:col-span-2">
-                            <span class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Keterangan / Rincian</span>
-                            <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 text-slate-700">
-                                {{ $finance->description ?? 'Tidak ada rincian tambahan keterangan.' }}
+                        <div class="flex flex-col md:col-span-2 space-y-3">
+                            <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em]">Catatan
+                                Deskripsi</span>
+                            <div
+                                class="bg-gray-50/30 px-6 py-5 rounded-2xl border border-gray-100 text-slate-600 font-medium text-[15px] italic leading-relaxed">
+                                "{{ $finance->description ?? 'Tidak ada rincian tambahan keterangan.' }}"
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="mt-10 flex items-center gap-4 pt-6 border-t border-slate-100">
-                        <a href="{{ route('finances.edit', $finance) }}" 
-                           class="px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-colors">
-                            Edit Data
+
+                    <!-- Bottom Actions -->
+                    <div class="mt-16 flex flex-col md:flex-row items-center gap-4 pt-8 border-t border-gray-100">
+                        <a href="{{ route('finances.edit', $finance) }}"
+                            class="w-full md:w-auto px-8 py-3.5 bg-blue-600 text-white text-sm font-black rounded-2xl hover:bg-blue-700 transition-all text-center shadow-lg shadow-gray-900/10">
+                            Edit Catatan
                         </a>
-                        <form action="{{ route('finances.destroy', $finance) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus catatan kas ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-6 py-3 bg-rose-50 text-rose-600 font-semibold rounded-xl hover:bg-rose-100 transition-colors">
-                                Hapus
+                        <form action="{{ route('finances.destroy', $finance) }}" method="POST"
+                            class="w-full md:w-auto" onsubmit="return confirm('Hapus permanen catatan arus kas ini?')">
+                            @csrf @method('DELETE')
+                            <button type="submit"
+                                class="w-full px-8 py-3.5 bg-rose-50 text-rose-600 text-sm font-black rounded-2xl hover:bg-rose-600 hover:text-white transition-all">
+                                Hapus Data
                             </button>
                         </form>
+                        <div class="md:ml-auto">
+                            <a href="{{ route('finances.index') }}"
+                                class="text-sm font-black text-gray-400 hover:text-blue-600 transition-colors uppercase tracking-widest">
+                                Kembali ke Daftar
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
