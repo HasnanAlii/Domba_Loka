@@ -14,7 +14,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12 bg-slate-50 min-h-screen px-10">
+    <div class="py-12  bg-[#f0f6ff] min-h-screen px-10">
         <div class="mx-auto sm:px-6 lg:px-8 max-w-4xl">
             <div class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl p-6 lg:p-10 border border-slate-100 relative overflow-hidden group">
                 <div class="absolute right-0 top-0 h-40 w-40 bg-emerald-50/50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>

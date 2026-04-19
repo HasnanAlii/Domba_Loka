@@ -14,7 +14,7 @@
         </div>
     </x-slot>
 
-    <div x-data="{ openMigrationModal: {{ $errors->has('amount') || $errors->has('description') ? 'true' : 'false' }} }" class="py-12 bg-slate-50 min-h-screen px-10">
+    <div x-data="{ openMigrationModal: {{ $errors->has('amount') || $errors->has('description') ? 'true' : 'false' }} }" class="py-12  bg-[#f0f6ff] min-h-screen px-10">
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 

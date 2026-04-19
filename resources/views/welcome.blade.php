@@ -35,9 +35,22 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .floating-anim {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
     </style>
 </head>
-<body class="antialiased bg-white text-slate-900 overflow-x-hidden" x-data="{ scrolled: false }" @scroll.window="scrolled = window.pageYOffset > 20">
+<body class="antialiased bg-white text-slate-900 overflow-x-hidden" x-data="{ scrolled: false, mobileMenu: false }" @scroll.window="scrolled = window.pageYOffset > 20">
     
     <!-- Navigasi -->
     <nav class="fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-6 py-4"
@@ -64,6 +77,10 @@
                     Layanan Kami
                     <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
                 </a>
+                <a href="#faq" class="text-xs font-black uppercase tracking-[0.2em] text-slate-600 hover:text-[#0c5197] transition-colors relative group">
+                    FAQ
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                </a>
             </div>
 
             <div class="flex items-center gap-5">
@@ -79,12 +96,46 @@
                         
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}" 
-                               class="px-6 py-2.5 bg-[#2ee0a7] text-[#03235b] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-xl hover:scale-105 transition-all emerald-glow">
+                               class="hidden sm:block px-6 py-2.5 bg-[#2ee0a7] text-[#03235b] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-xl hover:scale-105 transition-all emerald-glow">
                                 Bermitra
                             </a>
                         @endif
                     @endauth
                 @endif
+                
+                <!-- Mobile Menu Toggle -->
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none">
+                    <span class="w-6 h-0.5 bg-[#03235b] transition-all transform" :class="mobileMenu ? 'rotate-45 translate-y-2' : ''"></span>
+                    <span class="w-6 h-0.5 bg-[#03235b] transition-all" :class="mobileMenu ? 'opacity-0' : ''"></span>
+                    <span class="w-6 h-0.5 bg-[#03235b] transition-all transform" :class="mobileMenu ? '-rotate-45 -translate-y-2' : ''"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div x-show="mobileMenu" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 -translate-y-full"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-full"
+             class="fixed inset-0 z-[150] bg-white pt-32 px-10 md:hidden" 
+             x-cloak>
+            <div class="space-y-12">
+                <a @click="mobileMenu = false" href="{{ route('public.about') }}" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Tentang Kami</a>
+                <a @click="mobileMenu = false" href="{{ route('public.catalog') }}" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Katalog</a>
+                <a @click="mobileMenu = false" href="#services" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Layanan</a>
+                <a @click="mobileMenu = false" href="#faq" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">FAQ</a>
+                
+                <div class="pt-12 border-t border-slate-100 flex flex-col gap-6">
+                    @guest
+                        <a href="{{ route('login') }}" class="text-xs font-black uppercase tracking-widest text-slate-400">Masuk Akun</a>
+                        <a href="{{ route('register') }}" class="w-full py-5 bg-[#2ee0a7] text-[#03235b] text-center font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl">Daftar Kemitraan</a>
+                    @else
+                        <a href="{{ url('/dashboard') }}" class="w-full py-5 bg-[#03235b] text-white text-center font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl">Ke Dashboard</a>
+                    @endguest
+                </div>
             </div>
         </div>
     </nav>
@@ -137,16 +188,69 @@
         </div>
     </section>
 
+    <!-- Farm Experience Section -->
+    <section id="about" class="py-32 px-6 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-24 items-center">
+                <div class="relative">
+                    <div class="absolute -top-12 -left-12 w-64 h-64 bg-[#2ee0a7]/10 rounded-full blur-3xl"></div>
+                    <div class="relative rounded-[4rem] overflow-hidden shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-700">
+                        <img src="{{ asset('images/farm_panorama.png') }}" alt="Domba Loka Farm" class="w-full h-[600px] object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#03235b]/60 to-transparent"></div>
+                        <div class="absolute bottom-12 left-12 right-12">
+                            <p class="text-white/80 font-bold uppercase tracking-[0.3em] text-[10px] mb-2">Lokasi Kami</p>
+                            <h4 class="text-3xl font-black text-white tracking-tight">Kaki Gunung Gede, Cianjur.</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-12">
+                    <div class="space-y-6">
+                        <div class="inline-flex items-center gap-3 mb-6">
+                            <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                            <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Warisan & Kualitas</h2>
+                        </div>
+                        <h3 class="text-6xl font-black text-[#03235b] tracking-tighter leading-[0.95]">Peternakan Modern dengan <span class="text-[#2ee0a7]">Hati.</span></h3>
+                        <p class="text-xl text-slate-500 font-medium leading-relaxed">
+                            Berawal dari kecintaan pada peternakan lokal, Domba Loka hadir dengan standar manajemen modern. Kami memadukan teknologi pemantauan kesehatan dengan pakan organik terbaik dari alam Cianjur yang asri.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-[#03235b]">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2.5"/></svg>
+                            </div>
+                            <h5 class="text-lg font-black text-[#03235b]">Hygienic Barn</h5>
+                            <p class="text-sm text-slate-400 font-bold">Kandang yang selalu bersih untuk memastikan domba bebas stres dan penyakit.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-[#03235b]">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2.5"/></svg>
+                            </div>
+                            <h5 class="text-lg font-black text-[#03235b]">Fast Response</h5>
+                            <p class="text-sm text-slate-400 font-bold">Tim ahli kami siap melayani konsultasi pemilihan domba setiap saat.</p>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('public.about') }}" class="inline-flex items-center gap-4 text-xs font-black text-[#03235b] uppercase tracking-[0.3em] group">
+                        Selengkapnya Tentang Kami
+                        <span class="w-12 h-px bg-[#2ee0a7] group-hover:w-20 transition-all"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Katalog Section -->
     <section id="catalog" class="py-32 px-6 bg-[#f8fafc]">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
                 <div class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-1 bg-[#2ee0a7]"></div>
-                        <h2 class="text-xs font-black text-[#0c5197] uppercase tracking-[0.4em]">Katalog Domba</h2>
+                    <div class="inline-flex items-center gap-3 mb-2">
+                        <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                        <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Katalog Domba</h2>
                     </div>
-                    <h3 class="text-5xl font-black text-[#03235b] tracking-tighter">Pilihan Domba Terbaik.</h3>
+                    <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Pilihan Domba Terbaik.</h3>
                 </div>
                 <a href="{{ route('public.catalog') }}" class="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-3">
                     Lihat Semua Domba
@@ -197,13 +301,80 @@
         </div>
     </section>
 
+    <!-- Steps Section -->
+    <section class="py-32 px-6 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center space-y-4 mb-24">
+                <div class="inline-flex items-center gap-3 mb-2">
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Cara Memulai</h2>
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                </div>
+                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Proses Transaksi <span class="italic underline decoration-[#2ee0a7]">Tanpa Ribet.</span></h3>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-12 relative">
+                <!-- Line connection -->
+                <div class="hidden md:block absolute top-1/4 left-0 right-0 h-px bg-slate-100 z-0"></div>
+                
+                <div class="relative z-10 text-center space-y-8 group">
+                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
+                        <span class="text-3xl font-black text-[#03235b]">01</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black text-[#03235b] mb-4">Pilih Domba</h4>
+                        <p class="text-sm text-slate-400 font-bold leading-relaxed px-4">Telusuri katalog lengkap kami dengan foto dan spesifikasi detail.</p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 text-center space-y-8 group">
+                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
+                        <span class="text-3xl font-black text-[#03235b]">02</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black text-[#03235b] mb-4">Konsultasi</h4>
+                        <p class="text-sm text-slate-400 font-bold leading-relaxed px-4">Hubungi tim kami via WhatsApp untuk detail kesehatan & video terbaru.</p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 text-center space-y-8 group">
+                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
+                        <span class="text-3xl font-black text-[#03235b]">03</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black text-[#03235b] mb-4">Pembayaran</h4>
+                        <p class="text-sm text-slate-400 font-bold leading-relaxed px-4">Transaksi aman melalui transfer bank atau bayar di tempat (COD).</p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 text-center space-y-8 group">
+                    <div class="w-24 h-24 bg-[#03235b] shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto text-white group-hover:scale-110 transition-all duration-500">
+                        <svg class="w-10 h-10 text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" /></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black text-[#03235b] mb-4">Pengiriman</h4>
+                        <p class="text-sm text-slate-400 font-bold leading-relaxed px-4">Domba dikirim dengan armada khusus langsung ke lokasi Anda.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Keunggulan Section -->
-    <section id="about" class="py-32 bg-white relative">
+    <section id="features" class="py-32 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6 mb-20 text-center">
+            <div class="inline-flex items-center gap-3 mb-4">
+                <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Keunggulan Kami</h2>
+                <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+            </div>
+            <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Mengapa Memilih <span class="text-gradient">Domba Loka?</span></h3>
+        </div>
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-4 gap-8">
             <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-[#03235b] transition-all">
                     <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011 1v2.5a.5.5 0 01-1 0V16m-1.8-6H13a1 1 0 011 1v2a1 1 0 01-1 1h-1.8m-3-3.9a1 1 0 100 2 1 1 0 000-2zM9 18a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h6l3 3h5l1 5H5V8zm0 5l-1 2m12-2l1 2M8 18a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4zM2 8h2m-2 4h2m-2 4h2" />
                     </svg>
                 </div>
                 <h4 class="text-lg font-black text-[#03235b] uppercase tracking-widest mb-4">Pengiriman Cepat</h4>
@@ -241,10 +412,14 @@
 
     <!-- Services Section -->
     <section id="services" class="py-32 px-6 bg-[#f0f4f8]">
-        <div class="max-w-7xl mx-auto space-y-24">
-            <div class="flex items-center gap-10">
-                <h3 class="text-7xl font-black text-[#03235b] tracking-tighter shrink-0">LAYANAN KAMI.</h3>
-                <div class="h-px bg-slate-200 w-full block"></div>
+        <div class="max-w-7xl mx-auto space-y-20">
+            <div class="text-center space-y-4">
+                <div class="inline-flex items-center gap-3 mb-2">
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Kualitas & Layanan</h2>
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                </div>
+                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter uppercase">Layanan Kami.</h3>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
@@ -265,6 +440,138 @@
                     <h4 class="text-3xl font-black text-white mb-4 tracking-tight">Bibit Unggul</h4>
                     <p class="text-blue-100/60 font-medium leading-relaxed mb-10">Menyediakan bibit domba Garut dan jenis lainnya dengan genetika juara untuk peternak.</p>
                     <div class="w-12 h-1 bg-white/10 group-hover:bg-[#2ee0a7] transition-all w-0 group-hover:w-full"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-32 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col items-center text-center space-y-6 mb-24">
+                <div class="inline-flex items-center gap-3 mb-2">
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Kesan Pelanggan</h2>
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                </div>
+                <div class="px-6 py-2 bg-slate-50 rounded-full border border-slate-100 flex items-center gap-3">
+                    <div class="flex -space-x-3">
+                        <img src="{{ asset('images/avatar1.png') }}" class="w-8 h-8 rounded-full border-2 border-white object-cover">
+                        <img src="{{ asset('images/avatar2.png') }}" class="w-8 h-8 rounded-full border-2 border-white object-cover">
+                        <div class="w-8 h-8 rounded-full bg-[#03235b] border-2 border-white flex items-center justify-center text-[10px] text-white font-black">+2k</div>
+                    </div>
+                    <span class="text-[10px] font-black text-[#03235b] uppercase tracking-widest">Dipercaya 2000+ Pelanggan</span>
+                </div>
+                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter uppercase italic underline decoration-[#2ee0a7] decoration-[8px] underline-offset-[12px]">SUARA MEREKA.</h3>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group">
+                    <div class="flex gap-1 text-[#2ee0a7]">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                    </div>
+                    <p class="text-xl font-bold text-[#03235b] italic leading-relaxed">
+                        "Domba di sini sangat sehat dan terawat. Saya pesan untuk Aqiqah anak, prosesnya sangat mudah dan dokumentasi pemotongannya lengkap. Sangat puas!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="{{ asset('images/avatar1.png') }}" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <p class="font-black text-[#03235b] uppercase tracking-widest text-[11px]">Bapak Hendra</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Pengusaha - Bandung</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-12 bg-[#03235b] rounded-[3rem] shadow-2xl space-y-8 transform md:-translate-y-6">
+                    <div class="flex gap-1 text-[#2ee0a7]">
+                         @for($i=0; $i<5; $i++)
+                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                         @endfor
+                    </div>
+                    <p class="text-xl font-bold text-white italic leading-relaxed">
+                        "Layanan suplai karkas untuk restoran saya sangat konsisten. Timbangan akurat dan pengiriman selalu tepat waktu. Domba Loka partner terbaik kami."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="{{ asset('images/avatar2.png') }}" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <p class="font-black text-white uppercase tracking-widest text-[11px]">Ibu Sari</p>
+                            <p class="text-[9px] font-bold text-blue-200/50 uppercase tracking-widest">Pemilik Resto - Cianjur</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group">
+                    <div class="flex gap-1 text-[#2ee0a7]">
+                        @for($i=0; $i<5; $i++)
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-xl font-bold text-[#03235b] italic leading-relaxed">
+                        "Bibit domba Garut yang saya beli di sini memiliki genetika luar biasa. Pertumbuhannya sangat cepat. Konsultasinya juga sangat membantu."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-[#2ee0a7] flex items-center justify-center font-black text-[#03235b]">AM</div>
+                        <div>
+                            <p class="font-black text-[#03235b] uppercase tracking-widest text-[11px]">Anwar Mushaddad</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Peternak - Sukabumi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-32 px-6 bg-[#f8fafc]" x-data="{ active: 0 }">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center space-y-4 mb-20">
+                <div class="inline-flex items-center gap-3 mb-2">
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Tanya Jawab</h2>
+                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                </div>
+                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Hal yang Sering <span class="text-[#2ee0a7]">Ditanyakan.</span></h3>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <button @click="active = (active === 1 ? 0 : 1)" class="w-full p-8 flex items-center justify-between text-left">
+                        <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Apakah domba bisa dikirim ke luar Jawa Barat?</span>
+                        <svg class="w-6 h-6 transition-transform duration-500" :class="active === 1 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
+                    </button>
+                    <div x-show="active === 1" x-collapse>
+                        <div class="px-8 pb-8 text-slate-500 font-medium leading-relaxed uppercase tracking-wider text-[11px]">
+                            Saat ini fokus utama pengiriman kami adalah wilayah Jawa Barat (Jabodetabek, Bandung, Cianjur, dll) menggunakan armada sendiri. Namun untuk pemesanan bibit unggul dalam jumlah banyak, kami bisa melayani pengiriman ke luar provinsi dengan jasa ekspedisi hewan mitra kami.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <button @click="active = (active === 2 ? 0 : 2)" class="w-full p-8 flex items-center justify-between text-left">
+                        <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Apakah Domba Loka menyediakan paket Aqiqah siap saji?</span>
+                        <svg class="w-6 h-6 transition-transform duration-500" :class="active === 2 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
+                    </button>
+                    <div x-show="active === 2" x-collapse>
+                        <div class="px-8 pb-8 text-slate-500 font-medium leading-relaxed uppercase tracking-wider text-[11px]">
+                            Ya, kami bekerja sama dengan katering profesional untuk menyediakan paket Aqiqah siap saji dalam bentuk nasi kotak atau prasmanan. Anda tetap bisa memilih dombanya secara langsung atau via video call.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <button @click="active = (active === 3 ? 0 : 3)" class="w-full p-8 flex items-center justify-between text-left">
+                        <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Bagaimana sistem garansi kesehatan di Domba Loka?</span>
+                        <svg class="w-6 h-6 transition-transform duration-500" :class="active === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
+                    </button>
+                    <div x-show="active === 3" x-collapse>
+                        <div class="px-8 pb-8 text-slate-500 font-medium leading-relaxed uppercase tracking-wider text-[11px]">
+                            Setiap domba yang keluar dari farm kami telah melalui pengecekan kesehatan terakhir. Kami memberikan garansi ganti unit jika domba sakit atau mati dalam perjalanan hingga tiba di lokasi pelanggan.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -376,6 +683,144 @@
         </div>
     </footer>
 
+    <!-- Floating Elements -->
+    <div class="fixed bottom-10 right-10 z-[200] flex flex-col gap-4 items-end" x-data="chatbot()">
+        <!-- Chatbot Window -->
+        <div x-show="isOpen" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-10 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 translate-y-10 scale-95"
+             class="w-[380px] h-[550px] bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(3,35,91,0.3)] border border-slate-100 flex flex-col overflow-hidden mb-4" 
+             x-cloak>
+            <!-- Header -->
+            <div class="bg-[#03235b] p-6 text-white flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-[#2ee0a7] rounded-xl flex items-center justify-center text-[#03235b]">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="M9,15a1,1,0,1,0,1,1A1,1,0,0,0,9,15ZM2,14a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,2,14Zm20,0a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,22,14ZM17,7H13V5.72A2,2,0,0,0,14,4a2,2,0,0,0-4,0,2,2,0,0,0,1,1.72V7H7a3,3,0,0,0-3,3v9a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V10A3,3,0,0,0,17,7ZM13.72,9l-.5,2H10.78l-.5-2ZM18,19a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V10A1,1,0,0,1,7,9H8.22L9,12.24A1,1,0,0,0,10,13h4a1,1,0,0,0,1-.76L15.78,9H17a1,1,0,0,1,1,1Zm-3-4a1,1,0,1,0,1,1A1,1,0,0,0,15,15Z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black uppercase tracking-widest">LokaAI</h4>
+                        <p class="text-[9px] font-bold text-[#2ee0a7] uppercase tracking-[0.2em]">Asisten Virtual</p>
+                    </div>
+                </div>
+                <button @click="isOpen = false" class="text-white/50 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5"/></svg>
+                </button>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50" x-ref="messagesBox">
+                <template x-for="(msg, index) in messages" :key="index">
+                    <div :class="msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
+                        <div :class="msg.role === 'user' ? 'bg-[#03235b] text-white rounded-2xl rounded-tr-none px-5 py-3 max-w-[80%] shadow-lg' : 'bg-white text-slate-800 rounded-2xl rounded-tl-none px-5 py-3 max-w-[80%] shadow-md border border-slate-100'">
+                            <p class="text-sm font-medium leading-relaxed" x-text="msg.text"></p>
+                        </div>
+                    </div>
+                </template>
+                <div x-show="isLoading" class="flex justify-start">
+                    <div class="bg-white rounded-2xl rounded-tl-none px-5 py-3 shadow-md border border-slate-100 flex gap-1">
+                        <span class="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></span>
+                        <span class="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                        <span class="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer / Input -->
+            <div class="p-6 bg-white border-t border-slate-100">
+                <form @submit.prevent="sendMessage()" class="flex gap-2">
+                    <input type="text" 
+                           x-model="input" 
+                           placeholder="Tanya LokaAI..." 
+                           class="flex-1 px-5 py-3 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder-slate-400 focus:ring-2 focus:ring-[#2ee0a7] transition-all">
+                    <button type="submit" 
+                            :disabled="isLoading || !input.trim()"
+                            class="w-12 h-12 bg-[#03235b] text-white rounded-2xl flex items-center justify-center hover:bg-[#0c5197] disabled:opacity-50 transition-all">
+                        <svg class="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" stroke-width="2.5" /></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-4 items-end">
+            <!-- Chatbot Bubble -->
+            <button @click="isOpen = !isOpen" class="group relative">
+                <div class="absolute -inset-4 bg-[#03235b]/20 rounded-full blur-xl group-hover:bg-[#03235b]/40 transition-all" :class="isOpen ? 'opacity-0' : 'opacity-100 animate-pulse'"></div>
+                <div class="relative w-16 h-16 bg-[#03235b] text-white rounded-full flex items-center justify-center shadow-2xl transform transition-transform group-hover:scale-110">
+                    <svg x-show="!isOpen" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-width="2.5"/></svg>
+                    <svg x-show="isOpen" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="3"/></svg>
+                </div>
+            </button>
+
+            <!-- Scroll To Top -->
+            <button @click="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                    x-show="scrolled"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-10"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 translate-y-10"
+                    class="w-16 h-16 bg-white border border-slate-100 text-[#03235b] rounded-full flex items-center justify-center shadow-2xl hover:bg-slate-50 transition-all group"
+                    x-cloak>
+                <svg class="w-6 h-6 transform group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7" stroke-width="3" /></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function chatbot() {
+            return {
+                isOpen: false,
+                input: '',
+                messages: [
+                    { role: 'assistant', text: 'Halo! Saya LokaAI. Ada yang bisa saya bantu terkait domba-domba koleksi kami hari ini?' }
+                ],
+                isLoading: false,
+                async sendMessage() {
+                    if (!this.input.trim()) return;
+                    
+                    const userText = this.input;
+                    this.messages.push({ role: 'user', text: userText });
+                    this.input = '';
+                    this.isLoading = true;
+                    
+                    this.$nextTick(() => {
+                        this.scrollToBottom();
+                    });
+
+                    try {
+                        const response = await fetch('/chatbot', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ message: userText })
+                        });
+
+                        const data = await response.json();
+                        this.messages.push({ role: 'assistant', text: data.reply });
+                    } catch (error) {
+                        this.messages.push({ role: 'assistant', text: 'Maaf, sepertinya sedang ada gangguan teknis. Hubungi kami via WhatsApp saja ya!' });
+                    } finally {
+                        this.isLoading = false;
+                        this.$nextTick(() => {
+                            this.scrollToBottom();
+                        });
+                    }
+                },
+                scrollToBottom() {
+                    const box = this.$refs.messagesBox;
+                    box.scrollTop = box.scrollHeight;
+                }
+            }
+        }
+    </script>
     <!-- Feather Icons Init -->
     <script src="https://unpkg.com/feather-icons"></script>
     <script>

@@ -12,7 +12,7 @@
         </div>
     </x-slot>
 
-    <div class="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
+    <div class="min-h-screen  bg-[#f0f6ff] px-4 py-10 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-4xl">
             <div class="rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/60">
                 <form action="{{ $action }}" method="POST" class="p-8 lg:p-12 space-y-10">
@@ -97,7 +97,7 @@
                     <!-- Deskripsi -->
                     <div class="relative group pt-2">
                         <label for="description" class="absolute -top-1 left-3 bg-white px-1.5 text-[11px] font-bold text-gray-400 border border-gray-100 rounded shadow-sm z-20 uppercase tracking-wider">Keterangan / Deskripsi</label>
-                        <textarea id="description" name="description" rows="4" class="w-full rounded-[24px] border-slate-200 text-[15px] font-medium text-slate-700 bg-gray-50/30 p-5 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none" placeholder="Tambahkan catatan jika perlu...">{{ old('description', $finance->description) }}</textarea>
+                        <textarea id="description" name="description" rows="4" class="w-full rounded-[24px] border-slate-200 text-[15px] font-medium text-slate-700 bg-slate-50/30 p-5 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none" placeholder="Tambahkan catatan jika perlu...">{{ old('description', $finance->description) }}</textarea>
                         @error('description')<p class="mt-2 text-[11px] font-bold text-rose-500 ml-4">{{ $message }}</p>@enderror
                     </div>
 

@@ -106,6 +106,11 @@ class DashboardController extends Controller
             ->limit(3)
             ->get();
 
+        $topSheepTypes = \App\Models\SheepType::withCount('sheep')
+            ->orderBy('sheep_count', 'desc')
+            ->limit(3)
+            ->get();
+
         return view('dashboard', [
             'months' => $months,
             'years' => range(now()->year - 4, now()->year + 1),
@@ -127,6 +132,7 @@ class DashboardController extends Controller
             'recentFinances' => $recentFinances,
             'loyalCustomers' => $loyalCustomers,
             'topSuppliers' => $topSuppliers,
+            'topSheepTypes' => $topSheepTypes,
         ]);
     }
 }

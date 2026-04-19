@@ -14,7 +14,7 @@
     <!-- Alpine.js Transaction Form Data -->
     <div x-data="transactionForm()">
         <form action="{{ $action }}" method="POST" enctype="multipart/form-data"
-            class="min-h-screen bg-[#f8fbff] pb-12">
+            class="min-h-screen  bg-[#f0f6ff] px-5 pb-12">
             @csrf
             @if (isset($method) && $method !== 'POST')
                 @method($method)
@@ -273,7 +273,7 @@
                     <!-- Grey block: Tanggal & Tag -->
                     <div class="px-8 py-5 border-b border-gray-100 bg-white">
                         <div
-                            class="bg-gray-50/70 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-6 border border-gray-100/50">
+                            class="bg-slate-50/70 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-6 border border-gray-100/50">
 
                             <div class="relative">
                                 <label
@@ -299,7 +299,7 @@
                                     Referensi</label>
                                 <input type="text" name="reference_number"
                                     value="{{ old('reference_number', $transaction->reference_number ?? 'SJ-' . date('Ymd') . '-' . strtoupper(Str::random(4))) }}"
-                                    class="w-full rounded-xl border-gray-200 text-[16px] px-4 py-3 bg-gray-50 text-gray-500 font-bold focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-not-allowed"
+                                    class="w-full rounded-xl border-gray-200 text-[16px] px-4 py-3 bg-slate-50 text-gray-500 font-bold focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-not-allowed"
                                     readonly>
                             </div>
 
@@ -395,7 +395,7 @@
                                     <!-- Handle Option icons -->
                                     <div class="hidden md:flex items-center gap-1.5 px-1">
                                         <button type="button"
-                                            class="text-gray-400 hover:text-blue-500 bg-gray-50 p-1.5 rounded-full ring-1 ring-gray-200">
+                                            class="text-gray-400 hover:text-blue-500 bg-slate-50 p-1.5 rounded-full ring-1 ring-gray-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -427,7 +427,7 @@
                                     <!-- Satuan -->
                                     <div class="w-full md:w-28">
                                         <select disabled
-                                            class="w-full rounded-xl border-gray-200 bg-gray-50/50 text-[16px] text-gray-400 outline-none py-3 cursor-not-allowed">
+                                            class="w-full rounded-xl border-gray-200 bg-slate-50/50 text-[16px] text-gray-400 outline-none py-3 cursor-not-allowed">
                                             <option>Ekor</option>
                                         </select>
                                     </div>
@@ -436,7 +436,7 @@
                                     <div class="w-full md:w-40">
                                         <input type="text" x-model="item.price"
                                             :name="'details[' + index + '][price]'" readonly
-                                            class="w-full rounded-xl border-gray-200 text-[16px] text-gray-600 bg-gray-50/80 cursor-not-allowed focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-3 px-3"
+                                            class="w-full rounded-xl border-gray-200 text-[16px] text-gray-600 bg-slate-50/80 cursor-not-allowed focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 py-3 px-3"
                                             placeholder="Harga Satuan (Rp)" required>
                                     </div>
 
@@ -452,7 +452,7 @@
                                     <!-- Total Harga -->
                                     <div class="w-full md:w-40">
                                         <input type="text" :value="formatMoney(itemTotal(item))" readonly
-                                            class="w-full rounded-xl border border-transparent bg-gray-50/80 text-[16px] font-bold text-gray-700 outline-none py-3 px-3 cursor-default placeholder-gray-400"
+                                            class="w-full rounded-xl border border-transparent bg-slate-50/80 text-[16px] font-bold text-gray-700 outline-none py-3 px-3 cursor-default placeholder-gray-400"
                                             placeholder="Total Harga (Rp)">
                                     </div>
 
@@ -629,7 +629,7 @@
                         </div>
 
                         <!-- Right: Calculations Summary -->
-                        <div class="p-8 w-full lg:w-5/12 bg-gray-50/30">
+                        <div class="p-8 w-full lg:w-5/12 bg-slate-50/30">
                             <div class="space-y-4 text-sm">
                                 <div class="flex justify-between items-center">
                                     <span class="text-sm font-semibold text-gray-400">Subtotal Item</span>
@@ -688,7 +688,7 @@
                 <div @click.away="isSheepModalOpen = false"
                     class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all">
                     <!-- Modal Header -->
-                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-slate-50/50">
                         <div class="flex items-center gap-2">
                             <div class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
@@ -700,7 +700,7 @@
                             <h3 class="text-[17px] font-black text-gray-800">Tambah Domba Baru</h3>
                         </div>
                         <button type="button" @click="isSheepModalOpen = false"
-                            class="text-gray-400 hover:text-rose-500 bg-gray-100 p-1.5 rounded-lg transition">
+                            class="text-gray-400 hover:text-rose-500 bg-slate-50 p-1.5 rounded-lg transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M6 18L18 6M6 6l12 12"></path>
@@ -717,7 +717,7 @@
                                     class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Kode
                                     Domba</label>
                                 <input type="text" x-model="newSheep.code"
-                                    class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
+                                    class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
                                     placeholder="Masukkan Kode Domba">
                             </div>
                             <!-- Type -->
@@ -726,7 +726,7 @@
                                     class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Jenis
                                     Domba</label>
                                 <select x-model="newSheep.type_id"
-                                    class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 cursor-pointer">
+                                    class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 cursor-pointer">
                                     <option value="">Pilih Jenis</option>
                                     @foreach ($sheepTypes as $st)
                                         <option value="{{ $st->id }}">{{ $st->name }}</option>
@@ -740,7 +740,7 @@
                                         class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Berat
                                         (Kg)</label>
                                     <input type="number" x-model.number="newSheep.weight" min="1"
-                                        class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
+                                        class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
                                         placeholder="Misal: 45">
                                 </div>
                                 <!-- Condition -->
@@ -749,7 +749,7 @@
                                         class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Kondisi
                                         Fisik</label>
                                     <select x-model="newSheep.condition"
-                                        class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 cursor-pointer">
+                                        class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 cursor-pointer">
                                         <option value="Sehat">Sehat</option>
                                         <option value="Sakit">Sakit</option>
                                         <option value="Dalam Masa Rawat">Dalam Masa Rawat</option>
@@ -763,16 +763,16 @@
                                     Taksiran Pembelian (Rp)</label>
                                 <input type="text" x-model="newSheep.price"
                                     x-mask:dynamic="$money($input, ',', '.')"
-                                    class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
+                                    class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
                                     placeholder="Masukan Harga dlm Rupiah">
                             </div>
                         </div>
                     </div>
 
                     <!-- Modal Footer -->
-                    <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 bg-gray-50/50">
+                    <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 bg-slate-50/50">
                         <button type="button" @click="isSheepModalOpen = false"
-                            class="px-5 py-2.5 text-sm font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all hover:text-gray-800 focus:ring-2 focus:ring-gray-200">
+                            class="px-5 py-2.5 text-sm font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-slate-50 transition-all hover:text-gray-800 focus:ring-2 focus:ring-gray-200">
                             Batal
                         </button>
                         <button type="button" @click="saveNewSheep()" :disabled="isSavingSheep"
@@ -798,7 +798,7 @@
                 <div @click.away="isPartyModalOpen = false"
                     class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all">
                     <!-- Header -->
-                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-slate-50/50">
                         <div class="flex items-center gap-2">
                             <div class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
@@ -811,7 +811,7 @@
                                 x-text="type === 'penjualan' ? 'Pilih Pelanggan' : 'Pilih Supplier'">Pilih Data</h3>
                         </div>
                         <button type="button" @click="isPartyModalOpen = false"
-                            class="text-gray-400 hover:text-rose-500 bg-gray-100 p-1.5 rounded-lg transition">
+                            class="text-gray-400 hover:text-rose-500 bg-slate-50 p-1.5 rounded-lg transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M6 18L18 6M6 6l12 12"></path>
@@ -823,7 +823,7 @@
                     <div class="p-6">
                         <div x-data="{ search: '' }">
                             <input type="text" x-model="search"
-                                class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 mb-4"
+                                class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 mb-4"
                                 :placeholder="type === 'penjualan' ? 'Cari Pelanggan...' : 'Cari Supplier...'">
 
                             <div class="max-h-[300px] overflow-y-auto space-y-2 pr-1">
@@ -882,7 +882,7 @@
                         </div>
                     </div>
                     <!-- Footer -->
-                    <div class="px-6 py-4 border-t border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="px-6 py-4 border-t border-gray-100 flex justify-between items-center bg-slate-50/50">
                         <button type="button"
                             @click.stop="isPartyModalOpen = false; if(type === 'penjualan') { isAddCustomerModalOpen = true } else { isAddSupplierModalOpen = true }"
                             class="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1.5 uppercase tracking-wider">
@@ -890,7 +890,7 @@
                                 x-text="type === 'penjualan' ? 'Tambah Pelanggan Baru' : 'Tambah Supplier Baru'"></span>
                         </button>
                         <button type="button" @click="isPartyModalOpen = false"
-                            class="px-5 py-2 text-sm font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
+                            class="px-5 py-2 text-sm font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-slate-50 transition-all">
                             Tutup
                         </button>
                     </div>
@@ -916,7 +916,7 @@
                             <h3 class="text-xl font-black text-gray-800">Pelanggan Baru</h3>
                         </div>
                         <button type="button" @click="isAddCustomerModalOpen = false"
-                            class="text-gray-400 hover:text-rose-500 bg-gray-100 p-2 rounded-xl transition-all">
+                            class="text-gray-400 hover:text-rose-500 bg-slate-50 p-2 rounded-xl transition-all">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M6 18L18 6M6 6l12 12"></path>
@@ -929,30 +929,30 @@
                             <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nama
                                 Lengkap <span class="text-rose-500">*</span></label>
                             <input type="text" x-model="newCustomer.name" placeholder="Masukkan Nama "
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
                             <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nomor
                                 WhatsApp/HP <span class="text-rose-500">*</span></label>
                             <input type="text" x-model="newCustomer.phone" placeholder="Masukkan Nomor WhatsApp/HP"
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
                             <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Email
                                 (Opsional)</label>
                             <input type="email" x-model="newCustomer.email" placeholder="Masukkan Email"
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
                             <label
                                 class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Alamat
                                 (Opsional)</label>
                             <textarea x-model="newCustomer.address" rows="3" placeholder="Masukkan Alamat"
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none"></textarea>
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none"></textarea>
                         </div>
                     </div>
 
-                    <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex flex-col gap-3">
+                    <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex flex-col gap-3">
                         <button type="button" @click="saveNewParty()" :disabled="isSavingParty"
                             class="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-xl shadow-blue-200 transition-all flex items-center justify-center gap-2 group disabled:opacity-50">
                             <span x-show="!isSavingParty" class="flex items-center gap-2">
@@ -997,7 +997,7 @@
                             <h3 class="text-xl font-black text-gray-800">Supplier Baru</h3>
                         </div>
                         <button type="button" @click="isAddSupplierModalOpen = false"
-                            class="text-gray-400 hover:text-rose-500 bg-gray-100 p-2 rounded-xl transition-all">
+                            class="text-gray-400 hover:text-rose-500 bg-slate-50 p-2 rounded-xl transition-all">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M6 18L18 6M6 6l12 12"></path>
@@ -1010,30 +1010,30 @@
                             <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nama
                                 Perusahaan/Supplier <span class="text-rose-500">*</span></label>
                             <input type="text" x-model="newSupplier.name" placeholder="Masukkan Nama Perusahaan/Supplier"
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none">
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
                             <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nomor
                                 Kontak/HP <span class="text-rose-500">*</span></label>
                             <input type="text" x-model="newSupplier.phone" placeholder="Masukkan Nomor Kontak/HP"
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none"></textarea>
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none"></textarea>
                         </div>
                         <div>
                             <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Email
                                 (Opsional)</label>
                             <input type="email" x-model="newSupplier.email" placeholder="Masukkan Email"
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none">
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
                             <label
                                 class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Alamat
                                 (Opsional)</label>
                             <textarea x-model="newSupplier.address" rows="3" placeholder="Masukkan Alamat"
-                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-gray-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none"></textarea>
+                                class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none"></textarea>
                         </div>
                     </div>
 
-                    <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex flex-col gap-3">
+                    <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex flex-col gap-3">
                         <button type="button" @click="saveNewParty()" :disabled="isSavingParty"
                             class="w-full py-4 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-xl shadow-amber-200 transition-all flex items-center justify-center gap-2 group disabled:opacity-50">
                             <span x-show="!isSavingParty" class="flex items-center gap-2">

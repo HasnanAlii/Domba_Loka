@@ -256,6 +256,16 @@ class TransactionController extends Controller
         return view('transactions.show', compact('transaction'));
     }
 
+    public function exportPDF(Transaction $transaction)
+    {
+        $transaction->load(['customer', 'supplier', 'details.sheep.sheepType', 'bankAccount']);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('transactions.export.pdf', compact('transaction'));
+        $pdf->setPaper('a4', 'landscape');
+
+        return $pdf->download('Faktur-' . $transaction->reference_number . '.pdf');
+    }
+
     public function edit(Request $request, Transaction $transaction): View
     {
         $selectedType = $this->resolveType($request->query('type')) ?? $transaction->type;

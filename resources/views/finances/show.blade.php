@@ -13,7 +13,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12 bg-slate-50 min-h-screen px-10">
+    <div class="py-12  bg-[#f0f6ff] min-h-screen px-10">
         <div class="mx-auto sm:px-6 lg:px-8 max-w-4xl">
             <div
                 class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl p-6 lg:p-10 border border-slate-100 relative overflow-hidden group">
@@ -52,7 +52,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <!-- Left Big Info -->
                         <div
-                            class="flex flex-col bg-gray-50/50 p-8 rounded-[32px] border border-gray-100/50 md:col-span-2">
+                            class="flex flex-col bg-slate-50/50 p-8 rounded-[32px] border border-gray-100/50 md:col-span-2">
                             <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">Total
                                 Nilai Transaksi</span>
                             <span
@@ -111,7 +111,7 @@
                             <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em]">Catatan
                                 Deskripsi</span>
                             <div
-                                class="bg-gray-50/30 px-6 py-5 rounded-2xl border border-gray-100 text-slate-600 font-medium text-[15px] italic leading-relaxed">
+                                class="bg-slate-50/30 px-6 py-5 rounded-2xl border border-gray-100 text-slate-600 font-medium text-[15px] italic leading-relaxed">
                                 "{{ $finance->description ?? 'Tidak ada rincian tambahan keterangan.' }}"
                             </div>
                         </div>

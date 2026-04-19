@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $featuredSheep = \App\Models\Sheep::with('sheepType')
         ->where('status', 'tersedia')
-        ->whereIn('condition', ['sehat', 'baik'])
+        ->whereIn('condition', ['sehat', 'baik','sangat baik'])
         ->latest()
         ->take(2)
         ->get();
@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::get('transactions/{transaction}/export-pdf', [TransactionController::class, 'exportPDF'])->name('transactions.export-pdf');
     Route::resource('growths', GrowthController::class);
     Route::resource('finances', FinanceController::class);
     Route::resource('keuangan', FinanceController::class)
@@ -59,5 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/pertumbuhan-domba', [ReportController::class, 'pertumbuhanDomba'])->name('pertumbuhan-domba');
     });
 });
+
+Route::post('/chatbot', \App\Http\Controllers\ChatbotController::class)->name('api.chatbot');
 
 require __DIR__.'/auth.php';

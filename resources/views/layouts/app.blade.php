@@ -62,7 +62,9 @@
 <body class="font-sans antialiased text-gray-900 transition-all duration-300" x-data="{ showSidebar: false, sidebarCollapsed: localStorage.getItem('sidebar_collapsed') === 'true' }"
     x-init="$watch('sidebarCollapsed', val => localStorage.setItem('sidebar_collapsed', val))" :class="sidebarCollapsed ? 'sidebar-collapsed' : ''">
 
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-slate-50">
+
+
 
         {{-- NAVBAR MOBILE --}}
         <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50 md:hidden">
@@ -70,7 +72,7 @@
 
                 {{-- Tombol Sidebar --}}
                 <button @click="showSidebar = true"
-                    class="p-3 bg-white border rounded-xl  hover:bg-gray-100 transition">
+                    class="p-3 bg-white border rounded-xl  hover:bg-slate-50 transition">
                     <i data-feather="menu" class="w-6 h-6 text-gray-700"></i>
                 </button>
 
@@ -81,7 +83,7 @@
                     </h1>
                 </div>
 
-                <a href="{{ route('dashboard') }}" class="p-3 rounded-xl bg-white border hover:bg-gray-100 transition">
+                <a href="{{ route('dashboard') }}" class="p-3 rounded-xl bg-white border hover:bg-slate-50 transition">
                     <i data-feather="home" class="w-5 h-5 text-gray-700"></i>
                 </a>
 

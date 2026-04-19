@@ -12,7 +12,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12 bg-slate-50 min-h-screen px-10">
+    <div class="py-12  bg-[#f0f6ff] min-h-screen px-10">
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="space-y-8">
                 

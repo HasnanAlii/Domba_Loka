@@ -37,7 +37,7 @@ class SheepController extends Controller
             $query->latest();
         }
 
-        $sheep = $query->paginate(12)->withQueryString();
+        $sheep = $query->paginate(9)->withQueryString();
         $sheepTypes = \App\Models\SheepType::orderBy('name')->get();
 
         return view('public.catalog.index', compact('sheep', 'sheepTypes', 'filters'));
@@ -79,6 +79,10 @@ class SheepController extends Controller
             })
             ->when($filters['condition'], function ($q, $condition) {
                 return $q->where('condition', $condition);
+            })
+            // Default condition: show only 'tersedia' ONLY on initial load (no query params)
+            ->when(!$request->hasAny(['search', 'type_id', 'status', 'condition']), function ($q) {
+                return $q->where('status', 'tersedia');
             })
             ->latest();
 

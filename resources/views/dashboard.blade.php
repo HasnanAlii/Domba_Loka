@@ -51,10 +51,10 @@
         </div>
     </x-slot>
 
-    <div class="min-h-screen bg-[#f8fafc] px-6 py-12">
+    <div class="min-h-screen  bg-[#f0f6ff] px-6 py-12">
         <div class="mx-auto space-y-12 max-w-7xl">
             <!-- Welcome Card -->
-            <div class="relative overflow-hidden rounded-[3.5rem] border border-white bg-white p-12 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)]">
+            <div class="relative overflow-hidden rounded-[3.5rem] border border-white bg-white p-12 shadow-[0_40px_80px_-20px_rgba(3,35,91,0.04)]">
                 <div class="relative z-10">
                     <h3 class="text-4xl font-black text-[#03235b] tracking-tight uppercase">
                         Halo, <span class="text-[#0c5197] italic">{{ Auth::user()->name }}</span>
@@ -64,47 +64,47 @@
                     </p>
                 </div>
                 <!-- Subtle Gradient Pattern -->
-                <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-slate-50/50 to-transparent pointer-events-none"></div>
+                <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-50/20 to-transparent pointer-events-none"></div>
             </div>
 
             <!-- Operational Stats Grid -->
             <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                 <!-- Stat Item 1 -->
-                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white bg-white p-10 shadow-sm transition-all hover:shadow-[0_30px_60px_-15px_rgba(3,35,91,0.1)] hover:-translate-y-1">
+                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white bg-white p-10 shadow-sm transition-all hover:shadow-[0_30px_60px_-15px_rgba(3,35,91,0.08)] hover:-translate-y-1">
                     <p class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-[#0c5197] transition-colors mb-6">Inventarisasi Ternak</p>
                     <div class="flex items-center justify-between">
                         <div class="space-y-1">
                             <p class="text-sm font-black text-slate-300 uppercase tracking-widest">Total Populasi</p>
                             <p class="text-5xl font-black text-[#03235b] tracking-tighter leading-none">{{ $totalSheep }}</p>
                         </div>
-                        <div class="p-5 bg-blue-50 text-[#0c5197] rounded-[1.8rem] shadow-inner">
+                        <div class="p-5 bg-blue-50/50 backdrop-blur-sm text-[#0c5197] rounded-[1.8rem] shadow-inner border border-white/20">
                             <i data-feather="box" class="w-7 h-7"></i>
                         </div>
                     </div>
-                    <div class="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between">
-                         <p class="text-xs font-black text-slate-300 uppercase tracking-widest">Ø Berat Aktual</p>
+                    <div class="mt-8 pt-8 border-t border-slate-100/50 flex items-center justify-between">
+                         <p class="text-xs font-black text-slate-300 uppercase tracking-widest">Rata-rata Berat</p>
                          <p class="text-sm font-black text-[#0c5197] uppercase tracking-tight">{{ number_format($averageSheepWeight, 1, ',', '.') }} KG</p>
                     </div>
                 </div>
 
                 <!-- Stat Item 2 -->
-                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white bg-white p-10 shadow-sm transition-all hover:shadow-[0_30px_60px_-15px_rgba(3,35,91,0.1)] hover:-translate-y-1">
+                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white bg-white p-10 shadow-sm transition-all hover:shadow-[0_30px_60px_-15px_rgba(3,35,91,0.08)] hover:-translate-y-1">
                     <p class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-[#0c5197] transition-colors mb-6">Relasi Strategis</p>
                     <div class="flex items-center justify-between">
                         <div class="space-y-1">
                             <p class="text-sm font-black text-slate-300 uppercase tracking-widest">Jaringan Bisnis</p>
                             <p class="text-5xl font-black text-[#03235b] tracking-tighter leading-none">{{ $totalCustomers + $totalSuppliers }}</p>
                         </div>
-                        <div class="p-5 bg-emerald-50 text-emerald-600 rounded-[1.8rem] shadow-inner">
+                        <div class="p-5 bg-emerald-50/50 backdrop-blur-sm text-emerald-600 rounded-[1.8rem] shadow-inner border border-white/20">
                             <i data-feather="users" class="w-7 h-7"></i>
                         </div>
                     </div>
-                    <div class="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between gap-6">
+                    <div class="mt-8 pt-8 border-t border-slate-100/50 flex items-center justify-between gap-6">
                          <div class="text-left">
                             <p class="text-xs font-black text-slate-300 uppercase tracking-widest">Pelanggan</p>
                             <p class="text-lg font-black text-emerald-600 uppercase tracking-tight">{{ $totalCustomers }}</p>
                          </div>
-                         <div class="w-px h-10 bg-slate-100"></div>
+                         <div class="w-px h-10 bg-slate-100/50"></div>
                          <div class="text-left">
                             <p class="text-xs font-black text-slate-300 uppercase tracking-widest">Supplier</p>
                             <p class="text-lg font-black text-emerald-600 uppercase tracking-tight">{{ $totalSuppliers }}</p>
@@ -113,18 +113,18 @@
                 </div>
 
                 <!-- Stat Item 3 -->
-                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white bg-white p-10 shadow-sm transition-all hover:shadow-[0_30px_60px_-15px_rgba(3,35,91,0.1)] hover:-translate-y-1">
+                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white bg-white p-10 shadow-sm transition-all hover:shadow-[0_30px_60px_-15px_rgba(3,35,91,0.08)] hover:-translate-y-1">
                     <p class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-[#0c5197] transition-colors mb-6">Monitoring Pertumbuhan</p>
                     <div class="flex items-center justify-between">
                         <div class="space-y-1">
                             <p class="text-sm font-black text-slate-300 uppercase tracking-widest">Audit Berjalan</p>
                             <p class="text-5xl font-black text-[#03235b] tracking-tighter leading-none">{{ $transactionsThisMonth }}</p>
                         </div>
-                        <div class="p-5 bg-amber-50 text-amber-600 rounded-[1.8rem] shadow-inner">
+                        <div class="p-5 bg-amber-50/50 backdrop-blur-sm text-amber-600 rounded-[1.8rem] shadow-inner border border-white/20">
                             <i data-feather="activity" class="w-7 h-7"></i>
                         </div>
                     </div>
-                    <div class="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between">
+                    <div class="mt-8 pt-8 border-t border-slate-100/50 flex items-center justify-between">
                          <p class="text-xs font-black text-slate-300 uppercase tracking-widest">Log Terdata</p>
                          <p class="text-sm font-black text-amber-600 uppercase tracking-tight">{{ $growthChecksThisMonth }} Audit</p>
                     </div>
@@ -132,8 +132,8 @@
             </div>
 
             <!-- Standalone Financial Section -->
-            <div class="group relative overflow-hidden rounded-[3.5rem] border-2 border-slate-50 bg-white p-12 shadow-xl shadow-slate-200/50 transition-all hover:shadow-2xl hover:-translate-y-1 flex flex-col xl:flex-row xl:items-center justify-between gap-12">
-                <div class="absolute top-0 right-0 w-1/4 h-full bg-slate-50/30 -skew-x-12 translate-x-1/2 pointer-events-none"></div>
+            <div class="group relative overflow-hidden rounded-[3.5rem] border border-white bg-white p-12 shadow-xl shadow-blue-900/5 transition-all hover:shadow-2xl hover:-translate-y-1 flex flex-col xl:flex-row xl:items-center justify-between gap-12">
+                <div class="absolute top-0 right-0 w-1/4 h-full bg-slate-50/20 -skew-x-12 translate-x-1/2 pointer-events-none"></div>
                 
                 <div class="relative z-10 flex-1 space-y-8">
                     <div class="space-y-1">
@@ -148,13 +148,13 @@
                                 {{ $balance >= 0 ? '+' : '-' }}Rp{{ abs($balance) >= 1000000 ? number_format(abs($balance) / 1000000, 1, ',', '.') . ' Jt' : number_format(abs($balance), 0, ',', '.') }}
                             </p>
                         </div>
-                        <div class="p-7 {{ $balance >= 0 ? 'bg-emerald-50 text-emerald-500' : 'bg-rose-50 text-rose-500' }} rounded-[2.5rem] shadow-inner">
+                        <div class="p-7 {{ $balance >= 0 ? 'bg-emerald-50/50 text-emerald-500' : 'bg-rose-50/50 text-rose-500' }} rounded-[2.5rem] shadow-inner border border-white/20 backdrop-blur-sm">
                             <i data-feather="{{ $balance >= 0 ? 'trending-up' : 'trending-down' }}" class="w-12 h-12"></i>
                         </div>
                     </div>
                 </div>
 
-                <div class="relative z-10 w-full xl:w-auto flex flex-col sm:flex-row gap-10 bg-slate-50/50 p-12 rounded-[3.5rem] border border-slate-100">
+                <div class="relative z-10 w-full xl:w-auto flex flex-col sm:flex-row gap-10 bg-white/90 p-12 rounded-[3.5rem] border border-white backdrop-blur-md">
                     <div class="space-y-5 min-w-[200px]">
                         <div class="flex items-center gap-3">
                             <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -168,7 +168,7 @@
                         </div>
                     </div>
 
-                    <div class="hidden sm:block w-px h-28 bg-slate-200"></div>
+                    <div class="hidden sm:block w-px h-28 bg-slate-200/50"></div>
 
                     <div class="space-y-5 min-w-[200px]">
                         <div class="flex items-center gap-3">
@@ -195,7 +195,7 @@
                     <div class="rounded-[3rem] border border-white bg-white p-10 shadow-sm overflow-hidden relative">
                          <div class="flex items-center justify-between mb-8">
                             <h4 class="text-base font-black text-[#03235b] uppercase tracking-wider">Tren Penjualan</h4>
-                            <div class="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-2 text-[10px] font-black text-slate-400">
+                            <div class="flex items-center gap-2 rounded-xl bg-slate-100/50 backdrop-blur-sm px-4 py-2 text-[10px] font-black text-slate-400 border border-white/20">
                                 {{ $months[$selectedMonth] }} {{ $selectedYear }} <i data-feather="calendar" class="w-3 h-3 ml-1"></i>
                             </div>
                          </div>
@@ -210,9 +210,9 @@
                                 {{ $incomeGrowth >= 0 ? 'Pertumbuhan positif' : 'Penurunan performa' }} dibandingkan periode lalu
                             </p>
                          </div>
-                         <div class="h-40 w-full flex items-end gap-1 px-2 border-b-2 border-slate-50">
+                         <div class="h-40 w-full flex items-end gap-1 px-2 border-b-2 border-slate-100/50">
                             @foreach($chartIncome as $day => $percentage)
-                                <div class="flex-1 {{ $percentage > 0 ? 'bg-emerald-500' : 'bg-slate-50' }} rounded-t-sm transition-all hover:bg-emerald-600 group/bar relative" style="height: {{ max($percentage, 5) }}%">
+                                <div class="flex-1 {{ $percentage > 0 ? 'bg-emerald-500/80' : 'bg-slate-100/30' }} rounded-t-sm transition-all hover:bg-emerald-600 group/bar relative" style="height: {{ max($percentage, 5) }}%">
                                     <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#03235b] text-white text-[8px] font-black px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">
                                         Tgl {{ $day }}
                                     </div>
@@ -225,7 +225,7 @@
                     <div class="rounded-[3rem] border border-white bg-white p-10 shadow-sm overflow-hidden relative">
                          <div class="flex items-center justify-between mb-8">
                             <h4 class="text-base font-black text-[#03235b] uppercase tracking-wider">Arus Pengeluaran</h4>
-                            <div class="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-2 text-[10px] font-black text-slate-400">
+                            <div class="flex items-center gap-2 rounded-xl bg-slate-100/50 backdrop-blur-sm px-4 py-2 text-[10px] font-black text-slate-400 border border-white/20">
                                 {{ $months[$selectedMonth] }} {{ $selectedYear }} <i data-feather="calendar" class="w-3 h-3 ml-1"></i>
                             </div>
                          </div>
@@ -240,9 +240,9 @@
                                 {{ $expenseGrowth <= 0 ? 'Efisiensi biaya terjaga' : 'Peningkatan beban biaya' }} periode ini
                             </p>
                          </div>
-                         <div class="h-40 w-full flex items-end gap-1 px-2 border-b-2 border-slate-50">
+                         <div class="h-40 w-full flex items-end gap-1 px-2 border-b-2 border-slate-100/50">
                             @foreach($chartExpense as $day => $percentage)
-                                <div class="flex-1 {{ $percentage > 0 ? 'bg-rose-400' : 'bg-slate-50' }} rounded-t-sm transition-all hover:bg-rose-500 group/bar relative" style="height: {{ max($percentage, 5) }}%">
+                                <div class="flex-1 {{ $percentage > 0 ? 'bg-rose-400/80' : 'bg-slate-100/30' }} rounded-t-sm transition-all hover:bg-rose-500 group/bar relative" style="height: {{ max($percentage, 5) }}%">
                                     <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#03235b] text-white text-[8px] font-black px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">
                                         Tgl {{ $day }}
                                     </div>
@@ -256,8 +256,8 @@
                 <div class="space-y-10">
                     <!-- Produk Terlaris -->
                     <div class="rounded-[3rem] border border-white bg-white p-10 shadow-sm">
-                        <div class="flex items-center gap-5 border-b border-slate-50 pb-8 mb-8">
-                            <div class="p-4 bg-slate-50 text-slate-400 rounded-2xl">
+                        <div class="flex items-center gap-5 border-b border-slate-100/50 pb-8 mb-8">
+                            <div class="p-4 bg-slate-100/50 backdrop-blur-sm text-slate-400 rounded-2xl border border-white/20">
                                 <i data-feather="shopping-bag" class="w-6 h-6"></i>
                             </div>
                             <div>
@@ -267,16 +267,17 @@
                         </div>
 
                         <div class="space-y-3">
-                             @php $mockProducts = [['name' => 'Domba Garut Super', 'count' => 12], ['name' => 'Paket Aqiqah Hemat', 'count' => 8], ['name' => 'Bibit Domba Unggul', 'count' => 5]]; @endphp
-                             @foreach($mockProducts as $product)
-                                <div class="flex items-center justify-between p-7 hover:bg-slate-50 transition-all rounded-[2rem] group border border-transparent hover:border-slate-100">
-                                    <p class="text-sm font-black text-[#03235b] uppercase italic group-hover:translate-x-1 transition-transform tracking-tight">{{ $product['name'] }}</p>
+                             @forelse($topSheepTypes as $type)
+                                <div class="flex items-center justify-between p-7 hover:bg-white/60 transition-all rounded-[2rem] group border border-transparent hover:border-white/80 hover:shadow-sm">
+                                    <p class="text-sm font-black text-[#03235b] uppercase italic group-hover:translate-x-1 transition-transform tracking-tight">{{ $type->name }}</p>
                                     <div class="flex items-center gap-3">
-                                        <p class="text-base font-black text-[#0c5197] leading-none">{{ $product['count'] }}</p>
+                                        <p class="text-base font-black text-[#0c5197] leading-none">{{ $type->sheep_count }}</p>
                                         <span class="text-[9px] font-black text-slate-300 uppercase">Unit</span>
                                     </div>
                                 </div>
-                             @endforeach
+                             @empty
+                                <p class="text-center py-10 text-xs font-black text-slate-200 uppercase tracking-widest italic">Belum ada data katalog.</p>
+                             @endforelse
                         </div>
                     </div>
 
@@ -285,14 +286,14 @@
                         <!-- Pelanggan Terloyal -->
                         <div class="rounded-[3rem] border border-white bg-white p-10 shadow-sm">
                             <div class="flex items-center gap-5 mb-8">
-                                <div class="p-4 bg-blue-50 text-blue-500 rounded-2xl shadow-inner">
+                                <div class="p-4 bg-blue-50/50 backdrop-blur-sm text-blue-500 rounded-2xl shadow-inner border border-white/20">
                                     <i data-feather="users" class="w-6 h-6"></i>
                                 </div>
                                 <h4 class="text-base font-black text-[#03235b] uppercase tracking-tight">Pelanggan Teroyal</h4>
                             </div>
                             <div class="space-y-4">
                                  @forelse($loyalCustomers as $customer)
-                                    <div class="flex items-center justify-between py-4 border-b border-slate-50 last:border-0 group">
+                                    <div class="flex items-center justify-between py-4 border-b border-slate-100/50 last:border-0 group">
                                         <p class="text-sm font-black text-[#03235b] uppercase italic group-hover:text-[#0c5197] transition-colors">{{ $customer->name }}</p>
                                         <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{{ $customer->transactions_count }} Transaksi</p>
                                     </div>
@@ -305,14 +306,14 @@
                         <!-- Pemasok Tertinggi -->
                         <div class="rounded-[3rem] border border-white bg-white p-10 shadow-sm">
                             <div class="flex items-center gap-5 mb-8">
-                                <div class="p-4 bg-emerald-50 text-emerald-500 rounded-2xl shadow-inner">
+                                <div class="p-4 bg-emerald-50/50 backdrop-blur-sm text-emerald-500 rounded-2xl shadow-inner border border-white/20">
                                     <i data-feather="truck" class="w-6 h-6"></i>
                                 </div>
                                 <h4 class="text-base font-black text-[#03235b] uppercase tracking-tight">Pemasok Tertinggi </h4>
                             </div>
                             <div class="space-y-4">
                                  @forelse($topSuppliers as $supplier)
-                                    <div class="flex items-center justify-between py-4 border-b border-slate-50 last:border-0 group">
+                                    <div class="flex items-center justify-between py-4 border-b border-slate-100/50 last:border-0 group">
                                         <p class="text-sm font-black text-[#03235b] uppercase italic group-hover:text-emerald-600 transition-colors">{{ $supplier->name }}</p>
                                         <p class="text-[10px] font-black text-amber-500 uppercase tracking-widest">{{ $supplier->transactions_count }} Transaksi</p>
                                     </div>

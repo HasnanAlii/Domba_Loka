@@ -12,7 +12,7 @@
         </div>
     </x-slot>
 
-    <div class="min-h-screen bg-slate-50 px-10 py-12">
+    <div class="min-h-screen  bg-[#f0f6ff] px-10 py-12">
         <div class="mx-auto max-w-4xl sm:px-6 lg:px-8">
             <div class="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/60">
                 <div class="p-6 lg:p-10">

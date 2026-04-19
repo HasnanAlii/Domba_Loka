@@ -26,7 +26,7 @@ class SheepFactory extends Factory
             'weight' => fake()->randomFloat(2, 20, 80),
             'condition' => fake()->randomElement(['Sangat Baik', 'Baik', 'Cukup']),
             'code' => 'SHP-' . fake()->unique()->numberBetween(1000, 9999),
-            'status' => fake()->randomElement(['tersedia', 'terjual', 'booking']),
+            'status' => fake()->randomElement(['tersedia']),
         ];
     }
 }

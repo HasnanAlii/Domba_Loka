@@ -12,7 +12,7 @@
         </div>
     </x-slot>
 
-    <div class="min-h-screen bg-slate-50 px-10 py-12">
+    <div class="min-h-screen bg-[#f0f6ff] px-10 py-12">
         <div class="mx-auto space-y-8 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <!-- Pemasukan -->
@@ -293,7 +293,7 @@
                         <div class="overflow-x-auto">
                             <table class="min-w-full">
                                 <thead>
-                                    <tr class="bg-gray-50/50 border-b border-gray-100">
+                                    <tr class="bg-slate-50/50 border-b border-gray-100">
                                         <th
                                             class="px-6 py-5 text-center text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
                                             ID</th>
@@ -406,7 +406,7 @@
                                         <tr>
                                             <td colspan="7" class="px-6 py-20 text-center">
                                                 <div class="flex flex-col items-center">
-                                                    <div class="bg-gray-50 p-6 rounded-[32px] mb-4">
+                                                    <div class="bg-slate-50 p-6 rounded-[32px] mb-4">
                                                         <svg class="h-12 w-12 text-gray-200" fill="none"
                                                             viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
