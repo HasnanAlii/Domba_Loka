@@ -10,6 +10,7 @@ class Transaction extends Model
 {
     protected $fillable = [
         'type',
+        'kasir',
         'customer_id',
         'supplier_id',
         'bank_account_id',
@@ -22,6 +23,7 @@ class Transaction extends Model
         'sisa',
         'payment_method',
         'payment_proof',
+        'attachment',
         'reference_number',
         'transaction_date',
         'due_date',

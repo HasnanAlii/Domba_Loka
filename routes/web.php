@@ -15,8 +15,20 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $featuredSheep = \App\Models\Sheep::with('sheepType')
+        ->where('status', 'tersedia')
+        ->whereIn('condition', ['sehat', 'baik'])
+        ->latest()
+        ->take(2)
+        ->get();
+    return view('welcome', compact('featuredSheep'));
 });
+
+Route::get('/katalog', [SheepController::class, 'catalog'])->name('public.catalog');
+Route::get('/katalog/{sheep:code}', [SheepController::class, 'catalogDetail'])->name('public.catalog.show');
+Route::get('/tentang-kami', function () {
+    return view('public.about');
+})->name('public.about');
 
 Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 

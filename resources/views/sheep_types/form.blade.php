@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="mt-8 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
-                            <a href="{{ route('sheep-types.index') }}" class="px-6 py-3 font-medium text-slate-500 transition-colors hover:text-slate-700">Batal</a>
+                            <a href="{{ route('sheep-types.index') }}" class="border border-slate-200 rounded-xl px-6 py-3 font-medium text-slate-500 transition-colors hover:text-slate-700">Batal</a>
                             <button type="submit" class="transform rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-blue-600/40">
                                 {{ $submitLabel }}
                             </button>

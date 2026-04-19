@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -116,6 +117,7 @@ class TransactionController extends Controller
 
         $validated = $request->validate([
             'type' => ['required', Rule::in(['penjualan', 'pembelian'])],
+            'kasir' => ['required', 'string', 'max:255'],
             'customer_id' => [
                 'nullable',
                 'exists:customers,id',
@@ -134,7 +136,7 @@ class TransactionController extends Controller
                 Rule::requiredIf(fn () => $request->input('payment_method') === 'Transfer Bank'),
             ],
             'payment_method' => ['required', 'string', 'max:255'],
-            'payment_proof' => ['nullable', 'string', 'max:255'],
+            'attachment' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
             'reference_number' => ['nullable', 'string', 'max:255', 'unique:transactions,reference_number'],
             'transaction_date' => ['required', 'date'],
             'due_date' => ['required', 'date'],
@@ -190,14 +192,19 @@ class TransactionController extends Controller
         $total = $subtotal + $tax + $otherFees - $globalDiscount;
         $sisa = max(0, $total - $downpayment);
 
-        $transaction = DB::transaction(function () use ($validated, $subtotal, $total, $tax, $otherFees, $globalDiscount, $downpayment, $sisa, $detailsData) {
+        $attachmentPath = $request->hasFile('attachment')
+            ? $request->file('attachment')->store('attachments/transactions', 'public')
+            : null;
+
+        $transaction = DB::transaction(function () use ($validated, $subtotal, $total, $tax, $otherFees, $globalDiscount, $downpayment, $sisa, $detailsData, $attachmentPath) {
             $transaction = Transaction::create([
                 'type' => $validated['type'],
+                'kasir' => $validated['kasir'],
                 'customer_id' => $validated['customer_id'] ?? null,
                 'supplier_id' => $validated['supplier_id'] ?? null,
                 'bank_account_id' => $validated['bank_account_id'] ?? null,
                 'payment_method' => $validated['payment_method'],
-                'payment_proof' => $validated['payment_proof'] ?? null,
+                'attachment' => $attachmentPath,
                 'reference_number' => $validated['reference_number'],
                 'subtotal' => $subtotal,
                 'total_price' => $total,
@@ -282,6 +289,7 @@ class TransactionController extends Controller
 
         $validated = $request->validate([
             'type' => ['required', Rule::in(['penjualan', 'pembelian'])],
+            'kasir' => ['required', 'string', 'max:255'],
             'customer_id' => [
                 'nullable',
                 'exists:customers,id',
@@ -300,7 +308,7 @@ class TransactionController extends Controller
                 Rule::requiredIf(fn () => $request->input('payment_method') === 'Transfer Bank'),
             ],
             'payment_method' => ['required', 'string', 'max:255'],
-            'payment_proof' => ['nullable', 'string', 'max:255'],
+            'attachment' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
             'reference_number' => ['nullable', 'string', 'max:255', 'unique:transactions,reference_number,'.$transaction->id],
             'transaction_date' => ['required', 'date'],
             'due_date' => ['required', 'date'],
@@ -355,7 +363,16 @@ class TransactionController extends Controller
         $total = $subtotal + $tax + $otherFees - $globalDiscount;
         $sisa = max(0, $total - $downpayment);
 
-        DB::transaction(function () use ($transaction, $validated, $subtotal, $total, $tax, $otherFees, $downpayment, $sisa, $detailsData) {
+        // Handle file upload before transaction to avoid partial writes
+        $newAttachmentPath = $transaction->attachment; // keep old by default
+        if ($request->hasFile('attachment')) {
+            if ($transaction->attachment) {
+                Storage::disk('public')->delete($transaction->attachment);
+            }
+            $newAttachmentPath = $request->file('attachment')->store('attachments/transactions', 'public');
+        }
+
+        DB::transaction(function () use ($transaction, $validated, $subtotal, $total, $tax, $otherFees, $downpayment, $sisa, $detailsData, $newAttachmentPath) {
             $oldType = $transaction->type;
             $oldTotal = (float) $transaction->total_price;
             $oldBankAccountId = $transaction->bank_account_id;
@@ -373,11 +390,12 @@ class TransactionController extends Controller
 
             $transaction->update([
                 'type' => $validated['type'],
+                'kasir' => $validated['kasir'],
                 'customer_id' => $validated['customer_id'] ?? null,
                 'supplier_id' => $validated['supplier_id'] ?? null,
                 'bank_account_id' => $validated['bank_account_id'] ?? null,
                 'payment_method' => $validated['payment_method'],
-                'payment_proof' => $validated['payment_proof'] ?? null,
+                'attachment' => $newAttachmentPath,
                 'reference_number' => $validated['reference_number'],
                 'subtotal' => $subtotal,
                 'total_price' => $total,

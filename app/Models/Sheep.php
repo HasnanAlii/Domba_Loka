@@ -16,6 +16,8 @@ class Sheep extends Model
         'condition',
         'code',
         'status',
+        'photo',
+        'age',
     ];
 
     protected function casts(): array
@@ -41,5 +43,10 @@ class Sheep extends Model
         return $this->belongsToMany(Transaction::class, 'transaction_details', 'sheep_id', 'transaction_id')
                     ->withPivot(['quantity', 'price', 'discount', 'total_price'])
                     ->withTimestamps();
+    }
+
+    public function photos(): HasMany
+    {
+        return $this->hasMany(SheepPhoto::class)->orderBy('sort_order');
     }
 }

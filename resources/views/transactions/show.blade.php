@@ -25,9 +25,15 @@
                     <input type="text" readonly value="Tipe Transaksi : {{ ucfirst($transaction->type) }}" class="w-full rounded-xl border border-gray-200 text-sm px-4 py-3.5 outline-none text-[#64748b] font-bold bg-gray-50 shadow-[0_2px_4px_rgba(0,0,0,0.02)] cursor-default">
                 </div>
                 
-                <!-- Dana Masuk ke -->
+                <!-- Dana Masuk ke / Info Bank -->
                 <div class="relative">
-                    <input type="text" readonly value="{{ $transaction->payment_method }}" class="w-full rounded-xl border border-gray-200 text-sm px-4 py-3.5 outline-none text-[#64748b] font-bold bg-white shadow-[0_2px_4px_rgba(0,0,0,0.02)] cursor-default">
+                    @if($transaction->payment_method === 'Transfer Bank' && $transaction->bankAccount)
+                        <div class="w-full rounded-xl border border-blue-100 text-sm px-4 py-3 outline-none bg-blue-50/50 shadow-[0_2px_4px_rgba(0,0,0,0.02)] cursor-default">
+                            <span class="block text-[12px] font-black text-blue-400 uppercase tracking-widest ">Transfer: {{ $transaction->bankAccount->bank_name }}</span>
+                        </div>
+                    @else
+                        <input type="text" readonly value="Metode: {{ $transaction->payment_method }}" class="w-full rounded-xl border border-gray-200 text-sm px-4 py-3.5 outline-none text-[#64748b] font-bold bg-white shadow-[0_2px_4px_rgba(0,0,0,0.02)] cursor-default">
+                    @endif
                 </div>
                 
                 <!-- Print Button -->
@@ -61,8 +67,15 @@
                             <div class="flex items-center justify-between mb-3 text-blue-500">
                                 <span class="text-sm font-extrabold text-gray-500">Dikeluarkan Oleh :</span>
                             </div>
-                            <input type="text" readonly value="Admin Domba Loka" class="w-full border-none bg-transparent p-0 text-lg text-gray-800 font-black focus:ring-0">
-                            <p class="text-[11px] font-bold text-gray-400 mt-0.5">Metode Pembayaran: {{ $transaction->payment_method }}</p>
+                            <input type="text" readonly value="{{ $transaction->kasir ?? 'Admin Domba Loka' }}" class="w-full border-none bg-transparent p-0 text-lg text-gray-800 font-black focus:ring-0">
+                            
+                            {{-- @if($transaction->payment_method === 'Transfer Bank' && $transaction->bankAccount)
+                                <p class="text-[11px] font-bold text-blue-600 mt-0.5">
+                                    {{ $transaction->bankAccount->bank_name }} ({{ $transaction->bankAccount->account_number }}) a.n {{ $transaction->bankAccount->account_name }}
+                                </p>
+                            @else
+                                <p class="text-[11px] font-bold text-gray-400 mt-0.5">Metode Pembayaran: {{ $transaction->payment_method }}</p>
+                            @endif --}}
                         </div>
                         
                         <div>
@@ -149,29 +162,148 @@
 
                 <!-- Footer Summary Section -->
                 <div class="flex flex-col lg:flex-row justify-end border-t border-dashed border-gray-200 bg-white">
-                    <!-- Blank area for signature if printed -->
-                    <div class="hidden print-signature lg:flex w-full lg:w-7/12 items-end p-8 text-center text-sm font-bold text-gray-400">
-                        <div class="flex flex-col items-center justify-end h-full">
-                            <div class="mb-16">TANDA TERIMA</div>
-                            <div class="w-48 border-b-2 border-gray-300"></div>
-                            <div class="mt-2">{{ $transaction->type === 'penjualan' ? ($transaction->customer->name ?? 'Pelanggan') : ($transaction->supplier->name ?? 'Supplier') }}</div>
+                    
+                    <!-- Left: Bukti Pembayaran + Tanda Terima (sejajar) -->
+                    <div class="w-full lg:w-7/12 border-b lg:border-b-0 lg:border-r border-dashed border-gray-100 p-8">
+                        <div class="flex gap-10">
+
+                            <!-- Bukti Pembayaran -->
+                            <div class="flex-1">
+                                <h3 class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-4">Bukti Pembayaran</h3>
+                                @if($transaction->attachment)
+                                    <div x-data="{ open: false }" class="relative group inline-block">
+                                        <!-- Thumbnail -->
+                                        <div
+                                            @click="open = true"
+                                            class="relative cursor-zoom-in rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:border-blue-300 hover:shadow-md transition-all duration-300 w-48 h-32"
+                                        >
+                                            <img src="{{ asset('storage/' . $transaction->attachment) }}" alt="Bukti Pembayaran" class="w-full h-full object-cover">
+                                            <div class="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <div class="bg-white/90 rounded-full p-2 shadow">
+                                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-[10px] font-bold text-gray-400 mt-2 uppercase tracking-wider">Klik untuk perbesar</p>
+
+                                        <!-- Lightbox -->
+                                        <div
+                                            x-show="open"
+                                            x-cloak
+                                            x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0"
+                                            x-transition:enter-end="opacity-100"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100"
+                                            x-transition:leave-end="opacity-0"
+                                            @click="open = false"
+                                            @keydown.escape.window="open = false"
+                                            class="fixed inset-0 z-[200] flex items-center justify-center bg-gray-900/80 backdrop-blur-sm no-print"
+                                        >
+                                            <div @click.stop class="relative max-w-3xl w-full mx-4">
+                                                <img src="{{ asset('storage/' . $transaction->attachment) }}" alt="Bukti Pembayaran" class="w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl">
+                                                <button @click="open = false" class="absolute -top-3 -right-3 bg-white text-gray-700 hover:text-rose-600 p-2 rounded-full shadow-lg transition-all">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                </button>
+                                                <p class="text-center text-white/60 text-xs font-bold mt-3 tracking-wider uppercase">Bukti Pembayaran — {{ $transaction->reference_number }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl w-48 h-32 text-center">
+                                        <svg class="w-7 h-7 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider leading-tight">Belum ada<br>bukti pembayaran</span>
+                                    </div>
+                                @endif
+                                
+                                @if($transaction->payment_method === 'Transfer Bank' && $transaction->bankAccount)
+                                    <div class="mt-4 p-4 bg-blue-50/70 border border-blue-100 rounded-2xl w-48">
+                                        <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1 text-center">Rekening Tujuan</p>
+                                        <p class="text-[12px] font-black text-blue-900 text-center">{{ $transaction->bankAccount->bank_name }}</p>
+                                        <p class="text-[12px] font-bold text-blue-700 text-center tracking-wider mt-0.5">{{ $transaction->bankAccount->account_number }}</p>
+                                        <p class="text-[10px] font-medium text-blue-500 text-center truncate mt-0.5">a.n {{ $transaction->bankAccount->account_name }}</p>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Divider vertikal -->
+                            <div class="hidden md:block w-px border-l border-dashed border-gray-200 self-stretch"></div>
+
+                            <!-- Tanda Terima -->
+                            <div class="flex-1 flex flex-col items-center justify-between min-h-[9rem]">
+                                <h3 class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-4 self-start">Tanda Terima</h3>
+                                <div class="flex flex-col items-center justify-end flex-1 w-full pb-1">
+                                    <div class="w-36 border-b-2 border-gray-300 mt-auto"></div>
+                                    <p class="mt-2 text-xs font-bold text-gray-500 text-center">
+                                        {{ $transaction->type === 'penjualan' ? ($transaction->customer->name ?? 'Pelanggan') : ($transaction->supplier->name ?? 'Supplier') }}
+                                    </p>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
-                    <!-- Computations -->
-                    <div class="p-8 w-full lg:w-5/12 bg-gray-50/50 border-l border-gray-100">
-                        <div class="space-y-4 text-sm text-gray-800">
-                            <div class="flex justify-between items-center py-1">
-                                <span class="text-[17px] font-bold text-gray-600">Subtotal</span>
-                                <span class="text-[17px] font-bold text-gray-800">Rp {{ number_format($transaction->subtotal, 0, ',', '.') }}</span>
+                    <!-- Right: Computations -->
+                    <div class="p-8 w-full lg:w-5/12 bg-gray-50/50">
+                        <div class="space-y-3 text-sm text-gray-800">
+
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500">Subtotal</span>
+                                <span class="font-bold text-gray-800">Rp {{ number_format($transaction->subtotal, 0, ',', '.') }}</span>
                             </div>
-                            <div class="flex justify-between items-center border-t border-gray-200 pt-4">
-                                <span class="text-[20px] font-black text-black">Total Transaksi</span>
-                                <span class="text-[24px] font-black text-[#03235b]">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
+
+                            @if($transaction->tax > 0)
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500">Pajak ({{ number_format($transaction->tax, 0, ',', '.') }}%)</span>
+                                <span class="font-bold text-amber-600">
+                                    + Rp {{ number_format($transaction->subtotal * $transaction->tax / 100, 0, ',', '.') }}
+                                </span>
                             </div>
+                            @endif
+
+                            @if($transaction->other_fees > 0)
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-500">Biaya Lainnya</span>
+                                <span class="font-bold text-amber-600">+ Rp {{ number_format($transaction->other_fees, 0, ',', '.') }}</span>
+                            </div>
+                            @endif
+
+                            <div class="flex justify-between items-center border-t border-gray-200 pt-3 mt-1">
+                                <span class="text-[17px] font-black text-black">Total Transaksi</span>
+                                <span class="text-[20px] font-black text-[#03235b]">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
+                            </div>
+
+                            @if($transaction->downpayment > 0)
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="font-semibold text-gray-500 italic">Uang Muka / Dibayar</span>
+                                <span class="font-bold text-emerald-600">- Rp {{ number_format($transaction->downpayment, 0, ',', '.') }}</span>
+                            </div>
+                            @endif
+
+                            @if($transaction->sisa > 0)
+                            <div class="flex justify-between items-center bg-rose-50 -mx-8 px-8 py-4 border-t border-rose-100 mt-2">
+                                <span class="text-[15px] font-black text-slate-800">Sisa Tagihan</span>
+                                <span class="text-[20px] font-black text-rose-600">Rp {{ number_format($transaction->sisa, 0, ',', '.') }}</span>
+                            </div>
+                            @else
+                            <div class="flex justify-between items-center bg-emerald-50 -mx-8 px-8 py-4 border-t border-emerald-100 mt-2">
+                                <span class="text-[15px] font-black text-slate-800">Status</span>
+                                <span class="inline-flex items-center gap-1.5 text-[13px] font-black text-emerald-700 bg-emerald-100 px-3 py-1.5 rounded-full">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    LUNAS
+                                </span>
+                            </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
+
 
             </div>
             

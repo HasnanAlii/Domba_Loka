@@ -27,7 +27,7 @@ class SupplierController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -36,7 +36,15 @@ class SupplierController extends Controller
             'address' => ['nullable', 'string'],
         ]);
 
-        Supplier::create($validated);
+        $supplier = Supplier::create($validated);
+        
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Supplier berhasil ditambahkan.',
+                'supplier' => $supplier
+            ]);
+        }
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil ditambahkan.');
     }

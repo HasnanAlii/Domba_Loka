@@ -28,8 +28,10 @@
     {{-- Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- Mini Sidebar CSS --}}
+    {{-- Global Styles --}}
     <style>
+        [x-cloak] { display: none !important; }
+        
         /* Sembunyikan ikon sub-menu secara default (saat sidebar terbuka) */
         nav ul i { display: none !important; }
 
@@ -109,6 +111,9 @@
                 {{ $slot }}
             </div>
         </main>
+
+        {{-- Global Modal --}}
+        <x-delete-confirm />
     </div>
 
     {{-- SCRIPTS --}}

@@ -33,7 +33,7 @@
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="space-y-8">
 
-                <div class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl overflow-hidden border border-slate-100">
+                <div class="bg-white shadow-xl shadow-slate-200/60 rounded-2xl overflow-hidden border border-slate-100">
                     <div class="p-6 lg:p-10">
 
                         @if (session('success'))
@@ -85,13 +85,19 @@
 
                                 <div>
                                     <label for="filter_date_range"
-                                        class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Rentang Tanggal</label>
+                                        class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Rentang
+                                        Tanggal</label>
                                     <div class="relative group">
-                                        <input type="text" id="filter_date_range" name="date_range" value="{{ request('date_range') }}"
-                                            placeholder="Pilih rentang..."
+                                        <input type="text" id="filter_date_range" name="date_range"
+                                            value="{{ request('date_range') }}" placeholder="Pilih rentang..."
                                             class="w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] pr-10 text-[13px] font-bold text-slate-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px] cursor-pointer">
-                                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                        <div
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
                                         </div>
                                     </div>
                                 </div>
@@ -100,40 +106,68 @@
                                     <label for="filter_reference_number"
                                         class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">No
                                         Ref</label>
-                                    <div x-data="{ value: '{{ $filters['reference_number'] }}' }">
+                                    <div class="relative group" x-data="{
+                                        value: '{{ $filters['reference_number'] }}',
+                                        init() {
+                                            if (new URLSearchParams(window.location.search).get('reference_number')) {
+                                                this.$nextTick(() => {
+                                                    const input = this.$refs.refInput;
+                                                    input.focus();
+                                                    input.setSelectionRange(input.value.length, input.value.length);
+                                                });
+                                            }
+                                        }
+                                    }">
                                         <input type="text" id="filter_reference_number" name="reference_number"
-                                            x-model="value"
-                                            placeholder="Cari..."
-                                            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] text-[13px] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px]"
-                                            :class="value ? 'text-slate-700' : 'text-slate-400'">
+                                            x-ref="refInput" x-model="value"
+                                            @input.debounce.750ms="$el.closest('form').submit()" placeholder="Cari..."
+                                            class="w-full rounded-xl border border-slate-200 bg-white pl-4 pr-10 py-[7px] text-[13px] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px] transition-all duration-300"
+                                            :class="value ? 'text-slate-800' : 'text-slate-400'">
+                                        <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                            <button x-show="value" type="button"
+                                                @click="value = ''; $nextTick(() => $el.closest('form').submit())"
+                                                class="text-slate-300 hover:text-rose-500 transition-colors">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="2.5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                            <svg class="w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="relative group">
-                                    <label for="filter_sheep_id" class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Domba</label>
+                                    <label for="filter_sheep_id"
+                                        class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Domba</label>
                                     @php
-                                        $sheepFormatted = $sheepOptions->map(fn($s) => [
-                                            'id' => $s->id,
-                                            'name' => $s->code . ' (' . ($s->sheepType->name ?? '-') . ')'
-                                        ])->prepend(['id' => '', 'name' => 'Semua Domba'])->values()->toArray();
+                                        $sheepFormatted = $sheepOptions
+                                            ->map(
+                                                fn($s) => [
+                                                    'id' => $s->id,
+                                                    'name' => $s->code . ' (' . ($s->sheepType->name ?? '-') . ')',
+                                                ],
+                                            )
+                                            ->prepend(['id' => '', 'name' => 'Semua Domba'])
+                                            ->values()
+                                            ->toArray();
                                     @endphp
-                                    <x-searchable-dropdown 
-                                        name="sheep_id" 
-                                        id="filter_sheep_id" 
-                                        placeholder="Semua..."
-                                        :options="$sheepFormatted"
-                                        :value="$filters['sheep_id']"
-                                        :showFooter="false"
-                                        :compact="true"
-                                    />
+                                    <x-searchable-dropdown name="sheep_id" id="filter_sheep_id"
+                                        placeholder="Semua..." :options="$sheepFormatted" :value="$filters['sheep_id']" :showFooter="false"
+                                        :compact="true" />
                                 </div>
 
                                 <div class="flex flex-col">
                                     <label for="filter_total_price"
                                         class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Harga</label>
                                     <div x-data="{ value: '{{ $filters['total_price'] }}' }">
-                                        <input type="number" id="filter_total_price" name="total_price" min="0"
-                                            step="0.01" x-model="value"
-                                            placeholder="0"
+                                        <input type="number" id="filter_total_price" name="total_price"
+                                            min="0" step="0.01" x-model="value" placeholder="0"
                                             class="w-full rounded-xl border border-slate-200 bg-white px-4 py-[7px] text-[13px] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm min-h-[38px]"
                                             :class="value && value != 0 ? 'text-slate-600' : 'text-slate-400'">
                                     </div>
@@ -141,41 +175,43 @@
 
                                 @if ($isPenjualan)
                                     <div class="relative group">
-                                        <label for="filter_customer_id" class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Pelanggan</label>
+                                        <label for="filter_customer_id"
+                                            class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Pelanggan</label>
                                         @php
-                                            $customerFormatted = $customerOptions->map(fn($c) => [
-                                                'id' => $c->id,
-                                                'name' => $c->name
-                                            ])->prepend(['id' => '', 'name' => 'Semua Pelanggan'])->values()->toArray();
+                                            $customerFormatted = $customerOptions
+                                                ->map(
+                                                    fn($c) => [
+                                                        'id' => $c->id,
+                                                        'name' => $c->name,
+                                                    ],
+                                                )
+                                                ->prepend(['id' => '', 'name' => 'Semua Pelanggan'])
+                                                ->values()
+                                                ->toArray();
                                         @endphp
-                                        <x-searchable-dropdown 
-                                            name="customer_id" 
-                                            id="filter_customer_id" 
-                                            placeholder="Pelanggan..."
-                                            :options="$customerFormatted"
-                                            :value="$filters['customer_id']"
-                                            :showFooter="false"
-                                            :compact="true"
-                                        />
+                                        <x-searchable-dropdown name="customer_id" id="filter_customer_id"
+                                            placeholder="Pelanggan..." :options="$customerFormatted" :value="$filters['customer_id']"
+                                            :showFooter="false" :compact="true" />
                                     </div>
                                 @elseif ($isPembelian)
                                     <div class="relative group">
-                                        <label for="filter_supplier_id" class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Supplier</label>
+                                        <label for="filter_supplier_id"
+                                            class="mb-1.5 block text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">Supplier</label>
                                         @php
-                                            $supplierFormatted = $supplierOptions->map(fn($s) => [
-                                                'id' => $s->id,
-                                                'name' => $s->name
-                                            ])->prepend(['id' => '', 'name' => 'Semua Supplier'])->values()->toArray();
+                                            $supplierFormatted = $supplierOptions
+                                                ->map(
+                                                    fn($s) => [
+                                                        'id' => $s->id,
+                                                        'name' => $s->name,
+                                                    ],
+                                                )
+                                                ->prepend(['id' => '', 'name' => 'Semua Supplier'])
+                                                ->values()
+                                                ->toArray();
                                         @endphp
-                                        <x-searchable-dropdown 
-                                            name="supplier_id" 
-                                            id="filter_supplier_id" 
-                                            placeholder="Supplier..."
-                                            :options="$supplierFormatted"
-                                            :value="$filters['supplier_id']"
-                                            :showFooter="false"
-                                            :compact="true"
-                                        />
+                                        <x-searchable-dropdown name="supplier_id" id="filter_supplier_id"
+                                            placeholder="Supplier..." :options="$supplierFormatted" :value="$filters['supplier_id']"
+                                            :showFooter="false" :compact="true" />
                                     </div>
                                 @endif
 
@@ -397,17 +433,28 @@
         }
 
         /* Adjust Calendar Positioning */
-        .flatpickr-months { background: white !important; }
-        .flatpickr-innerContainer { padding: 10px; }
-        .flatpickr-days { width: auto !important; }
+        .flatpickr-months {
+            background: white !important;
+        }
+
+        .flatpickr-innerContainer {
+            padding: 10px;
+        }
+
+        .flatpickr-days {
+            width: auto !important;
+        }
 
         /* Custom Hover/Selected Days */
-        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
             background: #2563eb !important;
             border-color: #2563eb !important;
             color: #fff !important;
             border-radius: 12px !important;
         }
+
         .flatpickr-day.inRange {
             background: #eff6ff !important;
             box-shadow: none !important;

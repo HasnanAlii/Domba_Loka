@@ -19,48 +19,104 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
                 <div class="lg:col-span-1">
-                    <div class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl p-6 lg:p-8 border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all">
-                        <div class="absolute right-0 top-0 h-32 w-32 bg-indigo-50/50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-                        <div class="relative">
-                            <div class="flex items-center gap-4 mb-6">
-                                <div class="p-4 bg-indigo-100 text-indigo-600 rounded-2xl">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    <div class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl overflow-hidden border border-slate-100 group hover:shadow-2xl transition-all duration-500">
+                        {{-- Photo Section --}}
+                        <div class="relative h-64 w-full bg-slate-100 overflow-hidden">
+                            @if($sheep->photo)
+                                <img src="{{ asset('storage/' . $sheep->photo) }}" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Foto Domba">
+                            @else
+                                <div class="flex flex-col items-center justify-center h-full text-slate-300">
+                                    <svg class="w-16 h-16 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
+                                    <span class="text-[10px] uppercase font-black tracking-widest">Tidak ada foto</span>
                                 </div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-indigo-600 font-mono tracking-tight">{{ $sheep->code }}</h3>
-                                    <p class="text-sm font-medium text-slate-500">{{ $sheep->sheepType->name ?? '-' }}</p>
+                            @endif
+
+                            {{-- Status Badge Overlay --}}
+                            @php
+                                $statusColors = [
+                                    'tersedia' => 'bg-emerald-500',
+                                    'terjual' => 'bg-blue-500',
+                                    'sakit' => 'bg-amber-500',
+                                    'mati' => 'bg-rose-500',
+                                    'hilang' => 'bg-slate-500'
+                                ];
+                                $color = $statusColors[$sheep->status] ?? 'bg-slate-400';
+                            @endphp
+                            <div class="absolute top-4 right-4">
+                                <span class="{{ $color }} text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
+                                    {{ $sheep->status }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-6 lg:p-8">
+                            <div class="flex flex-col gap-1 mb-8">
+                                <h3 class="text-2xl font-black text-slate-800 font-mono tracking-tight">{{ $sheep->code }}</h3>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full {{ $color }}"></span>
+                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">{{ $sheep->sheepType->name ?? '-' }}</p>
                                 </div>
                             </div>
                             
-                            <div class="space-y-4">
-                                <div class="flex flex-col border-b border-slate-100 pb-3">
-                                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Berat Terakhir</span>
-                                    <span class="text-slate-700 font-bold">{{ (float) $sheep->weight }} Kg</span>
+                            <div class="space-y-5">
+                                <div class="flex justify-between items-center border-b border-slate-50 pb-4">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Berat Terakhir</span>
+                                    <span class="text-slate-800 font-extrabold text-lg">{{ (float) $sheep->weight }} <span class="text-xs font-bold text-slate-400">KG</span></span>
                                 </div>
-                                <div class="flex flex-col border-b border-slate-100 pb-3">
-                                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Kondisi</span>
-                                    <span class="text-slate-700 font-medium">{{ $sheep->condition }}</span>
+                                <div class="flex justify-between items-center border-b border-slate-50 pb-4">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Umur</span>
+                                    <span class="text-slate-800 font-extrabold text-lg">{{ $sheep->age }} <span class="text-xs font-bold text-slate-400">BLN</span></span>
                                 </div>
-                                <div class="flex flex-col border-b border-slate-100 pb-3">
-                                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Harga Estimasi/Beli</span>
-                                    <span class="text-slate-700 font-medium">Rp {{ number_format($sheep->price, 0, ',', '.') }}</span>
+                                <div class="flex justify-between items-center border-b border-slate-50 pb-4">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Kondisi</span>
+                                    @php
+                                        $conditionColors = [
+                                            'Sehat' => 'text-emerald-600 bg-emerald-50',
+                                            'Sakit Ringan' => 'text-amber-600 bg-amber-50',
+                                            'Sakit Parah' => 'text-rose-600 bg-rose-50',
+                                            'Cacat' => 'text-slate-600 bg-slate-50'
+                                        ];
+                                        $cColor = $conditionColors[$sheep->condition] ?? 'text-slate-600 bg-slate-50';
+                                    @endphp
+                                    <span class="{{ $cColor }} px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider">{{ $sheep->condition }}</span>
                                 </div>
-                                <div class="flex flex-col pb-3">
-                                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tanggal Input</span>
-                                    <span class="text-slate-700 font-medium">{{ $sheep->created_at->format('d/m/Y H:i') }}</span>
+                                <div class="flex justify-between items-center border-b border-slate-50 pb-4">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Harga Dasar/Beli</span>
+                                    <span class="text-blue-600 font-black tracking-tight">Rp {{ number_format($sheep->price, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Tanggal Masuk</span>
+                                    <span class="text-slate-600 font-bold text-xs">{{ $sheep->created_at->format('d/m/Y') }}</span>
                                 </div>
                             </div>
                             
-                            <div class="mt-6 flex items-center gap-3">
+                            <div class="mt-10 pt-6 border-t border-slate-100">
                                 <a href="{{ route('sheep.edit', $sheep) }}" 
-                                   class="flex-1 text-center py-2.5 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-colors">
-                                    Edit Domba
+                                   class="block w-full text-center py-4 bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-blue-600 shadow-xl shadow-slate-200 transition-all duration-300 transform hover:-translate-y-1">
+                                    Edit Profil Domba
                                 </a>
                             </div>
                         </div>
                     </div>
+
+                    {{-- Additional Photos Gallery --}}
+                    @if($sheep->photos->count() > 0)
+                        <div class="mt-8 bg-white shadow-xl shadow-slate-200/60 rounded-3xl overflow-hidden border border-slate-100 p-6 lg:p-8">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Galeri Foto Tambahan</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                @foreach($sheep->photos as $p)
+                                    <div class="relative aspect-square rounded-[1.5rem] overflow-hidden border border-slate-100 group/gallery">
+                                        <img src="{{ asset('storage/' . $p->path) }}" class="w-full h-full object-cover transition-transform duration-500 group-hover/gallery:scale-125">
+                                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/gallery:opacity-100 transition-opacity flex items-center justify-center">
+                                            <i data-feather="zoom-in" class="text-white w-5 h-5"></i>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="lg:col-span-2">

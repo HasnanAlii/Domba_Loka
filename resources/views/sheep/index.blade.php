@@ -200,9 +200,11 @@
                                     <thead class="bg-slate-50/80">
                                         <tr>
                                             <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">No</th>
+                                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Foto</th>
                                             <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Kode Domba</th>
                                             <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Jenis (Type)</th>
                                             <th class="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Berat (Kg)</th>
+                                            <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Umur</th>
                                             <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Kondisi</th>
                                             <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                                             <th class="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Harga Taksiran</th>
@@ -216,6 +218,19 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-400">
                                                 {{ $sheep->firstItem() + $key }}
                                             </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                <div class="inline-flex h-10 w-10 overflow-hidden rounded-xl bg-slate-100 border border-slate-200 shadow-sm">
+                                                    @if($s->photo)
+                                                        <img src="{{ asset('storage/' . $s->photo) }}" class="h-full w-full object-cover">
+                                                    @else
+                                                        <div class="flex h-full w-full items-center justify-center text-slate-300">
+                                                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-bold text-blue-600 font-mono">
                                                 {{ $s->code }}
                                             </td>
@@ -225,21 +240,34 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-slate-600">
                                                 {{ (float) $s->weight }} kg
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                                @if(strtolower($s->condition) == 'sehat')
-                                                    <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Sehat</span>
-                                                @elseif(strtolower($s->condition) == 'sakit')
-                                                    <span class="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-medium text-rose-700 ring-1 ring-inset ring-rose-600/20">Sakit</span>
-                                                @else
-                                                    <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 ring-1 ring-inset ring-slate-600/20">{{ $s->condition }}</span>
-                                                @endif
+                                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-slate-700">
+                                                {{ $s->age }} <span class="text-[10px] text-slate-400 font-medium">bln</span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
-                                                @if(strtolower($s->status) == 'terjual')
-                                                    <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20"><i data-feather="check-circle" class="w-3 h-3 mr-1"></i>Terjual</span>
-                                                @else
-                                                    <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20"><i data-feather="check" class="w-3 h-3 mr-1"></i>Tersedia</span>
-                                                @endif
+                                                @php
+                                                    $cond = strtolower($s->condition);
+                                                    $condClasses = [
+                                                        'sehat' => 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
+                                                        'sakit ringan' => 'bg-amber-50 text-amber-700 ring-amber-600/20',
+                                                        'sakit parah' => 'bg-rose-50 text-rose-700 ring-rose-600/20'
+                                                    ];
+                                                    $cClass = $condClasses[$cond] ?? 'bg-slate-50 text-slate-700 ring-slate-600/20';
+                                                @endphp
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider {{ $cClass }} ring-1 ring-inset">{{ $s->condition }}</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                @php
+                                                    $stat = strtolower($s->status);
+                                                    $statClasses = [
+                                                        'tersedia' => 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
+                                                        'terjual' => 'bg-blue-50 text-blue-700 ring-blue-600/20',
+                                                        'sakit' => 'bg-amber-50 text-amber-700 ring-amber-600/20',
+                                                        'mati' => 'bg-rose-50 text-rose-700 ring-rose-600/20',
+                                                        'hilang' => 'bg-slate-50 text-slate-700 ring-slate-600/20'
+                                                    ];
+                                                    $sClass = $statClasses[$stat] ?? 'bg-slate-50 text-slate-700 ring-slate-600/20';
+                                                @endphp
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider {{ $sClass }} ring-1 ring-inset">{{ $s->status }}</span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-slate-800">
                                                 Rp {{ number_format($s->price, 0, ',', '.') }}

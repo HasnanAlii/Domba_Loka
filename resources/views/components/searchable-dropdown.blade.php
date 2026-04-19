@@ -69,7 +69,7 @@
                 ($attributes->get('x-bind:disabled') ?? ($attributes->has('disabled') ? 'true' : 'false')));
     @endphp
 
-    <input type="hidden" {{ $attributes->merge(['name' => $name, 'id' => $id]) }} x-model="selected">
+    <input type="hidden" name="{{ $name }}" id="{{ $id }}" :value="selected">
 
     <!-- Trigger / Input Area -->
     <div @click="open = !open"
@@ -77,7 +77,7 @@
         :class="open ? 'border-blue-400 ring-4 ring-blue-500/10' : ''">
 
         <!-- Input Field -->
-        <input type="text" x-model="search" @focus="open = true" @input="selected = null; open = true" @click.stop
+        <input type="text" x-model="search" @focus="open = true" @input="if ($event.inputType) { selected = null; open = true; }" @click.stop
             class="w-full px-4 {{ $compact ? 'py-1.5 text-[13px]' : 'py-3 text-[16px]' }} text-slate-700 bg-transparent border-none focus:ring-0 placeholder-slate-400 font-medium"
             placeholder="{{ $placeholder }}" autocomplete="off">
 

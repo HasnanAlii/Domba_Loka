@@ -19,15 +19,5 @@
                 }
             });
         });
-
-        deleteForms.forEach((form) => {
-            form.addEventListener('submit', (event) => {
-                const message = form.dataset.confirmMessage || 'Yakin ingin menghapus data ini?';
-
-                if (!window.confirm(message)) {
-                    event.preventDefault();
-                }
-            });
-        });
     });
 </script>

@@ -72,6 +72,9 @@ class GrowthController extends Controller
 
         Growth::create($validated);
 
+        // Tambah umur domba +1 bulan setiap pencatatan pertumbuhan
+        Sheep::where('id', $validated['sheep_id'])->increment('age');
+
         return redirect()->route('growths.index')->with('success', 'Data pertumbuhan berhasil ditambahkan.');
     }
 

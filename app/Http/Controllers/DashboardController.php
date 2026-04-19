@@ -30,6 +30,51 @@ class DashboardController extends Controller
             ->whereBetween('created_at', [$startDate, $endDate])
             ->sum('amount');
 
+        // Calculate previous month data for growth comparison
+        $prevStartDate = (clone $startDate)->subMonth();
+        $prevEndDate = (clone $prevStartDate)->endOfMonth();
+
+        $prevIncome = Finance::where('type', 'income')
+            ->whereBetween('created_at', [$prevStartDate, $prevEndDate])
+            ->sum('amount');
+
+        $prevExpense = Finance::where('type', 'expense')
+            ->whereBetween('created_at', [$prevStartDate, $prevEndDate])
+            ->sum('amount');
+
+        $incomeGrowth = $prevIncome > 0 ? (($income - $prevIncome) / $prevIncome) * 100 : ($income > 0 ? 100 : 0);
+        $expenseGrowth = $prevExpense > 0 ? (($expense - $prevExpense) / $prevExpense) * 100 : ($expense > 0 ? 100 : 0);
+
+        // Daily Stats for Charts
+        $dailyIncome = Finance::where('type', 'income')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DAY(created_at) as day, SUM(amount) as total')
+            ->groupBy('day')
+            ->pluck('total', 'day')
+            ->all();
+
+        $dailyExpense = Finance::where('type', 'expense')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DAY(created_at) as day, SUM(amount) as total')
+            ->groupBy('day')
+            ->pluck('total', 'day')
+            ->all();
+
+        // Fill missing days with 0
+        $daysInMonth = $startDate->daysInMonth;
+        $chartIncome = [];
+        $chartExpense = [];
+        $maxIncome = count($dailyIncome) > 0 ? max($dailyIncome) : 0;
+        $maxExpense = count($dailyExpense) > 0 ? max($dailyExpense) : 0;
+
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $valICount = $dailyIncome[$i] ?? 0;
+            $valECount = $dailyExpense[$i] ?? 0;
+            
+            $chartIncome[$i] = $maxIncome > 0 ? ($valICount / $maxIncome) * 100 : 0;
+            $chartExpense[$i] = $maxExpense > 0 ? ($valECount / $maxExpense) * 100 : 0;
+        }
+
         $recentFinances = Finance::with(['bankAccount', 'transaction'])
             ->whereBetween('created_at', [$startDate, $endDate])
             ->latest()
@@ -51,6 +96,16 @@ class DashboardController extends Controller
             12 => 'Desember',
         ];
 
+        $loyalCustomers = Customer::withCount('transactions')
+            ->orderBy('transactions_count', 'desc')
+            ->limit(3)
+            ->get();
+
+        $topSuppliers = Supplier::withCount('transactions')
+            ->orderBy('transactions_count', 'desc')
+            ->limit(3)
+            ->get();
+
         return view('dashboard', [
             'months' => $months,
             'years' => range(now()->year - 4, now()->year + 1),
@@ -64,8 +119,14 @@ class DashboardController extends Controller
             'averageSheepWeight' => (float) Sheep::avg('weight'),
             'income' => $income,
             'expense' => $expense,
+            'incomeGrowth' => $incomeGrowth,
+            'expenseGrowth' => $expenseGrowth,
+            'chartIncome' => $chartIncome,
+            'chartExpense' => $chartExpense,
             'balance' => $income - $expense,
             'recentFinances' => $recentFinances,
+            'loyalCustomers' => $loyalCustomers,
+            'topSuppliers' => $topSuppliers,
         ]);
     }
 }

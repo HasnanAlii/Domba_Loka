@@ -98,7 +98,7 @@
                                                         <i data-feather="edit" class="h-5 w-5" aria-hidden="true"></i>
                                                     </a>
 
-                                                    <form action="{{ route('sheep-types.destroy', $type) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jenis domba ini?');">
+                                                    <form action="{{ route('sheep-types.destroy', $type) }}" method="POST" class="inline" data-confirm-message="Apakah Anda yakin ingin menghapus jenis domba ini? Seluruh data domba dengan jenis ini akan terpengaruh.">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" 

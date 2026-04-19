@@ -1,14 +1,5 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const forms = document.querySelectorAll('form[data-confirm-message]');
-        forms.forEach((form) => {
-            form.addEventListener('submit', (event) => {
-                if (!window.confirm(form.dataset.confirmMessage)) {
-                    event.preventDefault();
-                }
-            });
-        });
-
         // Date Range Picker
         const dateRangeField = document.getElementById('filter_date_range');
         if (dateRangeField) {

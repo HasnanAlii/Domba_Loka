@@ -7,9 +7,57 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class SheepController extends Controller
 {
+    public function catalog(Request $request): View
+    {
+        $filters = [
+            'search' => $request->get('search', ''),
+            'type_id' => $request->get('type_id', null),
+            'sort' => $request->get('sort', null),
+        ];
+
+        $query = Sheep::with('sheepType')
+            ->where('status', 'tersedia')
+            ->whereIn('condition', ['Sangat Baik', 'Baik', 'Cukup','sehat'])
+            ->when($filters['search'], function ($q, $search) {
+                return $q->where('code', 'like', "%{$search}%");
+            })
+            ->when($filters['type_id'], function ($q, $typeId) {
+                return $q->where('type_id', $typeId);
+            });
+
+        if ($filters['sort'] === 'price_high') {
+            $query->orderBy('price', 'desc');
+        } elseif ($filters['sort'] === 'price_low') {
+            $query->orderBy('price', 'asc');
+        } else {
+            $query->latest();
+        }
+
+        $sheep = $query->paginate(12)->withQueryString();
+        $sheepTypes = \App\Models\SheepType::orderBy('name')->get();
+
+        return view('public.catalog.index', compact('sheep', 'sheepTypes', 'filters'));
+    }
+
+    public function catalogDetail(Sheep $sheep): View
+    {
+        $sheep->load(['sheepType', 'photos']);
+        
+        // Simulasikan rekomendasi domba serupa
+        $recommendations = Sheep::with('sheepType')
+            ->where('id', '!=', $sheep->id)
+            ->where('type_id', $sheep->type_id)
+            ->where('status', 'tersedia')
+            ->take(4)
+            ->get();
+
+        return view('public.catalog.show', compact('sheep', 'recommendations'));
+    }
+
     public function index(Request $request): View
     {
         $filters = [
@@ -60,9 +108,25 @@ class SheepController extends Controller
             'weight' => ['required', 'numeric', 'min:0'],
             'condition' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:255', 'unique:sheep,code'],
+            'status' => ['required', 'string', 'in:tersedia,terjual,sakit,mati,hilang'],
+            'photo' => ['nullable', 'image', 'max:2048'],
+            'additional_photos' => ['nullable', 'array'],
+            'additional_photos.*' => ['image', 'max:4096'],
+            'age' => ['required', 'numeric', 'min:0'],
         ]);
 
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('sheep', 'public');
+        }
+
         $sheep = Sheep::create($validated);
+
+        if ($request->hasFile('additional_photos')) {
+            foreach ($request->file('additional_photos') as $photoFile) {
+                $path = $photoFile->store('sheep', 'public');
+                $sheep->photos()->create(['path' => $path]);
+            }
+        }
 
         $sheep->load('sheepType');
 
@@ -104,15 +168,44 @@ class SheepController extends Controller
             'weight' => ['required', 'numeric', 'min:0'],
             'condition' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:255', 'unique:sheep,code,'.$sheep->id],
+            'status' => ['required', 'string', 'in:tersedia,terjual,sakit,mati,hilang'],
+            'photo' => ['nullable', 'image', 'max:2048'],
+            'additional_photos' => ['nullable', 'array'],
+            'additional_photos.*' => ['image', 'max:4096'],
+            'age' => ['required', 'numeric', 'min:0'],
         ]);
 
+        if ($request->hasFile('photo')) {
+            if ($sheep->photo) {
+                Storage::disk('public')->delete($sheep->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('sheep', 'public');
+        }
+
         $sheep->update($validated);
+
+        if ($request->hasFile('additional_photos')) {
+            foreach ($request->file('additional_photos') as $photoFile) {
+                $path = $photoFile->store('sheep', 'public');
+                $sheep->photos()->create(['path' => $path]);
+            }
+        }
 
         return redirect()->route('sheep.index')->with('success', 'Data domba berhasil diperbarui.');
     }
 
     public function destroy(Sheep $sheep): RedirectResponse
     {
+        // Hapus foto-foto di galeri
+        foreach ($sheep->photos as $photo) {
+            Storage::disk('public')->delete($photo->path);
+        }
+
+        // Hapus foto utama
+        if ($sheep->photo) {
+            Storage::disk('public')->delete($sheep->photo);
+        }
+
         $sheep->delete();
 
         return redirect()->route('sheep.index')->with('success', 'Domba berhasil dihapus.');

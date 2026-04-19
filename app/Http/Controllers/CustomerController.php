@@ -27,7 +27,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -36,7 +36,15 @@ class CustomerController extends Controller
             'address' => ['nullable', 'string'],
         ]);
 
-        Customer::create($validated);
+        $customer = Customer::create($validated);
+        
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pelanggan berhasil ditambahkan.',
+                'customer' => $customer
+            ]);
+        }
 
         return redirect()->route('customers.index')->with('success', 'Pelanggan berhasil ditambahkan.');
     }
