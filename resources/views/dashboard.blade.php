@@ -262,13 +262,13 @@
                             </div>
                             <div>
                                 <h4 class="text-base font-black text-[#03235b] uppercase tracking-tight">Katalog Teraktif</h4>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Produk paling populer saat ini</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Jenis domba paling populer saat ini</p>
                             </div>
                         </div>
 
                         <div class="space-y-3">
                              @forelse($topSheepTypes as $type)
-                                <div class="flex items-center justify-between p-7 hover:bg-white/60 transition-all rounded-[2rem] group border border-transparent hover:border-white/80 hover:shadow-sm">
+                                <div class="flex items-center justify-between p-7 hover:bg-slate-100 transition-all rounded-[2rem] group border border-transparent hover:border-white/80 hover:shadow-sm">
                                     <p class="text-sm font-black text-[#03235b] uppercase italic group-hover:translate-x-1 transition-transform tracking-tight">{{ $type->name }}</p>
                                     <div class="flex items-center gap-3">
                                         <p class="text-base font-black text-[#0c5197] leading-none">{{ $type->sheep_count }}</p>

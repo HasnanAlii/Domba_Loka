@@ -143,7 +143,7 @@
                             :class="open ? 'border-blue-400 ring-4 ring-blue-500/10' : ''">
                             <div class="w-full px-4 py-3 text-[16px] font-medium"
                                 :class="selectedBank ? 'text-slate-700' : 'text-slate-400'"
-                                x-text="selectedBank ? selectedBank.bank_name + ' - ' + selectedBank.account_number : 'Pilih Rekening Bank...'">
+                                x-text="selectedBank ? selectedBank.bank_name : 'Pilih Rekening Bank...'">
                             </div>
 
                             <div class="px-3.5 py-3 border-l border-slate-100 flex items-center justify-center">
