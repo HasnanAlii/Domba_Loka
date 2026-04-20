@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Growth;
 use App\Models\Sheep;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -61,7 +62,7 @@ class GrowthController extends Controller
         );
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'sheep_id' => ['required', 'exists:sheep,id'],
@@ -74,6 +75,10 @@ class GrowthController extends Controller
 
         // Tambah umur domba +1 bulan setiap pencatatan pertumbuhan
         Sheep::where('id', $validated['sheep_id'])->increment('age');
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data pertumbuhan berhasil ditambahkan.', 'redirect' => route('growths.index')]);
+        }
 
         return redirect()->route('growths.index')->with('success', 'Data pertumbuhan berhasil ditambahkan.');
     }
@@ -96,7 +101,7 @@ class GrowthController extends Controller
         );
     }
 
-    public function update(Request $request, Growth $growth): RedirectResponse
+    public function update(Request $request, Growth $growth): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'sheep_id' => ['required', 'exists:sheep,id'],
@@ -107,12 +112,20 @@ class GrowthController extends Controller
 
         $growth->update($validated);
 
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data pertumbuhan berhasil diperbarui.', 'redirect' => route('growths.index')]);
+        }
+
         return redirect()->route('growths.index')->with('success', 'Data pertumbuhan berhasil diperbarui.');
     }
 
-    public function destroy(Growth $growth): RedirectResponse
+    public function destroy(Growth $growth): RedirectResponse|JsonResponse
     {
         $growth->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data pertumbuhan berhasil dihapus.', 'redirect' => route('growths.index')]);
+        }
 
         return redirect()->route('growths.index')->with('success', 'Data pertumbuhan berhasil dihapus.');
     }

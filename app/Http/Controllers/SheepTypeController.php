@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SheepType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -26,7 +27,7 @@ class SheepTypeController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:sheep_types,name'],
@@ -34,6 +35,11 @@ class SheepTypeController extends Controller
         ]);
 
         SheepType::create($validated);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Kategori domba berhasil ditambahkan.', 'redirect' => route('sheep-types.index')]);
+        }
+
         return redirect()->route('sheep-types.index')->with('success', 'Kategori domba berhasil ditambahkan.');
     }
 
@@ -53,7 +59,7 @@ class SheepTypeController extends Controller
         ]);
     }
 
-    public function update(Request $request, SheepType $sheepType): RedirectResponse
+    public function update(Request $request, SheepType $sheepType): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:sheep_types,name,'.$sheepType->id],
@@ -61,16 +67,29 @@ class SheepTypeController extends Controller
         ]);
 
         $sheepType->update($validated);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Kategori domba berhasil diperbarui.', 'redirect' => route('sheep-types.index')]);
+        }
+
         return redirect()->route('sheep-types.index')->with('success', 'Kategori domba berhasil diperbarui.');
     }
 
-    public function destroy(SheepType $sheepType): RedirectResponse
+    public function destroy(SheepType $sheepType): RedirectResponse|JsonResponse
     {
         if ($sheepType->sheep()->count() > 0) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Gagal: Kategori ini sedang digunakan oleh data domba.']);
+            }
             return redirect()->route('sheep-types.index')->with('error', 'Gagal: Kategori ini sedang digunakan oleh data domba.');
         }
 
         $sheepType->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Kategori domba berhasil dihapus.', 'redirect' => route('sheep-types.index')]);
+        }
+
         return redirect()->route('sheep-types.index')->with('success', 'Kategori domba berhasil dihapus.');
     }
 }

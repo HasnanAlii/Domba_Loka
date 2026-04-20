@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Finance;
 use App\Models\Supplier;
 use App\Models\Transaction;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -123,7 +124,7 @@ class FinanceController extends Controller
         );
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'type' => ['required', 'in:income,expense'],
@@ -134,6 +135,10 @@ class FinanceController extends Controller
         ]);
 
         Finance::create($validated);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Keuangan berhasil ditambahkan.', 'redirect' => route('finances.index')]);
+        }
 
         return redirect()->route('finances.index')->with('success', 'Keuangan berhasil ditambahkan.');
     }
@@ -156,7 +161,7 @@ class FinanceController extends Controller
         );
     }
 
-    public function update(Request $request, Finance $finance): RedirectResponse
+    public function update(Request $request, Finance $finance): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'type' => ['required', 'in:income,expense'],
@@ -168,12 +173,27 @@ class FinanceController extends Controller
 
         $finance->update($validated);
 
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data keuangan berhasil diperbarui.', 'redirect' => route('finances.index')]);
+        }
+
         return redirect()->route('finances.index')->with('success', 'Data keuangan berhasil diperbarui.');
     }
 
-    public function destroy(Finance $finance): RedirectResponse
+    public function destroy(Finance $finance): RedirectResponse|JsonResponse
     {
+        if ($finance->transaction_id) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Arus kas ini terhubung otomatis dengan transaksi jual/beli dan tidak dapat dihapus manual.']);
+            }
+            return redirect()->route('finances.index')->with('error', 'Arus kas ini terhubung otomatis dengan transaksi jual/beli dan tidak dapat dihapus manual.');
+        }
+
         $finance->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data keuangan berhasil dihapus.', 'redirect' => route('finances.index')]);
+        }
 
         return redirect()->route('finances.index')->with('success', 'Data keuangan berhasil dihapus.');
     }

@@ -9,6 +9,7 @@ use App\Models\Sheep;
 use App\Models\SheepType;
 use App\Models\Supplier;
 use App\Models\Transaction;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -98,7 +99,7 @@ class TransactionController extends Controller
         );
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $request->merge([
             'tax' => str_replace('.', '', $request->input('tax', '0') ?: '0'),
@@ -244,9 +245,9 @@ class TransactionController extends Controller
             return $transaction;
         });
 
-        return redirect()
-            ->route('transactions.show', $transaction->id)
-            ->with('success', 'Transaksi berhasil ditambahkan.');
+        return $request->wantsJson()
+            ? response()->json(['success' => true, 'message' => 'Transaksi berhasil ditambahkan.', 'redirect' => route('transactions.show', $transaction->id)])
+            : redirect()->route('transactions.show', $transaction->id)->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
     public function show(Transaction $transaction): View
@@ -280,7 +281,7 @@ class TransactionController extends Controller
         );
     }
 
-    public function update(Request $request, Transaction $transaction): RedirectResponse
+    public function update(Request $request, Transaction $transaction): RedirectResponse|JsonResponse
     {
         $request->merge([
             'tax' => str_replace('.', '', $request->input('tax', '0') ?: '0'),
@@ -443,12 +444,12 @@ class TransactionController extends Controller
             );
         });
 
-        return redirect()
-            ->route('transactions.show', $transaction->id)
-            ->with('success', 'Transaksi berhasil diperbarui.');
+        return $request->wantsJson()
+            ? response()->json(['success' => true, 'message' => 'Transaksi berhasil diperbarui.', 'redirect' => route('transactions.show', $transaction->id)])
+            : redirect()->route('transactions.show', $transaction->id)->with('success', 'Transaksi berhasil diperbarui.');
     }
 
-    public function destroy(Transaction $transaction): RedirectResponse
+    public function destroy(Transaction $transaction): RedirectResponse|JsonResponse
     {
         $type = $transaction->type;
 
@@ -469,9 +470,9 @@ class TransactionController extends Controller
             $transaction->delete();
         });
 
-        return redirect()
-            ->route('transactions.index', ['type' => $type])
-            ->with('success', 'Transaksi berhasil dihapus.');
+        return request()->wantsJson()
+            ? response()->json(['success' => true, 'message' => 'Transaksi berhasil dihapus.', 'redirect' => route('transactions.index', ['type' => $type])])
+            : redirect()->route('transactions.index', ['type' => $type])->with('success', 'Transaksi berhasil dihapus.');
     }
 
     private function formView(

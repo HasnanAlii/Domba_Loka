@@ -21,7 +21,7 @@
                         <p class="mt-1 text-sm text-slate-500">Masukkan data identitas domba dengan lengkap.</p>
                     </div>
 
-                    <form action="{{ $action }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ $action }}" method="POST" enctype="multipart/form-data" data-ajax-form>
                         @csrf
                         @if ($method !== 'POST')
                             @method($method)

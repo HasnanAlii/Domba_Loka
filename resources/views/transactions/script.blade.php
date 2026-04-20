@@ -114,9 +114,19 @@
                                     condition: 'Sehat',
                                     price: ''
                                 };
+                                
+                                // Trigger modal success
+                                window.dispatchEvent(new CustomEvent('show-notification', { detail: { 
+                                    type: 'success', 
+                                    title: 'Berhasil', 
+                                    message: 'Data domba baru berhasil ditambahkan.' 
+                                }}));
                             } else {
-                                alert(data.message ||
-                                    'Gagal menyimpan data domba. Kode mungkin sudah ada.');
+                                window.dispatchEvent(new CustomEvent('show-notification', { detail: { 
+                                    type: 'error', 
+                                    title: 'Gagal', 
+                                    message: data.message || 'Gagal menyimpan data domba. Kode mungkin sudah ada.' 
+                                }}));
                             }
                         } catch (error) {
                             console.error('Error:', error);
@@ -167,8 +177,18 @@
                                     this.newSupplier = { name: '', phone: '', email: '', address: '' };
                                 }
                                 this.isPartyModalOpen = false;
+                                
+                                window.dispatchEvent(new CustomEvent('show-notification', { detail: { 
+                                    type: 'success', 
+                                    title: 'Berhasil', 
+                                    message: isCustomer ? 'Data pelanggan berhasil ditambahkan.' : 'Data supplier berhasil ditambahkan.' 
+                                }}));
                             } else {
-                                alert(result.message || 'Gagal menyimpan data.');
+                                window.dispatchEvent(new CustomEvent('show-notification', { detail: { 
+                                    type: 'error', 
+                                    title: 'Gagal', 
+                                    message: result.message || 'Gagal menyimpan data.' 
+                                }}));
                             }
                         } catch (error) {
                             console.error('Error:', error);
@@ -558,6 +578,73 @@
                 });
 
                 instance.calendarContainer.prepend(sidebar);
+            }
+        });
+    });
+</script>
+
+<script>
+    // AJAX Form Submit Interceptor
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('transaction-main-form');
+        if (!form) return;
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    window.dispatchEvent(new CustomEvent('show-notification', {
+                        detail: {
+                            type: 'success',
+                            title: 'Berhasil',
+                            message: data.message || 'Transaksi berhasil disimpan.',
+                            redirectUrl: data.redirect || null,
+                        }
+                    }));
+                } else {
+                    if (submitBtn) submitBtn.disabled = false;
+
+                    const errors = data.errors
+                        ? Object.values(data.errors).flat().join('\n')
+                        : (data.message || 'Terjadi kesalahan.');
+
+                    window.dispatchEvent(new CustomEvent('show-notification', {
+                        detail: {
+                            type: 'error',
+                            title: 'Gagal',
+                            message: errors,
+                            redirectUrl: null,
+                        }
+                    }));
+                }
+            } catch (err) {
+                if (submitBtn) submitBtn.disabled = false;
+                console.error(err);
+                window.dispatchEvent(new CustomEvent('show-notification', {
+                    detail: {
+                        type: 'error',
+                        title: 'Gagal',
+                        message: 'Terjadi kesalahan jaringan.',
+                        redirectUrl: null,
+                    }
+                }));
             }
         });
     });

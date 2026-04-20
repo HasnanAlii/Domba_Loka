@@ -13,7 +13,7 @@
     </style>
     <!-- Alpine.js Transaction Form Data -->
     <div x-data="transactionForm()">
-        <form action="{{ $action }}" method="POST" enctype="multipart/form-data"
+        <form id="transaction-main-form" action="{{ $action }}" method="POST" enctype="multipart/form-data"
             class="min-h-screen  bg-[#f0f6ff] px-5 pb-12">
             @csrf
             @if (isset($method) && $method !== 'POST')
@@ -690,13 +690,13 @@
                     <!-- Modal Header -->
                     <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-slate-50/50">
                         <div class="flex items-center gap-2">
-                            <div class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
+                            {{-- <div class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4" />
                                 </svg>
-                            </div>
+                            </div> --}}
                             <h3 class="text-[17px] font-black text-gray-800">Tambah Domba Baru</h3>
                         </div>
                         <button type="button" @click="isSheepModalOpen = false"
@@ -725,13 +725,42 @@
                                 <label
                                     class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Jenis
                                     Domba</label>
-                                <select x-model="newSheep.type_id"
-                                    class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 cursor-pointer">
-                                    <option value="">Pilih Jenis</option>
-                                    @foreach ($sheepTypes as $st)
-                                        <option value="{{ $st->id }}">{{ $st->name }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="relative" x-data="{ open: false, types: {{ $sheepTypes->map(fn($t) => ['id' => $t->id, 'name' => $t->name])->toJson() }} }">
+                                    <div @click="open = !open" @click.outside="open = false"
+                                        class="w-full rounded-xl border border-gray-200 bg-slate-50 px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-white hover:border-blue-500 hover:ring-4 hover:ring-blue-500/10 transition-all text-sm font-bold text-gray-700">
+                                        <div class="flex flex-col">
+                                            <span x-text="types.find(t => t.id == newSheep.type_id)?.name || 'Pilih Jenis Domba'"></span>
+                                        </div>
+                                        <svg class="w-4 h-4 text-slate-400 transition-transform duration-300"
+                                            :class="open ? 'rotate-180 text-blue-500' : ''" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+
+                                    <div x-show="open" x-cloak
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-y-1"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        class="absolute z-[110] w-full mt-1.5 bg-white border border-slate-100 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/[0.02]">
+                                        <div class="py-1 max-h-48 overflow-y-auto">
+                                            <template x-for="st in types" :key="st.id">
+                                                <div @click="newSheep.type_id = st.id; open = false"
+                                                    class="px-4 py-2.5 cursor-pointer hover:bg-slate-50 transition-all duration-200 flex items-center justify-between group">
+                                                    <span class="text-[13px] font-bold tracking-tight text-slate-700 group-hover:text-blue-600"
+                                                        :class="newSheep.type_id == st.id ? 'text-blue-600' : ''" x-text="st.name"></span>
+                                                    <div x-show="newSheep.type_id == st.id"
+                                                        class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                                                        <svg class="w-2.5 h-2.5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <!-- Weight -->
@@ -748,12 +777,42 @@
                                     <label
                                         class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Kondisi
                                         Fisik</label>
-                                    <select x-model="newSheep.condition"
-                                        class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4 cursor-pointer">
-                                        <option value="Sehat">Sehat</option>
-                                        <option value="Sakit">Sakit</option>
-                                        <option value="Dalam Masa Rawat">Dalam Masa Rawat</option>
-                                    </select>
+                                    <div class="relative" x-data="{ open: false, options: ['Sehat', 'Sakit', 'Dalam Masa Rawat'] }">
+                                        <div @click="open = !open" @click.outside="open = false"
+                                            class="w-full rounded-xl border border-gray-200 bg-slate-50 px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-white hover:border-blue-500 hover:ring-4 hover:ring-blue-500/10 transition-all text-sm font-bold text-gray-700">
+                                            <div class="flex flex-col">
+                                                <span x-text="newSheep.condition || 'Pilih Kondisi'"></span>
+                                            </div>
+                                            <svg class="w-4 h-4 text-slate-400 transition-transform duration-300"
+                                                :class="open ? 'rotate-180 text-blue-500' : ''" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+
+                                        <div x-show="open" x-cloak
+                                            x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 translate-y-1"
+                                            x-transition:enter-end="opacity-100 translate-y-0"
+                                            class="absolute z-[110] w-full mt-1.5 bg-white border border-slate-100 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/[0.02]">
+                                            <div class="py-1">
+                                                <template x-for="opt in options" :key="opt">
+                                                    <div @click="newSheep.condition = opt; open = false"
+                                                        class="px-4 py-2.5 cursor-pointer hover:bg-slate-50 transition-all duration-200 flex items-center justify-between group">
+                                                        <span class="text-[13px] font-bold tracking-tight text-slate-700 group-hover:text-blue-600"
+                                                            :class="newSheep.condition === opt ? 'text-blue-600' : ''" x-text="opt"></span>
+                                                        <div x-show="newSheep.condition === opt"
+                                                            class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                                                            <svg class="w-2.5 h-2.5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Price -->
@@ -800,13 +859,13 @@
                     <!-- Header -->
                     <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-slate-50/50">
                         <div class="flex items-center gap-2">
-                            <div class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
+                            {{-- <div class="bg-blue-100 text-blue-600 p-1.5 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
-                            </div>
+                            </div> --}}
                             <h3 class="text-[17px] font-black text-gray-800"
                                 x-text="type === 'penjualan' ? 'Pilih Pelanggan' : 'Pilih Supplier'">Pilih Data</h3>
                         </div>
@@ -882,17 +941,17 @@
                         </div>
                     </div>
                     <!-- Footer -->
-                    <div class="px-6 py-4 border-t border-gray-100 flex justify-between items-center bg-slate-50/50">
+                    <div class="px-6 py-4 border-t border-gray-100 flex justify-center items-center bg-slate-50/50">
                         <button type="button"
                             @click.stop="isPartyModalOpen = false; if(type === 'penjualan') { isAddCustomerModalOpen = true } else { isAddSupplierModalOpen = true }"
-                            class="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1.5 uppercase tracking-wider">
+                            class="text-xs font-bold text-blue-600 hover:underline flex items-center justify-center  gap-1.5 uppercase tracking-wider">
                             <span class="text-lg">+</span> <span
                                 x-text="type === 'penjualan' ? 'Tambah Pelanggan Baru' : 'Tambah Supplier Baru'"></span>
                         </button>
-                        <button type="button" @click="isPartyModalOpen = false"
+                        {{-- <button type="button" @click="isPartyModalOpen = false"
                             class="px-5 py-2 text-sm font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-slate-50 transition-all">
                             Tutup
-                        </button>
+                        </button> --}}
                     </div>
                 </div>
             </div>
@@ -906,13 +965,13 @@
                     <div
                         class="px-8 py-6 border-b border-gray-50 flex justify-between items-center bg-gradient-to-r from-blue-50/50 to-white">
                         <div class="flex items-center gap-3">
-                            <div class="bg-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-200">
+                            {{-- <div class="bg-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                         d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                                 </svg>
-                            </div>
+                            </div> --}}
                             <h3 class="text-xl font-black text-gray-800">Pelanggan Baru</h3>
                         </div>
                         <button type="button" @click="isAddCustomerModalOpen = false"
@@ -926,19 +985,23 @@
 
                     <div class="p-8 space-y-5">
                         <div>
-                            <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nama
+                            <label
+                                class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nama
                                 Lengkap <span class="text-rose-500">*</span></label>
                             <input type="text" x-model="newCustomer.name" placeholder="Masukkan Nama "
                                 class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nomor
+                            <label
+                                class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nomor
                                 WhatsApp/HP <span class="text-rose-500">*</span></label>
-                            <input type="text" x-model="newCustomer.phone" placeholder="Masukkan Nomor WhatsApp/HP"
+                            <input type="text" x-model="newCustomer.phone"
+                                placeholder="Masukkan Nomor WhatsApp/HP"
                                 class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Email
+                            <label
+                                class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Email
                                 (Opsional)</label>
                             <input type="email" x-model="newCustomer.email" placeholder="Masukkan Email"
                                 class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all py-3.5 px-5 outline-none">
@@ -952,27 +1015,26 @@
                         </div>
                     </div>
 
-                    <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex flex-col gap-3">
+                    <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex gap-4">
+                        <button type="button" @click="isAddCustomerModalOpen = false"
+                            class="flex-1 py-4 text-sm font-bold text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 rounded-2xl transition-all">
+                            Batalkan
+                        </button>
                         <button type="button" @click="saveNewParty()" :disabled="isSavingParty"
-                            class="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-xl shadow-blue-200 transition-all flex items-center justify-center gap-2 group disabled:opacity-50">
+                            class="flex-1 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-xl shadow-blue-200 transition-all flex items-center justify-center gap-2 group disabled:opacity-50">
                             <span x-show="!isSavingParty" class="flex items-center gap-2">
-                                Simpan Pelanggan <i data-feather="arrow-right"
-                                    class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                                Simpan
                             </span>
                             <span x-show="isSavingParty" class="flex items-center gap-2">
                                 <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="4"></circle>
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor"
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                     </path>
                                 </svg>
                                 Memproses...
                             </span>
-                        </button>
-                        <button type="button" @click="isAddCustomerModalOpen = false"
-                            class="w-full py-3 text-sm font-bold text-gray-400 hover:text-gray-600 transition-all">
-                            Batalkan
                         </button>
                     </div>
                 </div>
@@ -988,8 +1050,8 @@
                         class="px-8 py-6 border-b border-gray-50 flex justify-between items-center bg-gradient-to-r from-amber-50/50 to-white">
                         <div class="flex items-center gap-3">
                             <div class="bg-amber-600 text-white p-2 rounded-xl shadow-lg shadow-amber-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                 </svg>
@@ -1007,19 +1069,23 @@
 
                     <div class="p-8 space-y-5">
                         <div>
-                            <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nama
+                            <label
+                                class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nama
                                 Perusahaan/Supplier <span class="text-rose-500">*</span></label>
-                            <input type="text" x-model="newSupplier.name" placeholder="Masukkan Nama Perusahaan/Supplier"
+                            <input type="text" x-model="newSupplier.name"
+                                placeholder="Masukkan Nama Perusahaan/Supplier"
                                 class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nomor
+                            <label
+                                class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Nomor
                                 Kontak/HP <span class="text-rose-500">*</span></label>
                             <input type="text" x-model="newSupplier.phone" placeholder="Masukkan Nomor Kontak/HP"
                                 class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none"></textarea>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Email
+                            <label
+                                class="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Email
                                 (Opsional)</label>
                             <input type="email" x-model="newSupplier.email" placeholder="Masukkan Email"
                                 class="w-full rounded-2xl border-gray-100 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all py-3.5 px-5 outline-none">
@@ -1033,27 +1099,27 @@
                         </div>
                     </div>
 
-                    <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex flex-col gap-3">
+                    <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex gap-4">
+                        <button type="button" @click="isAddSupplierModalOpen = false"
+                            class="flex-1 py-4 text-sm font-bold text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 rounded-2xl transition-all">
+                            Batalkan
+                        </button>
                         <button type="button" @click="saveNewParty()" :disabled="isSavingParty"
-                            class="w-full py-4 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-xl shadow-amber-200 transition-all flex items-center justify-center gap-2 group disabled:opacity-50">
+                            class="flex-1 py-4 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-xl shadow-amber-200 transition-all flex items-center justify-center gap-2 group disabled:opacity-50">
                             <span x-show="!isSavingParty" class="flex items-center gap-2">
                                 Simpan Supplier <i data-feather="arrow-right"
                                     class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                             </span>
                             <span x-show="isSavingParty" class="flex items-center gap-2">
                                 <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="4"></circle>
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor"
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                     </path>
                                 </svg>
                                 Memproses...
                             </span>
-                        </button>
-                        <button type="button" @click="isAddSupplierModalOpen = false"
-                            class="w-full py-3 text-sm font-bold text-gray-400 hover:text-gray-600 transition-all">
-                            Batalkan
                         </button>
                     </div>
                 </div>

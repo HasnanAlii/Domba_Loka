@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -42,7 +43,8 @@ class SupplierController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Supplier berhasil ditambahkan.',
-                'supplier' => $supplier
+                'supplier' => $supplier,
+                'redirect' => route('suppliers.index'),
             ]);
         }
 
@@ -67,7 +69,7 @@ class SupplierController extends Controller
         ]);
     }
 
-    public function update(Request $request, Supplier $supplier): RedirectResponse
+    public function update(Request $request, Supplier $supplier): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -78,12 +80,27 @@ class SupplierController extends Controller
 
         $supplier->update($validated);
 
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data supplier berhasil diperbarui.', 'redirect' => route('suppliers.index')]);
+        }
+
         return redirect()->route('suppliers.index')->with('success', 'Data supplier berhasil diperbarui.');
     }
 
-    public function destroy(Supplier $supplier): RedirectResponse
+    public function destroy(Supplier $supplier): RedirectResponse|JsonResponse
     {
+        if ($supplier->transactions()->exists()) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Supplier ini terkait dengan data transaksi.']);
+            }
+            return redirect()->route('suppliers.index')->with('error', 'Supplier ini terkait dengan data transaksi.');
+        }
+
         $supplier->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Supplier berhasil dihapus.', 'redirect' => route('suppliers.index')]);
+        }
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil dihapus.');
     }

@@ -21,7 +21,7 @@
                         <p class="mt-1 text-sm text-slate-500">Masukkan nama kategori atau jenis domba.</p>
                     </div>
 
-                    <form action="{{ $action }}" method="POST">
+                    <form action="{{ $action }}" method="POST" data-ajax-form>
                         @csrf
                         @if ($method !== 'POST')
                             @method($method)

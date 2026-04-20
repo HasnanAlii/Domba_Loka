@@ -93,30 +93,6 @@
             <!-- Main Table Card -->
             <div class="rounded-[32px] bg-white shadow-sm shadow-blue-900/5 ring-1 ring-gray-100">
                 <div class="p-8 lg:p-12">
-                    @if (session('success'))
-                        <div id="finance-success-alert"
-                            class="mb-8 flex items-center justify-between rounded-2xl border-l-4 border-emerald-500 bg-emerald-50/50 p-5 text-emerald-800 shadow-sm transition-all duration-300">
-                            <div class="flex items-center gap-4">
-                                <div class="bg-emerald-500 p-1.5 rounded-lg text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                        fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <span class="text-[15px] font-black tracking-tight">{{ session('success') }}</span>
-                            </div>
-                            <button type="button" data-dismiss-target="#finance-success-alert"
-                                class="text-emerald-400 hover:text-emerald-600 transition-colors">
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    @endif
-
                     <div class="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
                         <div>
                             <h3 class="text-xl font-black text-[#0f172a] tracking-tight">Riwayat Transaksi Keuangan</h3>
@@ -289,8 +265,8 @@
                         </form>
                     </div>
 
-                    <div class="relative z-0 rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
-                        <div class="overflow-x-auto">
+                    <div class="relative z-0 rounded-2xl border border-gray-100 bg-white shadow-sm">
+                        <div class="overflow-visible">
                             <table class="min-w-full">
                                 <thead>
                                     <tr class="bg-slate-50/50 border-b border-gray-100">
@@ -379,25 +355,38 @@
                                                 </p>
                                             </td>
                                             <td class="px-6 py-5 text-center">
-                                                <div
-                                                    class="flex items-center justify-center gap-1 opacity-20 group-hover:opacity-100 transition-opacity">
-                                                    <a href="{{ route('finances.show', $finance) }}"
-                                                        class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
-                                                        <i data-feather="eye" class="h-4 w-4"></i>
-                                                    </a>
-                                                    <a href="{{ route('finances.edit', $finance) }}"
-                                                        class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
-                                                        <i data-feather="edit" class="h-4 w-4"></i>
-                                                    </a>
-                                                    <form action="{{ route('finances.destroy', $finance) }}"
-                                                        method="POST" class="inline"
-                                                        data-confirm-message="Hapus catatan arus kas ini?">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit"
-                                                            class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
-                                                            <i data-feather="trash-2" class="h-4 w-4"></i>
-                                                        </button>
-                                                    </form>
+                                                <div class="relative flex justify-center" x-data="{ open: false }">
+                                                    <button @click="open = !open" @click.outside="open = false"
+                                                        class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all">
+                                                        <svg width="3" height="15" viewBox="0 0 3 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 1.5C4.47035e-08 0.671573 0.671573 0 1.5 0C2.32843 4.47035e-08 3 0.671573 3 1.5C3 2.32843 2.32843 3 1.5 3C0.671573 3 0 2.32843 0 1.5ZM0 7.5C4.47035e-08 6.67157 0.671573 6 1.5 6C2.32843 6 3 6.67157 3 7.5C3 8.32843 2.32843 9 1.5 9C0.671573 9 0 8.32843 0 7.5ZM0 13.5C4.47035e-08 12.6716 0.671573 12 1.5 12C2.32843 12 3 12.6716 3 13.5C3 14.3284 2.32843 15 1.5 15C0.671573 15 0 14.3284 0 13.5Z" fill="#555555"/></svg>
+                                                    </button>
+                                                    <div x-show="open"
+                                                        x-transition:enter="transition ease-out duration-150"
+                                                        x-transition:enter-start="opacity-0 scale-95"
+                                                        x-transition:enter-end="opacity-100 scale-100"
+                                                        x-transition:leave="transition ease-in duration-100"
+                                                        x-transition:leave-start="opacity-100 scale-100"
+                                                        x-transition:leave-end="opacity-0 scale-95"
+                                                        class="absolute right-0 top-9 z-30 w-36 rounded-xl bg-white shadow-xl border border-slate-100 overflow-hidden origin-top-right"
+                                                        style="display:none;">
+                                                        <a href="{{ route('finances.show', $finance) }}"
+                                                            class="block px-4 py-2.5 text-sm text-left font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                                                            Detail
+                                                        </a>
+                                                        <a href="{{ route('finances.edit', $finance) }}"
+                                                            class="block px-4 py-2.5 text-sm text-left font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                                                            Edit
+                                                        </a>
+                                                        <form action="{{ route('finances.destroy', $finance) }}" method="POST"
+                                                            data-confirm-message="Hapus catatan arus kas ini?">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="w-full text-left px-4 py-2.5 text-sm font-semibold text-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-colors">
+                                                                Hapus
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

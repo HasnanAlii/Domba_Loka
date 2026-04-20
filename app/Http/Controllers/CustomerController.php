@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -42,7 +43,8 @@ class CustomerController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Pelanggan berhasil ditambahkan.',
-                'customer' => $customer
+                'customer' => $customer,
+                'redirect' => route('customers.index'),
             ]);
         }
 
@@ -67,7 +69,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function update(Request $request, Customer $customer): RedirectResponse
+    public function update(Request $request, Customer $customer): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -78,12 +80,27 @@ class CustomerController extends Controller
 
         $customer->update($validated);
 
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data pelanggan berhasil diperbarui.', 'redirect' => route('customers.index')]);
+        }
+
         return redirect()->route('customers.index')->with('success', 'Data pelanggan berhasil diperbarui.');
     }
 
-    public function destroy(Customer $customer): RedirectResponse
+    public function destroy(Customer $customer): RedirectResponse|JsonResponse
     {
+        if ($customer->transactions()->exists()) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Pelanggan ini terkait dengan data transaksi.']);
+            }
+            return redirect()->route('customers.index')->with('error', 'Pelanggan ini terkait dengan data transaksi.');
+        }
+
         $customer->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Pelanggan berhasil dihapus.', 'redirect' => route('customers.index')]);
+        }
 
         return redirect()->route('customers.index')->with('success', 'Pelanggan berhasil dihapus.');
     }

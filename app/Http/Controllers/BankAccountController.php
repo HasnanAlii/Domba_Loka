@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankAccount;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,7 +28,7 @@ class BankAccountController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'account_name' => ['required', 'string', 'max:255'],
@@ -36,7 +37,11 @@ class BankAccountController extends Controller
             'saldo' => ['required', 'numeric', 'min:0'],
         ]);
 
-        BankAccount::create($validated);
+        $bankAccount = BankAccount::create($validated);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Rekening bank berhasil ditambahkan.', 'redirect' => route('bank-accounts.index')]);
+        }
 
         return redirect()->route('bank-accounts.index')->with('success', 'Rekening bank berhasil ditambahkan.');
     }
@@ -100,7 +105,7 @@ class BankAccountController extends Controller
         ]);
     }
 
-    public function update(Request $request, BankAccount $bankAccount): RedirectResponse
+    public function update(Request $request, BankAccount $bankAccount): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'account_name' => ['required', 'string', 'max:255'],
@@ -111,12 +116,27 @@ class BankAccountController extends Controller
 
         $bankAccount->update($validated);
 
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Rekening bank berhasil diperbarui.', 'redirect' => route('bank-accounts.index')]);
+        }
+
         return redirect()->route('bank-accounts.index')->with('success', 'Rekening bank berhasil diperbarui.');
     }
 
-    public function destroy(BankAccount $bankAccount): RedirectResponse
+    public function destroy(BankAccount $bankAccount): RedirectResponse|JsonResponse
     {
+        if ($bankAccount->transactions()->exists() || $bankAccount->finances()->exists()) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Rekening ini memiliki catatan transaksi atau arus kas.']);
+            }
+            return redirect()->route('bank-accounts.index')->with('error', 'Rekening ini memiliki catatan transaksi atau arus kas.');
+        }
+
         $bankAccount->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Rekening bank berhasil dihapus.', 'redirect' => route('bank-accounts.index')]);
+        }
 
         return redirect()->route('bank-accounts.index')->with('success', 'Rekening bank berhasil dihapus.');
     }

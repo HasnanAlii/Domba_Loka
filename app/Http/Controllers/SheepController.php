@@ -138,7 +138,8 @@ class SheepController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Domba berhasil ditambahkan.',
-                'sheep' => $sheep
+                'sheep' => $sheep,
+                'redirect' => route('sheep.index'),
             ]);
         }
 
@@ -164,7 +165,7 @@ class SheepController extends Controller
         ]);
     }
 
-    public function update(Request $request, Sheep $sheep): RedirectResponse
+    public function update(Request $request, Sheep $sheep): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'type_id' => ['required', 'exists:sheep_types,id'],
@@ -195,11 +196,22 @@ class SheepController extends Controller
             }
         }
 
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Data domba berhasil diperbarui.', 'redirect' => route('sheep.index')]);
+        }
+
         return redirect()->route('sheep.index')->with('success', 'Data domba berhasil diperbarui.');
     }
 
-    public function destroy(Sheep $sheep): RedirectResponse
+    public function destroy(Sheep $sheep): RedirectResponse|JsonResponse
     {
+        if ($sheep->transactions()->exists() || $sheep->growths()->exists()) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Domba ini terikat dengan transaksi atau data perkembangan.']);
+            }
+            return redirect()->route('sheep.index')->with('error', 'Domba ini terikat dengan transaksi atau data perkembangan.');
+        }
+
         // Hapus foto-foto di galeri
         foreach ($sheep->photos as $photo) {
             Storage::disk('public')->delete($photo->path);
@@ -211,6 +223,10 @@ class SheepController extends Controller
         }
 
         $sheep->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Domba berhasil dihapus.', 'redirect' => route('sheep.index')]);
+        }
 
         return redirect()->route('sheep.index')->with('success', 'Domba berhasil dihapus.');
     }

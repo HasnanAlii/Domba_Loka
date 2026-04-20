@@ -16,7 +16,7 @@
         <div class="mx-auto max-w-4xl sm:px-6 lg:px-8">
             <div class="rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/60">
                 <div class="p-6 lg:p-10">
-                    <form action="{{ $action }}" method="POST">
+                    <form action="{{ $action }}" method="POST" data-ajax-form>
                         @csrf
                         @if ($method !== 'POST')
                             @method($method)
