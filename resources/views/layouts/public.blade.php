@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Domba Loka - Premium Livestock' }}</title>
+    <title>{{ $title ?? 'DombaLoka - Premium Livestock' }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,8 +27,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .emerald-glow {
-            box-shadow: 0 0 20px rgba(46, 224, 167, 0.3);
+        .yellow-glow {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
         }
     </style>
 </head>
@@ -40,29 +40,29 @@
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <a href="{{ url('/') }}" class="flex items-center gap-4 group">
-                    <div class="bg-white p-2 rounded-xl shadow-md border border-slate-100 transform transition-transform group-hover:rotate-3">
+                    <div class="transform transition-transform group-hover:rotate-3">
                         <x-application-logo class="w-7 h-7 text-[#03235b]" />
                     </div>
-                    <span class="text-2xl font-black text-[#03235b] transition-colors tracking-tight uppercase">Domba Loka</span>
+                    {{-- <span class="text-2xl font-black text-[#03235b] transition-colors tracking-tight uppercase">DombaLoka</span> --}}
                 </a>
             </div>
 
             <div class="hidden md:flex items-center gap-10">
                 <a href="{{ route('public.about') }}" class="text-xs font-black uppercase tracking-[0.2em] {{ request()->routeIs('public.about') ? 'text-[#0c5197]' : 'text-slate-600' }} hover:text-[#0c5197] transition-colors relative group">
                     Tentang Kami
-                    <span class="absolute -bottom-1 left-0 {{ request()->routeIs('public.about') ? 'w-full' : 'w-0' }} h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 {{ request()->routeIs('public.about') ? 'w-full' : 'w-0' }} h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
                 <a href="{{ route('public.catalog') }}" class="text-xs font-black uppercase tracking-[0.2em] {{ request()->routeIs('public.catalog*') ? 'text-[#0c5197]' : 'text-slate-600' }} hover:text-[#0c5197] transition-colors relative group">
                     Katalog Domba
-                    <span class="absolute -bottom-1 left-0 {{ request()->routeIs('public.catalog*') ? 'w-full' : 'w-0' }} h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 {{ request()->routeIs('public.catalog*') ? 'w-full' : 'w-0' }} h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
                 <a href="{{ url('/') }}#services" class="text-xs font-black uppercase tracking-[0.2em] text-slate-600 hover:text-[#0c5197] transition-colors relative group">
                     Layanan Kami
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
                 <a href="{{ url('/') }}#faq" class="text-xs font-black uppercase tracking-[0.2em] text-slate-600 hover:text-[#0c5197] transition-colors relative group">
                     FAQ
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
             </div>
 
@@ -79,7 +79,7 @@
                         
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}" 
-                               class="hidden sm:block px-6 py-2.5 bg-[#2ee0a7] text-[#03235b] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-xl hover:scale-105 transition-all">
+                               class="hidden sm:block px-6 py-2.5 bg-[#fbbf24] text-[#03235b] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-xl hover:scale-105 transition-all">
                                 Bermitra
                             </a>
                         @endif
@@ -135,11 +135,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
                 <!-- Brand Section -->
                 <div class="space-y-8">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-white p-2 rounded-xl shadow-md border border-slate-100">
+                     <div class="flex items-center gap-4">
+                        <div class=" border-slate-100">
                             <x-application-logo class="w-10 h-10 text-[#03235b]" />
                         </div>
-                        <span class="text-3xl font-black text-[#03235b] tracking-tighter uppercase">Domba Loka</span>
+                        <span class="text-3xl font-black text-[#03235b] tracking-tighter uppercase">DombaLoka</span>
                     </div>
                     <p class="text-slate-400 font-bold leading-relaxed italic pr-4">
                         "Pusat domba premium Jawa Barat. Fokus pada kualitas, kesehatan, dan kepuasan pelanggan di setiap transaksi."
@@ -161,10 +161,10 @@
                 <div class="space-y-8">
                     <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Navigasi</h4>
                     <ul class="space-y-4">
-                        <li><a href="{{ route('public.about') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Tentang Kami</a></li>
-                        <li><a href="{{ route('public.catalog') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Katalog Domba</a></li>
-                        <li><a href="#services" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Layanan Kami</a></li>
-                        <li><a href="#testimonials" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Testimoni</a></li>
+                        <li><a href="{{ route('public.about') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Tentang Kami</a></li>
+                        <li><a href="{{ route('public.catalog') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Katalog Domba</a></li>
+                        <li><a href="#services" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Layanan Kami</a></li>
+                        <li><a href="#testimonials" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Testimoni</a></li>
                     </ul>
                 </div>
 
@@ -184,7 +184,7 @@
                     <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Kontak Kami</h4>
                     <div class="space-y-6">
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#2ee0a7] shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#fbbf24] shrink-0">
                                 <i data-feather="map-pin" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-bold text-slate-600 leading-relaxed uppercase tracking-wider mt-1">
@@ -192,7 +192,7 @@
                             </p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#2ee0a7] shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#fbbf24] shrink-0">
                                 <i data-feather="phone" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-black text-[#03235b] uppercase tracking-widest">
@@ -200,7 +200,7 @@
                             </p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#2ee0a7] shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#fbbf24] shrink-0">
                                 <i data-feather="mail" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-black text-[#03235b] uppercase tracking-widest">
@@ -212,7 +212,7 @@
             </div>
 
             <div class="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">
-                 <p>&copy; {{ date('Y') }} Domba Loka Farm • Cianjur, Jawa Barat</p>
+                 <p>&copy; {{ date('Y') }} DombaLoka Farm • Cianjur, Jawa Barat</p>
                  <div class="flex items-center gap-8">
                     <a href="#" class="hover:text-[#03235b] transition-colors">Syarat & Ketentuan</a>
                     <a href="#" class="hover:text-[#03235b] transition-colors">Kebijakan Privasi</a>
@@ -236,12 +236,12 @@
             <!-- Header -->
             <div class="bg-[#03235b] p-6 text-white flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-[#2ee0a7] rounded-xl flex items-center justify-center text-[#03235b]">
+                    <div class="w-10 h-10 bg-[#fbbf24] rounded-xl flex items-center justify-center text-[#03235b]">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="M9,15a1,1,0,1,0,1,1A1,1,0,0,0,9,15ZM2,14a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,2,14Zm20,0a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,22,14ZM17,7H13V5.72A2,2,0,0,0,14,4a2,2,0,0,0-4,0,2,2,0,0,0,1,1.72V7H7a3,3,0,0,0-3,3v9a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V10A3,3,0,0,0,17,7ZM13.72,9l-.5,2H10.78l-.5-2ZM18,19a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V10A1,1,0,0,1,7,9H8.22L9,12.24A1,1,0,0,0,10,13h4a1,1,0,0,0,1-.76L15.78,9H17a1,1,0,0,1,1,1Zm-3-4a1,1,0,1,0,1,1A1,1,0,0,0,15,15Z"/></svg>
                     </div>
                     <div>
                         <h4 class="text-sm font-black uppercase tracking-widest">LokaAI</h4>
-                        <p class="text-[9px] font-bold text-[#2ee0a7] uppercase tracking-[0.2em]">Asisten Virtual</p>
+                        <p class="text-[9px] font-bold text-[#fbbf24] uppercase tracking-[0.2em]">Asisten Virtual</p>
                     </div>
                 </div>
                 <button @click="isOpen = false" class="text-white/50 hover:text-white transition-colors">
@@ -273,7 +273,7 @@
                     <input type="text" 
                            x-model="input" 
                            placeholder="Tanya LokaAI..." 
-                           class="flex-1 px-5 py-3 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder-slate-400 focus:ring-2 focus:ring-[#2ee0a7] transition-all">
+                           class="flex-1 px-5 py-3 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder-slate-400 focus:ring-2 focus:ring-[#fbbf24] transition-all">
                     <button type="submit" 
                             :disabled="isLoading || !input.trim()"
                             class="w-12 h-12 bg-[#03235b] text-white rounded-2xl flex items-center justify-center hover:bg-[#0c5197] disabled:opacity-50 transition-all">

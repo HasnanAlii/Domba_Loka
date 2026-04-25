@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="mb-10 text-center">
         <h2 class="text-2xl font-black tracking-tight text-slate-800">Selamat Datang</h2>
-        <p class="mt-2 text-sm font-medium text-slate-500">Silakan masuk ke akun Domba Loka Anda</p>
+        <p class="mt-2 text-sm font-medium text-slate-500">Silakan masuk ke akun DombaLoka Anda</p>
     </div>
 
     <!-- Session Status -->

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Domba Loka - Pusat Domba Premium & Unggul</title>
+    <title>DombaLoka - Pusat Domba Premium & Unggul</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,8 +29,8 @@
         .hero-pattern {
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2303235b' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        .emerald-glow {
-            box-shadow: 0 0 20px rgba(46, 224, 167, 0.3);
+        .yellow-glow {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
         }
         [x-cloak] { display: none !important; }
         .text-gradient {
@@ -60,29 +60,29 @@
          :class="scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg py-3 border-b border-slate-100' : 'bg-transparent py-6'">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="bg-white p-2 rounded-xl shadow-md border border-slate-100 transform transition-transform hover:rotate-3">
+                <div class="p-2  border-slate-100 transform transition-transform hover:rotate-3">
                     <x-application-logo class="w-7 h-7 text-[#03235b]" />
                 </div>
-                <span class="text-2xl font-black transition-colors tracking-tight uppercase"
-                      :class="scrolled ? 'text-[#03235b]' : 'text-[#03235b]'">Domba Loka</span>
+                {{-- <span class="text-2xl font-black transition-colors tracking-tight uppercase"
+                      :class="scrolled ? 'text-[#03235b]' : 'text-[#03235b]'">DombaLoka</span> --}}
             </div>
 
             <div class="hidden md:flex items-center gap-10">
                 <a href="{{ route('public.about') }}" class="text-xs font-black uppercase tracking-[0.2em] text-slate-600 hover:text-[#0c5197] transition-colors relative group">
                     Tentang Kami
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
                 <a href="{{ route('public.catalog') }}" class="text-xs font-black uppercase tracking-[0.2em] text-slate-600 hover:text-[#0c5197] transition-colors relative group">
                     Katalog Domba
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
                 <a href="#services" class="text-xs font-black uppercase tracking-[0.2em] text-slate-600 hover:text-[#0c5197] transition-colors relative group">
                     Layanan Kami
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
                 <a href="#faq" class="text-xs font-black uppercase tracking-[0.2em] text-slate-600 hover:text-[#0c5197] transition-colors relative group">
                     FAQ
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2ee0a7] transition-all group-hover:w-full"></span>
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#fbbf24] transition-all group-hover:w-full"></span>
                 </a>
             </div>
 
@@ -99,7 +99,7 @@
                         
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}" 
-                               class="hidden sm:block px-6 py-2.5 bg-[#2ee0a7] text-[#03235b] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-xl hover:scale-105 transition-all emerald-glow">
+                               class="hidden sm:block px-6 py-2.5 bg-[#fbbf24] text-[#03235b] font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-xl hover:scale-105 transition-all yellow-glow">
                                 Bermitra
                             </a>
                         @endif
@@ -153,16 +153,16 @@
         <div class="relative max-w-7xl mx-auto px-6 w-full py-20" data-aos="fade-up">
             <div class="max-w-3xl space-y-10">
                 {{-- <div class="inline-flex items-center gap-4 px-5 py-2.5 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-100 shadow-sm">
-                    <span class="w-2.5 h-2.5 bg-[#2ee0a7] rounded-full emerald-glow animate-pulse"></span>
+                    <span class="w-2.5 h-2.5 bg-[#fbbf24] rounded-full yellow-glow animate-pulse"></span>
                     <span class="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em]">Penyedia Domba Premium Jawa Barat</span>
                 </div> --}}
                 
                 <h1 class="text-7xl lg:text-8xl font-black text-[#03235b] leading-[0.95] tracking-tighter">
                     DOMBA<br>
-                    <span class="text-gradient underline decoration-[#2ee0a7] decoration-8 underline-offset-[12px]">UNGGULAN.</span>
+                    <span class="text-gradient underline decoration-[#fbbf24] decoration-8 underline-offset-[12px]">UNGGULAN.</span>
                 </h1>
                 
-                <p class="text-xl text-slate-600 font-bold leading-relaxed max-w-xl border-l-4 border-[#2ee0a7] pl-8">
+                <p class="text-xl text-slate-600 font-bold leading-relaxed max-w-xl border-l-4 border-[#fbbf24] pl-8">
                     Menyediakan bibit unggul dan domba siap potong dengan kualitas daging terbaik. Setiap ekor dipantau kesehatannya secara ketat untuk jaminan kepuasan Anda.
                 </p>
 
@@ -172,7 +172,7 @@
                     </a>
                     <a href="https://wa.me/+6287708463586" target="_blank" class="px-10 py-5 bg-white text-[#03235b] border border-slate-200 font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-slate-50 transition-all flex items-center gap-4 group">
                         Konsultasi Pesanan
-                        <svg class="w-5 h-5 text-[#2ee0a7] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-width="3" /></svg>
+                        <svg class="w-5 h-5 text-[#fbbf24] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-width="3" /></svg>
                     </a>
                 </div>
 
@@ -199,9 +199,9 @@
         <div class="max-w-7xl mx-auto">
             <div class="grid lg:grid-cols-2 gap-24 items-center">
                 <div class="relative" data-aos="fade-right">
-                    <div class="absolute -top-12 -left-12 w-64 h-64 bg-[#2ee0a7]/10 rounded-full blur-3xl"></div>
+                    <div class="absolute -top-12 -left-12 w-64 h-64 bg-[#fbbf24]/10 rounded-full blur-3xl"></div>
                     <div class="relative rounded-[4rem] overflow-hidden shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-700">
-                        <img src="{{ asset('images/farm_panorama.png') }}" alt="Domba Loka Farm" class="w-full h-[600px] object-cover">
+                        <img src="{{ asset('images/farm_panorama.png') }}" alt="DombaLoka Farm" class="w-full h-[600px] object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#03235b]/60 to-transparent"></div>
                         <div class="absolute bottom-12 left-12 right-12">
                             <p class="text-white/80 font-bold uppercase tracking-[0.3em] text-[10px] mb-2">Lokasi Kami</p>
@@ -212,12 +212,12 @@
                 <div class="space-y-12" data-aos="fade-left">
                     <div class="space-y-6">
                         <div class="inline-flex items-center gap-3 mb-6">
-                            <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                            <div class="w-10 h-1 bg-[#fbbf24]"></div>
                             <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Warisan & Kualitas</h2>
                         </div>
-                        <h3 class="text-6xl font-black text-[#03235b] tracking-tighter leading-[0.95]">Peternakan Modern dengan <span class="text-[#2ee0a7]">Hati.</span></h3>
+                        <h3 class="text-6xl font-black text-[#03235b] tracking-tighter leading-[0.95]">Peternakan Modern dengan <span class="text-[#fbbf24]">Hati.</span></h3>
                         <p class="text-xl text-slate-500 font-medium leading-relaxed">
-                            Berawal dari kecintaan pada peternakan lokal, Domba Loka hadir dengan standar manajemen modern. Kami memadukan teknologi pemantauan kesehatan dengan pakan organik terbaik dari alam Cianjur yang asri.
+                            Berawal dari kecintaan pada peternakan lokal, DombaLoka hadir dengan standar manajemen modern. Kami memadukan teknologi pemantauan kesehatan dengan pakan organik terbaik dari alam Cianjur yang asri.
                         </p>
                     </div>
                     
@@ -240,7 +240,7 @@
 
                     <a href="{{ route('public.about') }}" class="inline-flex items-center gap-4 text-xs font-black text-[#03235b] uppercase tracking-[0.3em] group">
                         Selengkapnya Tentang Kami
-                        <span class="w-12 h-px bg-[#2ee0a7] group-hover:w-20 transition-all"></span>
+                        <span class="w-12 h-px bg-[#fbbf24] group-hover:w-20 transition-all"></span>
                     </a>
                 </div>
             </div>
@@ -253,7 +253,7 @@
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8" data-aos="fade-up">
                 <div class="space-y-4">
                     <div class="inline-flex items-center gap-3 mb-2">
-                        <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                        <div class="w-10 h-1 bg-[#fbbf24]"></div>
                         <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Katalog Domba</h2>
                     </div>
                     <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Pilihan Domba Terbaik.</h3>
@@ -312,11 +312,11 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center space-y-4 mb-24" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Cara Memulai</h2>
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                 </div>
-                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Proses Transaksi <span class="italic underline decoration-[#2ee0a7]">Tanpa Ribet.</span></h3>
+                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Proses Transaksi <span class="italic underline decoration-[#fbbf24]">Tanpa Ribet.</span></h3>
             </div>
 
             <div class="grid md:grid-cols-4 gap-12 relative" data-aos="fade-up">
@@ -324,7 +324,7 @@
                 <div class="hidden md:block absolute top-1/4 left-0 right-0 h-px bg-slate-100 z-0"></div>
                 
                 <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="0">
-                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
+                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#fbbf24] group-hover:scale-110 transition-all duration-500">
                         <span class="text-3xl font-black text-[#03235b]">01</span>
                     </div>
                     <div>
@@ -334,7 +334,7 @@
                 </div>
 
                 <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
+                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#fbbf24] group-hover:scale-110 transition-all duration-500">
                         <span class="text-3xl font-black text-[#03235b]">02</span>
                     </div>
                     <div>
@@ -344,7 +344,7 @@
                 </div>
 
                 <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
+                    <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#fbbf24] group-hover:scale-110 transition-all duration-500">
                         <span class="text-3xl font-black text-[#03235b]">03</span>
                     </div>
                     <div>
@@ -355,7 +355,7 @@
 
                 <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="300">
                     <div class="w-24 h-24 bg-[#03235b] shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto text-white group-hover:scale-110 transition-all duration-500">
-                        <svg class="w-10 h-10 text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" /></svg>
+                        <svg class="w-10 h-10 text-[#fbbf24]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" /></svg>
                     </div>
                     <div>
                         <h4 class="text-xl font-black text-[#03235b] mb-4">Pengiriman</h4>
@@ -370,16 +370,16 @@
     <section id="features" class="py-32 bg-white relative">
         <div class="max-w-7xl mx-auto px-6 mb-20 text-center" data-aos="fade-up">
             <div class="inline-flex items-center gap-3 mb-4">
-                <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                <div class="w-10 h-1 bg-[#fbbf24]"></div>
                 <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Keunggulan Kami</h2>
-                <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                <div class="w-10 h-1 bg-[#fbbf24]"></div>
             </div>
-            <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Mengapa Memilih <span class="text-gradient">Domba Loka?</span></h3>
+            <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Mengapa Memilih <span class="text-gradient">DombaLoka?</span></h3>
         </div>
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-4 gap-8">
             <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all" data-aos="fade-up" data-aos-delay="0">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-[#03235b] transition-all">
-                    <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#fbbf24]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h6l3 3h5l1 5H5V8zm0 5l-1 2m12-2l1 2M8 18a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4zM2 8h2m-2 4h2m-2 4h2" />
                     </svg>
                 </div>
@@ -388,7 +388,7 @@
             </div>
             <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all" data-aos="fade-up" data-aos-delay="100">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-[#03235b] transition-all">
-                    <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#fbbf24]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                 </div>
@@ -397,7 +397,7 @@
             </div>
             <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all" data-aos="fade-up" data-aos-delay="200">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-[#03235b] transition-all">
-                    <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#fbbf24]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                     </svg>
                 </div>
@@ -406,7 +406,7 @@
             </div>
             <div class="p-12 bg-[#03235b] shadow-2xl rounded-[3rem] group hover:scale-105 transition-all text-white" data-aos="fade-up" data-aos-delay="300">
                 <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-8 border border-white/10">
-                    <svg class="w-8 h-8 text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-[#fbbf24]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                     </svg>
                 </div>
@@ -421,31 +421,31 @@
         <div class="max-w-7xl mx-auto space-y-20">
             <div class="text-center space-y-4" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Kualitas & Layanan</h2>
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                 </div>
                 <h3 class="text-6xl font-black text-[#03235b] tracking-tighter uppercase">Layanan Kami.</h3>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-xl group hover:-translate-y-3 transition-all duration-500" data-aos="fade-up" data-aos-delay="0">
-                    <p class="text-6xl font-black text-slate-100 group-hover:text-[#2ee0a7]/20 transition-colors mb-8">01</p>
+                    <p class="text-6xl font-black text-slate-100 group-hover:text-[#fbbf24]/20 transition-colors mb-8">01</p>
                     <h4 class="text-3xl font-black text-slate-900 mb-4 tracking-tight">Aqiqah & Qurban</h4>
                     <p class="text-slate-500 font-medium leading-relaxed mb-10">Paket ibadah lengkap mulai dari pemilihan domba, pemotongan syar'i, hingga penyaluran daging.</p>
-                    <div class="w-12 h-1 bg-slate-100 group-hover:bg-[#2ee0a7] transition-all w-0 group-hover:w-full"></div>
+                    <div class="w-12 h-1 bg-slate-100 group-hover:bg-[#fbbf24] transition-all w-0 group-hover:w-full"></div>
                 </div>
                 <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-xl group hover:-translate-y-3 transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
-                    <p class="text-6xl font-black text-slate-100 group-hover:text-[#2ee0a7]/20 transition-colors mb-8">02</p>
+                    <p class="text-6xl font-black text-slate-100 group-hover:text-[#fbbf24]/20 transition-colors mb-8">02</p>
                     <h4 class="text-3xl font-black text-slate-900 mb-4 tracking-tight">Suplai Restoran</h4>
                     <p class="text-slate-500 font-medium leading-relaxed mb-10">Penyedia karkas domba segar berkualitas tinggi untuk kebutuhan hotel, restoran, dan katering.</p>
-                    <div class="w-12 h-1 bg-slate-100 group-hover:bg-[#2ee0a7] transition-all w-0 group-hover:w-full"></div>
+                    <div class="w-12 h-1 bg-slate-100 group-hover:bg-[#fbbf24] transition-all w-0 group-hover:w-full"></div>
                 </div>
                 <div class="p-12 bg-[#03235b] rounded-[3rem] shadow-2xl group hover:-translate-y-3 transition-all duration-500" data-aos="fade-up" data-aos-delay="200">
                     <p class="text-6xl font-black text-white/5 mb-8">03</p>
                     <h4 class="text-3xl font-black text-white mb-4 tracking-tight">Bibit Unggul</h4>
                     <p class="text-blue-100/60 font-medium leading-relaxed mb-10">Menyediakan bibit domba Garut dan jenis lainnya dengan genetika juara untuk peternak.</p>
-                    <div class="w-12 h-1 bg-white/10 group-hover:bg-[#2ee0a7] transition-all w-0 group-hover:w-full"></div>
+                    <div class="w-12 h-1 bg-white/10 group-hover:bg-[#fbbf24] transition-all w-0 group-hover:w-full"></div>
                 </div>
             </div>
         </div>
@@ -456,9 +456,9 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col items-center text-center space-y-6 mb-24" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Kesan Pelanggan</h2>
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                 </div>
                 <div class="px-6 py-2 bg-slate-50 rounded-full border border-slate-100 flex items-center gap-3">
                     <div class="flex -space-x-3">
@@ -468,12 +468,12 @@
                     </div>
                     <span class="text-[10px] font-black text-[#03235b] uppercase tracking-widest">Dipercaya 2000+ Pelanggan</span>
                 </div>
-                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter uppercase italic underline decoration-[#2ee0a7] decoration-[8px] underline-offset-[12px]">SUARA MEREKA.</h3>
+                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter uppercase italic underline decoration-[#fbbf24] decoration-[8px] underline-offset-[12px]">SUARA MEREKA.</h3>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group" data-aos="fade-up" data-aos-delay="0">
-                    <div class="flex gap-1 text-[#2ee0a7]">
+                    <div class="flex gap-1 text-[#fbbf24]">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
@@ -493,13 +493,13 @@
                 </div>
 
                 <div class="p-12 bg-[#03235b] rounded-[3rem] shadow-2xl space-y-8 transform md:-translate-y-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex gap-1 text-[#2ee0a7]">
+                    <div class="flex gap-1 text-[#fbbf24]">
                          @for($i=0; $i<5; $i++)
                          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                          @endfor
                     </div>
                     <p class="text-xl font-bold text-white italic leading-relaxed">
-                        "Layanan suplai karkas untuk restoran saya sangat konsisten. Timbangan akurat dan pengiriman selalu tepat waktu. Domba Loka partner terbaik kami."
+                        "Layanan suplai karkas untuk restoran saya sangat konsisten. Timbangan akurat dan pengiriman selalu tepat waktu. DombaLoka partner terbaik kami."
                     </p>
                     <div class="flex items-center gap-4">
                         <img src="{{ asset('images/avatar2.png') }}" class="w-12 h-12 rounded-full object-cover">
@@ -511,7 +511,7 @@
                 </div>
 
                 <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group" data-aos="fade-up" data-aos-delay="200">
-                    <div class="flex gap-1 text-[#2ee0a7]">
+                    <div class="flex gap-1 text-[#fbbf24]">
                         @for($i=0; $i<5; $i++)
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                         @endfor
@@ -520,7 +520,7 @@
                         "Bibit domba Garut yang saya beli di sini memiliki genetika luar biasa. Pertumbuhannya sangat cepat. Konsultasinya juga sangat membantu."
                     </p>
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-[#2ee0a7] flex items-center justify-center font-black text-[#03235b]">AM</div>
+                        <div class="w-12 h-12 rounded-full bg-[#fbbf24] flex items-center justify-center font-black text-[#03235b]">AM</div>
                         <div>
                             <p class="font-black text-[#03235b] uppercase tracking-widest text-[11px]">Anwar Mushaddad</p>
                             <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Peternak - Sukabumi</p>
@@ -536,11 +536,11 @@
         <div class="max-w-4xl mx-auto">
             <div class="text-center space-y-4 mb-20" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Tanya Jawab</h2>
-                    <div class="w-10 h-1 bg-[#2ee0a7]"></div>
+                    <div class="w-10 h-1 bg-[#fbbf24]"></div>
                 </div>
-                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Hal yang Sering <span class="text-[#2ee0a7]">Ditanyakan.</span></h3>
+                <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Hal yang Sering <span class="text-[#fbbf24]">Ditanyakan.</span></h3>
             </div>
 
             <div class="space-y-4">
@@ -558,7 +558,7 @@
 
                 <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="100">
                     <button @click="active = (active === 2 ? 0 : 2)" class="w-full p-8 flex items-center justify-between text-left">
-                        <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Apakah Domba Loka menyediakan paket Aqiqah siap saji?</span>
+                        <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Apakah DombaLoka menyediakan paket Aqiqah siap saji?</span>
                         <svg class="w-6 h-6 transition-transform duration-500" :class="active === 2 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
                     </button>
                     <div x-show="active === 2" x-collapse>
@@ -570,7 +570,7 @@
 
                 <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="200">
                     <button @click="active = (active === 3 ? 0 : 3)" class="w-full p-8 flex items-center justify-between text-left">
-                        <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Bagaimana sistem garansi kesehatan di Domba Loka?</span>
+                        <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Bagaimana sistem garansi kesehatan di DombaLoka?</span>
                         <svg class="w-6 h-6 transition-transform duration-500" :class="active === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
                     </button>
                     <div x-show="active === 3" x-collapse>
@@ -588,7 +588,7 @@
         <div class="max-w-7xl mx-auto rounded-[3rem] md:rounded-[4rem] bg-[#03235b] p-8 sm:p-12 md:p-24 text-center relative shadow-[0_40px_80px_-20px_rgba(3,35,91,0.4)]" data-aos="zoom-in">
              <div class="absolute inset-0 hero-pattern opacity-10"></div>
              <div class="relative z-10 space-y-8 md:space-y-12">
-                <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-none uppercase italic underline decoration-[#2ee0a7] decoration-[8px] md:decoration-[12px] underline-offset-[8px] md:underline-offset-[16px]">DAPATKAN DOMBA<br>TERBAIK ANDA.</h2>
+                <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-none uppercase italic underline decoration-[#fbbf24] decoration-[8px] md:decoration-[12px] underline-offset-[8px] md:underline-offset-[16px]">DAPATKAN DOMBA<br>TERBAIK ANDA.</h2>
                 <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 pt-8 md:pt-12">
                     <a href="{{ route('public.catalog') }}" class="w-full sm:w-auto px-8 py-5 md:px-14 md:py-7 bg-white text-[#03235b] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] md:tracking-[0.4em] rounded-2xl shadow-xl hover:scale-105 transition-all">Lihat Katalog</a>
                     <a href="https://wa.me/+6287708463586" class="w-full sm:w-auto px-8 py-5 md:px-14 md:py-7 bg-transparent text-white border-2 border-white/20 font-black text-[10px] md:text-xs uppercase tracking-[0.2em] md:tracking-[0.4em] rounded-2xl hover:bg-white/5 transition-all">Pesan Lewat WA</a>
@@ -604,10 +604,10 @@
                 <!-- Brand Section -->
                 <div class="space-y-8">
                     <div class="flex items-center gap-4">
-                        <div class="bg-white p-2 rounded-xl shadow-md border border-slate-100">
+                        <div class=" border-slate-100">
                             <x-application-logo class="w-10 h-10 text-[#03235b]" />
                         </div>
-                        <span class="text-3xl font-black text-[#03235b] tracking-tighter uppercase">Domba Loka</span>
+                        <span class="text-3xl font-black text-[#03235b] tracking-tighter uppercase">DombaLoka</span>
                     </div>
                     <p class="text-slate-400 font-bold leading-relaxed italic pr-4">
                         "Pusat domba premium Jawa Barat. Fokus pada kualitas, kesehatan, dan kepuasan pelanggan di setiap transaksi."
@@ -629,10 +629,10 @@
                 <div class="space-y-8">
                     <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Navigasi</h4>
                     <ul class="space-y-4">
-                        <li><a href="{{ route('public.about') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Tentang Kami</a></li>
-                        <li><a href="{{ route('public.catalog') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Katalog Domba</a></li>
-                        <li><a href="#services" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Layanan Kami</a></li>
-                        <li><a href="#testimonials" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#2ee0a7] scale-0 group-hover:scale-100 transition-transform"></span> Testimoni</a></li>
+                        <li><a href="{{ route('public.about') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Tentang Kami</a></li>
+                        <li><a href="{{ route('public.catalog') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Katalog Domba</a></li>
+                        <li><a href="#services" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Layanan Kami</a></li>
+                        <li><a href="#testimonials" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Testimoni</a></li>
                     </ul>
                 </div>
 
@@ -652,7 +652,7 @@
                     <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Kontak Kami</h4>
                     <div class="space-y-6">
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#2ee0a7] shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#fbbf24] shrink-0">
                                 <i data-feather="map-pin" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-bold text-slate-600 leading-relaxed uppercase tracking-wider mt-1">
@@ -660,7 +660,7 @@
                             </p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#2ee0a7] shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#fbbf24] shrink-0">
                                 <i data-feather="phone" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-black text-[#03235b] uppercase tracking-widest">
@@ -668,7 +668,7 @@
                             </p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#2ee0a7] shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#fbbf24] shrink-0">
                                 <i data-feather="mail" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-black text-[#03235b] uppercase tracking-widest">
@@ -680,7 +680,7 @@
             </div>
 
             <div class="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">
-                 <p>&copy; {{ date('Y') }} Domba Loka Farm • Cianjur, Jawa Barat</p>
+                 <p>&copy; {{ date('Y') }} DombaLoka Farm • Cianjur, Jawa Barat</p>
                  <div class="flex items-center gap-8">
                     <a href="#" class="hover:text-[#03235b] transition-colors">Syarat & Ketentuan</a>
                     <a href="#" class="hover:text-[#03235b] transition-colors">Kebijakan Privasi</a>
@@ -704,12 +704,12 @@
             <!-- Header -->
             <div class="bg-[#03235b] p-6 text-white flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-[#2ee0a7] rounded-xl flex items-center justify-center text-[#03235b]">
+                    <div class="w-10 h-10 bg-[#fbbf24] rounded-xl flex items-center justify-center text-[#03235b]">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="M9,15a1,1,0,1,0,1,1A1,1,0,0,0,9,15ZM2,14a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,2,14Zm20,0a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,22,14ZM17,7H13V5.72A2,2,0,0,0,14,4a2,2,0,0,0-4,0,2,2,0,0,0,1,1.72V7H7a3,3,0,0,0-3,3v9a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V10A3,3,0,0,0,17,7ZM13.72,9l-.5,2H10.78l-.5-2ZM18,19a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V10A1,1,0,0,1,7,9H8.22L9,12.24A1,1,0,0,0,10,13h4a1,1,0,0,0,1-.76L15.78,9H17a1,1,0,0,1,1,1Zm-3-4a1,1,0,1,0,1,1A1,1,0,0,0,15,15Z"/></svg>
                     </div>
                     <div>
                         <h4 class="text-sm font-black uppercase tracking-widest">LokaAI</h4>
-                        <p class="text-[9px] font-bold text-[#2ee0a7] uppercase tracking-[0.2em]">Asisten Virtual</p>
+                        <p class="text-[9px] font-bold text-[#fbbf24] uppercase tracking-[0.2em]">Asisten Virtual</p>
                     </div>
                 </div>
                 <button @click="isOpen = false" class="text-white/50 hover:text-white transition-colors">
@@ -741,7 +741,7 @@
                     <input type="text" 
                            x-model="input" 
                            placeholder="Tanya LokaAI..." 
-                           class="flex-1 px-5 py-3 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder-slate-400 focus:ring-2 focus:ring-[#2ee0a7] transition-all">
+                           class="flex-1 px-5 py-3 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder-slate-400 focus:ring-2 focus:ring-[#fbbf24] transition-all">
                     <button type="submit" 
                             :disabled="isLoading || !input.trim()"
                             class="w-12 h-12 bg-[#03235b] text-white rounded-2xl flex items-center justify-center hover:bg-[#0c5197] disabled:opacity-50 transition-all">

@@ -1,5 +1,5 @@
 <x-public-layout>
-    <x-slot name="title">Katalog Premium Domba - Domba Loka</x-slot>
+    <x-slot name="title">Katalog Premium Domba - DombaLoka</x-slot>
 
     <div class="bg-[#f8fafc] min-h-screen">
         <!-- Hero Header -->
@@ -13,7 +13,7 @@
                     </nav>
                     <h1 class="text-6xl lg:text-7xl font-black text-[#03235b] tracking-tighter leading-tight uppercase italic">
                         Katalog<br>
-                        <span class="text-[#0c5197] underline decoration-[#2ee0a7] decoration-[8px] underline-offset-[12px]">Pilihan.</span>
+                        <span class="text-[#0c5197] underline decoration-[#fbbf24] decoration-[8px] underline-offset-[12px]">Pilihan.</span>
                     </h1>
                     <p class="text-slate-500 font-bold max-w-xl text-lg leading-relaxed">
                         Eksplorasi koleksi domba premium kami yang telah melalui proses seleksi ketat di peternakan Cianjur.
@@ -45,7 +45,7 @@
                         <!-- Search -->
                         <div class="relative group">
                             <input type="text" name="search" value="{{ $filters['search'] }}" placeholder="Cari Kode atau ID..." 
-                                   class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold text-[#03235b] placeholder-slate-400 focus:ring-4 focus:ring-[#2ee0a7]/20 transition-all">
+                                   class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold text-[#03235b] placeholder-slate-400 focus:ring-4 focus:ring-[#fbbf24]/20 transition-all">
                         </div>
 
                         <!-- Type -->
@@ -103,14 +103,14 @@
                             <!-- Badges -->
                             <div class="absolute top-5 left-5 right-5 flex justify-between items-start">
                                  <span class="px-4 py-2 bg-white/90 backdrop-blur-md text-[#03235b] text-[9px] font-black uppercase tracking-widest rounded-xl shadow-sm border border-white/20">{{ $item->sheepType->name }}</span>
-                                 <div class="w-8 h-8 bg-[#2ee0a7] rounded-lg flex items-center justify-center text-[#03235b] shadow-lg">
+                                 <div class="w-8 h-8 bg-[#fbbf24] rounded-lg flex items-center justify-center text-[#03235b] shadow-lg">
                                     <i data-feather="check" class="w-4 h-4"></i>
                                  </div>
                             </div>
 
                             <div class="absolute bottom-5 left-5 right-5">
                                 <div class="bg-black/20 backdrop-blur-md px-4 py-2 rounded-xl inline-flex items-center gap-2 border border-white/10">
-                                    <div class="w-2 h-2 rounded-full bg-[#2ee0a7] animate-pulse"></div>
+                                    <div class="w-2 h-2 rounded-full bg-[#fbbf24] animate-pulse"></div>
                                     <span class="text-[9px] font-black text-white uppercase tracking-widest">Siap Kirim</span>
                                 </div>
                             </div>

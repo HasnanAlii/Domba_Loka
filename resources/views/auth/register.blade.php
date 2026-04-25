@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="mb-10 text-center">
         <h2 class="text-2xl font-black tracking-tight text-slate-800">Daftar Akun</h2>
-        <p class="mt-2 text-sm font-medium text-slate-500">Bergabunglah dengan ekosistem Domba Loka</p>
+        <p class="mt-2 text-sm font-medium text-slate-500">Bergabunglah dengan ekosistem DombaLoka</p>
     </div>
 
     <form method="POST" action="{{ route('register') }}" class="space-y-5">

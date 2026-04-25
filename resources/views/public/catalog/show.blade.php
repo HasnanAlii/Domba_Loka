@@ -1,5 +1,5 @@
 <x-public-layout>
-    <x-slot name="title">Detail {{ $sheep->code }} - Domba Loka</x-slot>
+    <x-slot name="title">Detail {{ $sheep->code }} - DombaLoka</x-slot>
 
     <div class="bg-[#f8fafc] min-h-screen pt-32 pb-24">
         <div class="max-w-7xl mx-auto px-6">
@@ -33,7 +33,7 @@
                              <span class="px-5 py-2.5 bg-white/90 backdrop-blur-md text-[#03235b] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-sm border border-white/20">
                                 {{ $sheep->sheepType->name }}
                              </span>
-                             <div class="bg-[#2ee0a7] px-4 py-2 rounded-xl inline-flex items-center gap-2 border border-white/20 shadow-lg self-start">
+                             <div class="bg-[#fbbf24] px-4 py-2 rounded-xl inline-flex items-center gap-2 border border-white/20 shadow-lg self-start">
                                 <div class="w-2 h-2 rounded-full bg-[#03235b] animate-pulse"></div>
                                 <span class="text-[9px] font-black text-[#03235b] uppercase tracking-widest">Kondisi Prima</span>
                              </div>
@@ -45,7 +45,7 @@
                         <template x-for="photo in photos" :key="photo.id">
                             <button @click="activePhoto = photo.path" 
                                     class="relative aspect-square rounded-2xl overflow-hidden border-2 transition-all duration-300"
-                                    :class="activePhoto === photo.path ? 'border-[#2ee0a7] shadow-lg scale-105' : 'border-transparent hover:border-slate-200'">
+                                    :class="activePhoto === photo.path ? 'border-[#fbbf24] shadow-lg scale-105' : 'border-transparent hover:border-slate-200'">
                                 <img :src="photo.path" class="w-full h-full object-cover">
                             </button>
                         </template>
@@ -72,7 +72,7 @@
                                 <p class="text-5xl font-black text-[#0c5197] tracking-tighter">Rp {{ number_format($sheep->price, 0, ',', '.') }}</p>
                             </div>
                             <div class="text-right space-y-2">
-                                <span class="px-4 py-2 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-lg">Status: {{ ucfirst($sheep->status) }}</span>
+                                <span class="px-4 py-2 bg-amber-50 text-amber-600 text-[9px] font-black uppercase tracking-widest rounded-lg">Status: {{ ucfirst($sheep->status) }}</span>
                             </div>
                         </div>
 
@@ -80,14 +80,14 @@
                             <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 flex flex-col gap-2">
                                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Berat Aktual</p>
                                 <div class="flex items-center gap-3 text-[#03235b]">
-                                    <i data-feather="target" class="w-5 h-5 text-[#2ee0a7]"></i>
+                                    <i data-feather="target" class="w-5 h-5 text-[#fbbf24]"></i>
                                     <span class="text-2xl font-black tracking-tight">{{ $sheep->weight }} <span class="text-sm font-bold opacity-30 uppercase tracking-widest">KG</span></span>
                                 </div>
                             </div>
                             <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 flex flex-col gap-2">
                                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Usia Ternak</p>
                                 <div class="flex items-center gap-3 text-[#03235b]">
-                                    <i data-feather="calendar" class="w-5 h-5 text-[#2ee0a7]"></i>
+                                    <i data-feather="calendar" class="w-5 h-5 text-[#fbbf24]"></i>
                                     <span class="text-2xl font-black tracking-tight">{{ $sheep->age }} <span class="text-sm font-bold opacity-30 uppercase tracking-widest">BLN</span></span>
                                 </div>
                             </div>
@@ -102,19 +102,19 @@
                         </p>
                         <ul class="grid grid-cols-2 gap-y-4 gap-x-8">
                              <li class="flex items-center gap-3 text-xs font-black text-slate-800 uppercase tracking-widest">
-                                <div class="w-2 h-2 rounded-full bg-[#2ee0a7]"></div>
+                                <div class="w-2 h-2 rounded-full bg-[#fbbf24]"></div>
                                 Sudah Vaksinasi
                              </li>
                              <li class="flex items-center gap-3 text-xs font-black text-slate-800 uppercase tracking-widest">
-                                <div class="w-2 h-2 rounded-full bg-[#2ee0a7]"></div>
+                                <div class="w-2 h-2 rounded-full bg-[#fbbf24]"></div>
                                 Pakan Organik
                              </li>
                              <li class="flex items-center gap-3 text-xs font-black text-slate-800 uppercase tracking-widest">
-                                <div class="w-2 h-2 rounded-full bg-[#2ee0a7]"></div>
+                                <div class="w-2 h-2 rounded-full bg-[#fbbf24]"></div>
                                 Bebas Penyakit
                              </li>
                              <li class="flex items-center gap-3 text-xs font-black text-slate-800 uppercase tracking-widest">
-                                <div class="w-2 h-2 rounded-full bg-[#2ee0a7]"></div>
+                                <div class="w-2 h-2 rounded-full bg-[#fbbf24]"></div>
                                 Sertifikat Sehat
                              </li>
                         </ul>
@@ -122,7 +122,7 @@
 
                     <!-- CTA Section -->
                     <div class="pt-8 flex flex-col sm:flex-row gap-6">
-                        <a href="https://wa.me/+6287708463586?text=Halo Domba Loka, saya tertarik untuk memesan domba dengan kode {{ $sheep->code }} ({{ $sheep->sheepType->name }}). Mohon informasi ketersediaan dan cara pemesanannya. Terima kasih!" 
+                        <a href="https://wa.me/+6287708463586?text=Halo DombaLoka, saya tertarik untuk memesan domba dengan kode {{ $sheep->code }} ({{ $sheep->sheepType->name }}). Mohon informasi ketersediaan dan cara pemesanannya. Terima kasih!" 
                            target="_blank"
                            class="flex-1 flex items-center justify-center gap-4 py-6 bg-[#03235b] text-white text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] shadow-[0_25px_50px_-15px_rgba(3,35,91,0.3)] hover:bg-[#0c5197] hover:scale-105 transition-all">
                             Pesan Sekarang
@@ -143,7 +143,7 @@
                         <h2 class="text-xs font-black text-[#0c5197] uppercase tracking-[0.4em]">Rekomendasi Serupa</h2>
                         <h3 class="text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Mungkin Anda Suka.</h3>
                     </div>
-                    <a href="{{ route('public.catalog') }}" class="text-[10px] font-black text-[#03235b] uppercase tracking-widest border-b-2 border-[#2ee0a7] pb-1">Lihat Semua Katalog</a>
+                    <a href="{{ route('public.catalog') }}" class="text-[10px] font-black text-[#03235b] uppercase tracking-widest border-b-2 border-[#fbbf24] pb-1">Lihat Semua Katalog</a>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

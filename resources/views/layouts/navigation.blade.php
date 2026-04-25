@@ -1,28 +1,27 @@
 <nav
     class="fixed inset-y-0 left-0 w-[270px] bg-gradient-to-b from-[#03235b] via-[#0c5197] to-[#1c88da] shadow-2xl z-50 font-sans text-white overflow-y-auto flex flex-col">
 
-    {{-- BAGIAN ATAS --}}
     <div class="flex-1 flex flex-col">
 
-        {{-- Header / Logo --}}
-        <div class="px-6 py-7 flex items-center justify-between">
-            <div class="flex items-center gap-3.5">
-                <div class="bg-white p-2 rounded-lg flex items-center justify-center">
-                    <x-application-logo class="h-6 w-6 text-[#03235b]" />
-                </div>
-                <span class="text-xl font-extrabold text-white tracking-tight">Domba Loka</span>
-            </div>
 
-            {{-- Tombol Collapse --}}
+        {{-- Header / Logo (centered & bigger) --}}
+        <div class="px-6 pt-10 pb-7 flex flex-col items-center justify-center">
+            <div class="bg-white p-3 rounded-2xl flex items-center justify-center shadow-lg">
+                <x-application-logo class="h-24 w-24 text-[#03235b]" />
+            </div>
+            <span class="mt-4 text-2xl font-extrabold text-white tracking-tight">DombaLoka</span>
+        </div>
+        {{-- Tombol Collapse --}}
+        {{-- <div class="flex justify-center mb-2">
             <button @click="window.innerWidth < 768 ? showSidebar = false : sidebarCollapsed = !sidebarCollapsed"
-                class="bg-[#f0f4f8] hover:bg-white text-[#03235b] rounded-lg p-1.5 shadow-sm transition-all ml-1 w-8 h-8 flex items-center justify-center">
+                class="bg-[#f0f4f8] hover:bg-white text-[#03235b] rounded-lg p-1.5 shadow-sm transition-all w-8 h-8 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg"
                     class="w-5 h-5 stroke-[3px] transition-transform duration-300 collapse-icon" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
             </button>
-        </div>
+        </div> --}}
 
         {{-- Menu Utama --}}
         <div class="px-5 pb-6 flex-1">

@@ -49,7 +49,7 @@
                     <div class="text-center space-y-5 mb-8">
                         <a href="/" class="inline-block group transition-transform hover:scale-105">
                             <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-white/50 transition-all group-hover:shadow-md inline-flex items-center justify-center">
-                                <x-application-logo class="w-12 h-12 text-[#03235b]" />
+                                <x-application-logo class="w-24 h-24 text-[#03235b]" />
                             </div>
                         </a>
                         {{-- <div class="space-y-1">

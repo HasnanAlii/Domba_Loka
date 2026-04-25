@@ -107,7 +107,13 @@
         <table class="header-table">
             <tr>
                 <td class="align-middle text-left" style="width: 8%; padding-bottom: 5px;">
-                    <img src="{{ public_path('images/domba.png') }}" style="height: 50px; width: auto;" alt="Logo">
+                    @php
+                        $path = public_path('images/icon/logo.png');
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $data = file_get_contents($path);
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                    @endphp
+                    <img src="{{ $base64 }}" style="height: 50px; width: auto;" alt="Logo">
                 </td>
                 <td class="align-middle text-left" style="width: 52%; padding-left: 15px;">
                     <div style="font-size: 25px; font-weight: 800; letter-spacing: 0.5px;">DOMBA LOKA</div>
