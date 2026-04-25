@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="overflow-x-hidden">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,6 +12,9 @@
 
     <!-- Tailwind CSS (via Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
@@ -64,7 +67,7 @@
             </div>
 
             <div class="flex items-center gap-5">
-                @if (Route::has('login'))
+                {{-- @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}" 
                            class="px-6 py-2.5 bg-[#03235b] text-white font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-lg hover:scale-105 transition-all">
@@ -81,7 +84,7 @@
                             </a>
                         @endif
                     @endauth
-                @endif
+                @endif --}}
                 
                 <!-- Mobile Menu Toggle -->
                 <button @click="mobileMenu = !mobileMenu" class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none">
@@ -91,36 +94,38 @@
                 </button>
             </div>
         </div>
-
-        <!-- Mobile Menu Overlay -->
-        <div x-show="mobileMenu" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 -translate-y-full"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 -translate-y-full"
-             class="fixed inset-0 z-[150] bg-white pt-32 px-10 md:hidden" 
-             x-cloak>
-            <div class="space-y-12">
-                <a @click="mobileMenu = false" href="{{ route('public.about') }}" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Tentang Kami</a>
-                <a @click="mobileMenu = false" href="{{ route('public.catalog') }}" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Katalog</a>
-                <a @click="mobileMenu = false" href="{{ url('/') }}#services" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Layanan</a>
-                <a @click="mobileMenu = false" href="{{ url('/') }}#faq" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">FAQ</a>
-                
-                <div class="pt-12 border-t border-slate-100 flex flex-col gap-6">
-                    @guest
-                        <a href="{{ route('login') }}" class="text-xs font-black uppercase tracking-widest text-slate-400">Masuk Akun</a>
-                        <a href="{{ route('register') }}" class="w-full py-5 bg-[#2ee0a7] text-[#03235b] text-center font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl">Daftar Kemitraan</a>
-                    @else
-                        <a href="{{ url('/dashboard') }}" class="w-full py-5 bg-[#03235b] text-white text-center font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl">Ke Dashboard</a>
-                    @endguest
-                </div>
-            </div>
-        </div>
     </nav>
 
-    <main class="min-h-screen pt-24 pb-20">
+        <!-- Mobile Menu Backdrop -->
+        <div x-show="mobileMenu" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-[80] bg-slate-900/40 backdrop-blur-sm md:hidden"
+             @click="mobileMenu = false"
+             x-cloak></div>
+
+        <!-- Mobile Menu Sidebar -->
+        <div x-show="mobileMenu" 
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             class="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm z-[90] bg-white pt-28 px-6 md:hidden shadow-2xl border-l border-slate-100 overflow-y-auto" 
+             x-cloak>
+            <div class="space-y-8 px-2">
+                <a @click="mobileMenu = false" href="{{ route('public.about') }}" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">Tentang Kami</a>
+                <a @click="mobileMenu = false" href="{{ route('public.catalog') }}" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">Katalog</a>
+                <a @click="mobileMenu = false" href="{{ url('/') }}#services" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">Layanan</a>
+                <a @click="mobileMenu = false" href="{{ url('/') }}#faq" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">FAQ</a>
+            </div>
+        </div>
+    <main class="min-h-screen pt-24 pb-20 overflow-x-hidden">
         {{ $slot }}
     </main>
 
@@ -358,6 +363,16 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
         feather.replace();
+    </script>
+    
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
     </script>
 
 </body>

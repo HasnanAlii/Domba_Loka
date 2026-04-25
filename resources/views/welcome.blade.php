@@ -13,6 +13,9 @@
     <!-- Tailwind CSS (via Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -84,7 +87,7 @@
             </div>
 
             <div class="flex items-center gap-5">
-                @if (Route::has('login'))
+                {{-- @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}" 
                            class="px-6 py-2.5 bg-[#03235b] text-white font-black text-[10px] uppercase tracking-[0.2em] rounded-xl shadow-lg hover:scale-105 transition-all">
@@ -102,7 +105,7 @@
                         @endif
                     @endauth
                 @endif
-                
+                 --}}
                 <!-- Mobile Menu Toggle -->
                 <button @click="mobileMenu = !mobileMenu" class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none">
                     <span class="w-6 h-0.5 bg-[#03235b] transition-all transform" :class="mobileMenu ? 'rotate-45 translate-y-2' : ''"></span>
@@ -111,40 +114,43 @@
                 </button>
             </div>
         </div>
+    </nav>
 
-        <!-- Mobile Menu Overlay -->
+        <!-- Mobile Menu Backdrop -->
         <div x-show="mobileMenu" 
              x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 -translate-y-full"
-             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
              x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 -translate-y-full"
-             class="fixed inset-0 z-[150] bg-white pt-32 px-10 md:hidden" 
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-[80] bg-slate-900/40 backdrop-blur-sm md:hidden"
+             @click="mobileMenu = false"
+             x-cloak></div>
+
+        <!-- Mobile Menu Sidebar -->
+        <div x-show="mobileMenu" 
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             class="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm z-[90] bg-white pt-28 px-6 md:hidden shadow-2xl border-l border-slate-100 overflow-y-auto" 
              x-cloak>
-            <div class="space-y-12">
-                <a @click="mobileMenu = false" href="{{ route('public.about') }}" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Tentang Kami</a>
-                <a @click="mobileMenu = false" href="{{ route('public.catalog') }}" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Katalog</a>
-                <a @click="mobileMenu = false" href="#services" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">Layanan</a>
-                <a @click="mobileMenu = false" href="#faq" class="block text-4xl font-black text-[#03235b] tracking-tighter uppercase italic">FAQ</a>
-                
-                <div class="pt-12 border-t border-slate-100 flex flex-col gap-6">
-                    @guest
-                        <a href="{{ route('login') }}" class="text-xs font-black uppercase tracking-widest text-slate-400">Masuk Akun</a>
-                        <a href="{{ route('register') }}" class="w-full py-5 bg-[#2ee0a7] text-[#03235b] text-center font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl">Daftar Kemitraan</a>
-                    @else
-                        <a href="{{ url('/dashboard') }}" class="w-full py-5 bg-[#03235b] text-white text-center font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl">Ke Dashboard</a>
-                    @endguest
-                </div>
+            <div class="space-y-8 px-2">
+                <a @click="mobileMenu = false" href="{{ route('public.about') }}" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">Tentang Kami</a>
+                <a @click="mobileMenu = false" href="{{ route('public.catalog') }}" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">Katalog</a>
+                <a @click="mobileMenu = false" href="#services" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">Layanan</a>
+                <a @click="mobileMenu = false" href="#faq" class="block text-2xl font-black text-[#03235b] tracking-tighter uppercase">FAQ</a>
             </div>
         </div>
-    </nav>
 
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center pt-20 overflow-hidden hero-bg">
         <div class="absolute inset-0 hero-pattern opacity-30"></div>
         
-        <div class="relative max-w-7xl mx-auto px-6 w-full py-20">
+        <div class="relative max-w-7xl mx-auto px-6 w-full py-20" data-aos="fade-up">
             <div class="max-w-3xl space-y-10">
                 {{-- <div class="inline-flex items-center gap-4 px-5 py-2.5 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-100 shadow-sm">
                     <span class="w-2.5 h-2.5 bg-[#2ee0a7] rounded-full emerald-glow animate-pulse"></span>
@@ -192,7 +198,7 @@
     <section id="about" class="py-32 px-6 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="grid lg:grid-cols-2 gap-24 items-center">
-                <div class="relative">
+                <div class="relative" data-aos="fade-right">
                     <div class="absolute -top-12 -left-12 w-64 h-64 bg-[#2ee0a7]/10 rounded-full blur-3xl"></div>
                     <div class="relative rounded-[4rem] overflow-hidden shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-700">
                         <img src="{{ asset('images/farm_panorama.png') }}" alt="Domba Loka Farm" class="w-full h-[600px] object-cover">
@@ -203,7 +209,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="space-y-12">
+                <div class="space-y-12" data-aos="fade-left">
                     <div class="space-y-6">
                         <div class="inline-flex items-center gap-3 mb-6">
                             <div class="w-10 h-1 bg-[#2ee0a7]"></div>
@@ -244,7 +250,7 @@
     <!-- Katalog Section -->
     <section id="catalog" class="py-32 px-6 bg-[#f8fafc]">
         <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8" data-aos="fade-up">
                 <div class="space-y-4">
                     <div class="inline-flex items-center gap-3 mb-2">
                         <div class="w-10 h-1 bg-[#2ee0a7]"></div>
@@ -259,8 +265,8 @@
             </div>
 
             <div class="grid md:grid-cols-2 gap-12">
-                @forelse($featuredSheep as $sheep)
-                    <div class="group relative bg-white rounded-[3rem] overflow-hidden shadow-xl border border-slate-100 hover:shadow-2xl transition-all duration-500">
+                @forelse($featuredSheep as $index => $sheep)
+                    <div class="group relative bg-white rounded-[3rem] overflow-hidden shadow-xl border border-slate-100 hover:shadow-2xl transition-all duration-500" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
                         <div class="h-[450px] overflow-hidden bg-slate-100 relative">
                             @if($sheep->photo)
                                 <img src="{{ asset('storage/' . $sheep->photo) }}" alt="{{ $sheep->code }}" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105">
@@ -304,7 +310,7 @@
     <!-- Steps Section -->
     <section class="py-32 px-6 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center space-y-4 mb-24">
+            <div class="text-center space-y-4 mb-24" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
                     <div class="w-10 h-1 bg-[#2ee0a7]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Cara Memulai</h2>
@@ -313,11 +319,11 @@
                 <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Proses Transaksi <span class="italic underline decoration-[#2ee0a7]">Tanpa Ribet.</span></h3>
             </div>
 
-            <div class="grid md:grid-cols-4 gap-12 relative">
+            <div class="grid md:grid-cols-4 gap-12 relative" data-aos="fade-up">
                 <!-- Line connection -->
                 <div class="hidden md:block absolute top-1/4 left-0 right-0 h-px bg-slate-100 z-0"></div>
                 
-                <div class="relative z-10 text-center space-y-8 group">
+                <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="0">
                     <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
                         <span class="text-3xl font-black text-[#03235b]">01</span>
                     </div>
@@ -327,7 +333,7 @@
                     </div>
                 </div>
 
-                <div class="relative z-10 text-center space-y-8 group">
+                <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
                         <span class="text-3xl font-black text-[#03235b]">02</span>
                     </div>
@@ -337,7 +343,7 @@
                     </div>
                 </div>
 
-                <div class="relative z-10 text-center space-y-8 group">
+                <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-24 h-24 bg-white shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto border border-slate-50 group-hover:bg-[#2ee0a7] group-hover:scale-110 transition-all duration-500">
                         <span class="text-3xl font-black text-[#03235b]">03</span>
                     </div>
@@ -347,7 +353,7 @@
                     </div>
                 </div>
 
-                <div class="relative z-10 text-center space-y-8 group">
+                <div class="relative z-10 text-center space-y-8 group" data-aos="fade-up" data-aos-delay="300">
                     <div class="w-24 h-24 bg-[#03235b] shadow-2xl rounded-[2rem] flex items-center justify-center mx-auto text-white group-hover:scale-110 transition-all duration-500">
                         <svg class="w-10 h-10 text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" /></svg>
                     </div>
@@ -362,7 +368,7 @@
 
     <!-- Keunggulan Section -->
     <section id="features" class="py-32 bg-white relative">
-        <div class="max-w-7xl mx-auto px-6 mb-20 text-center">
+        <div class="max-w-7xl mx-auto px-6 mb-20 text-center" data-aos="fade-up">
             <div class="inline-flex items-center gap-3 mb-4">
                 <div class="w-10 h-1 bg-[#2ee0a7]"></div>
                 <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Keunggulan Kami</h2>
@@ -371,7 +377,7 @@
             <h3 class="text-6xl font-black text-[#03235b] tracking-tighter">Mengapa Memilih <span class="text-gradient">Domba Loka?</span></h3>
         </div>
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-4 gap-8">
-            <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all">
+            <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all" data-aos="fade-up" data-aos-delay="0">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-[#03235b] transition-all">
                     <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h6l3 3h5l1 5H5V8zm0 5l-1 2m12-2l1 2M8 18a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4zM2 8h2m-2 4h2m-2 4h2" />
@@ -380,7 +386,7 @@
                 <h4 class="text-lg font-black text-[#03235b] uppercase tracking-widest mb-4">Pengiriman Cepat</h4>
                 <p class="text-sm font-bold text-slate-400 leading-relaxed">Kami antar domba pesanan Anda sampai ke depan rumah dengan armada khusus ternak.</p>
             </div>
-            <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all">
+            <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all" data-aos="fade-up" data-aos-delay="100">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-[#03235b] transition-all">
                     <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -389,7 +395,7 @@
                 <h4 class="text-lg font-black text-[#03235b] uppercase tracking-widest mb-4">Sehat & Bergaransi</h4>
                 <p class="text-sm font-bold text-slate-400 leading-relaxed">Seluruh domba telah divaksinasi dan kami garansi kesehatannya hingga tiba di lokasi.</p>
             </div>
-            <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all">
+            <div class="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] group hover:bg-white hover:shadow-2xl transition-all" data-aos="fade-up" data-aos-delay="200">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-[#03235b] transition-all">
                     <svg class="w-8 h-8 text-[#03235b] group-hover:text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
@@ -398,7 +404,7 @@
                 <h4 class="text-lg font-black text-[#03235b] uppercase tracking-widest mb-4">Timbangan Akurat</h4>
                 <p class="text-sm font-bold text-slate-400 leading-relaxed">Sistem jual beli transparan dengan timbangan yang akurat dan bisa dipantau langsung.</p>
             </div>
-            <div class="p-12 bg-[#03235b] shadow-2xl rounded-[3rem] group hover:scale-105 transition-all text-white">
+            <div class="p-12 bg-[#03235b] shadow-2xl rounded-[3rem] group hover:scale-105 transition-all text-white" data-aos="fade-up" data-aos-delay="300">
                 <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-8 border border-white/10">
                     <svg class="w-8 h-8 text-[#2ee0a7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -413,7 +419,7 @@
     <!-- Services Section -->
     <section id="services" class="py-32 px-6 bg-[#f0f4f8]">
         <div class="max-w-7xl mx-auto space-y-20">
-            <div class="text-center space-y-4">
+            <div class="text-center space-y-4" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
                     <div class="w-10 h-1 bg-[#2ee0a7]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Kualitas & Layanan</h2>
@@ -423,19 +429,19 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-xl group hover:-translate-y-3 transition-all duration-500">
+                <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-xl group hover:-translate-y-3 transition-all duration-500" data-aos="fade-up" data-aos-delay="0">
                     <p class="text-6xl font-black text-slate-100 group-hover:text-[#2ee0a7]/20 transition-colors mb-8">01</p>
                     <h4 class="text-3xl font-black text-slate-900 mb-4 tracking-tight">Aqiqah & Qurban</h4>
                     <p class="text-slate-500 font-medium leading-relaxed mb-10">Paket ibadah lengkap mulai dari pemilihan domba, pemotongan syar'i, hingga penyaluran daging.</p>
                     <div class="w-12 h-1 bg-slate-100 group-hover:bg-[#2ee0a7] transition-all w-0 group-hover:w-full"></div>
                 </div>
-                <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-xl group hover:-translate-y-3 transition-all duration-500">
+                <div class="p-12 bg-white rounded-[3rem] border border-slate-100 shadow-xl group hover:-translate-y-3 transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
                     <p class="text-6xl font-black text-slate-100 group-hover:text-[#2ee0a7]/20 transition-colors mb-8">02</p>
                     <h4 class="text-3xl font-black text-slate-900 mb-4 tracking-tight">Suplai Restoran</h4>
                     <p class="text-slate-500 font-medium leading-relaxed mb-10">Penyedia karkas domba segar berkualitas tinggi untuk kebutuhan hotel, restoran, dan katering.</p>
                     <div class="w-12 h-1 bg-slate-100 group-hover:bg-[#2ee0a7] transition-all w-0 group-hover:w-full"></div>
                 </div>
-                <div class="p-12 bg-[#03235b] rounded-[3rem] shadow-2xl group hover:-translate-y-3 transition-all duration-500">
+                <div class="p-12 bg-[#03235b] rounded-[3rem] shadow-2xl group hover:-translate-y-3 transition-all duration-500" data-aos="fade-up" data-aos-delay="200">
                     <p class="text-6xl font-black text-white/5 mb-8">03</p>
                     <h4 class="text-3xl font-black text-white mb-4 tracking-tight">Bibit Unggul</h4>
                     <p class="text-blue-100/60 font-medium leading-relaxed mb-10">Menyediakan bibit domba Garut dan jenis lainnya dengan genetika juara untuk peternak.</p>
@@ -448,7 +454,7 @@
     <!-- Testimonials Section -->
     <section id="testimonials" class="py-32 px-6 bg-white">
         <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col items-center text-center space-y-6 mb-24">
+            <div class="flex flex-col items-center text-center space-y-6 mb-24" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
                     <div class="w-10 h-1 bg-[#2ee0a7]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Kesan Pelanggan</h2>
@@ -466,7 +472,7 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group">
+                <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group" data-aos="fade-up" data-aos-delay="0">
                     <div class="flex gap-1 text-[#2ee0a7]">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
@@ -486,7 +492,7 @@
                     </div>
                 </div>
 
-                <div class="p-12 bg-[#03235b] rounded-[3rem] shadow-2xl space-y-8 transform md:-translate-y-6">
+                <div class="p-12 bg-[#03235b] rounded-[3rem] shadow-2xl space-y-8 transform md:-translate-y-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex gap-1 text-[#2ee0a7]">
                          @for($i=0; $i<5; $i++)
                          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
@@ -504,7 +510,7 @@
                     </div>
                 </div>
 
-                <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group">
+                <div class="p-12 bg-slate-50 rounded-[3rem] border border-slate-100 space-y-8 hover:bg-white hover:shadow-2xl transition-all duration-500 group" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex gap-1 text-[#2ee0a7]">
                         @for($i=0; $i<5; $i++)
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
@@ -528,7 +534,7 @@
     <!-- FAQ Section -->
     <section id="faq" class="py-32 px-6 bg-[#f8fafc]" x-data="{ active: 0 }">
         <div class="max-w-4xl mx-auto">
-            <div class="text-center space-y-4 mb-20">
+            <div class="text-center space-y-4 mb-20" data-aos="fade-up">
                 <div class="inline-flex items-center gap-3 mb-2">
                     <div class="w-10 h-1 bg-[#2ee0a7]"></div>
                     <h2 class="text-[10px] font-black text-[#0c5197] uppercase tracking-[0.5em]">Tanya Jawab</h2>
@@ -538,7 +544,7 @@
             </div>
 
             <div class="space-y-4">
-                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="0">
                     <button @click="active = (active === 1 ? 0 : 1)" class="w-full p-8 flex items-center justify-between text-left">
                         <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Apakah domba bisa dikirim ke luar Jawa Barat?</span>
                         <svg class="w-6 h-6 transition-transform duration-500" :class="active === 1 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
@@ -550,7 +556,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="100">
                     <button @click="active = (active === 2 ? 0 : 2)" class="w-full p-8 flex items-center justify-between text-left">
                         <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Apakah Domba Loka menyediakan paket Aqiqah siap saji?</span>
                         <svg class="w-6 h-6 transition-transform duration-500" :class="active === 2 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
@@ -562,7 +568,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow" data-aos="fade-up" data-aos-delay="200">
                     <button @click="active = (active === 3 ? 0 : 3)" class="w-full p-8 flex items-center justify-between text-left">
                         <span class="text-lg font-black text-[#03235b] uppercase tracking-tight">Bagaimana sistem garansi kesehatan di Domba Loka?</span>
                         <svg class="w-6 h-6 transition-transform duration-500" :class="active === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3"/></svg>
@@ -578,14 +584,14 @@
     </section>
 
     <!-- Final CTA -->
-    <section class="py-32 px-6 bg-white overflow-hidden">
-        <div class="max-w-7xl mx-auto rounded-[4rem] bg-[#03235b] p-24 text-center relative shadow-[0_40px_80px_-20px_rgba(3,35,91,0.4)]">
+    <section class="py-20 md:py-32 px-4 md:px-6 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto rounded-[3rem] md:rounded-[4rem] bg-[#03235b] p-8 sm:p-12 md:p-24 text-center relative shadow-[0_40px_80px_-20px_rgba(3,35,91,0.4)]" data-aos="zoom-in">
              <div class="absolute inset-0 hero-pattern opacity-10"></div>
-             <div class="relative z-10 space-y-12">
-                <h2 class="text-6xl lg:text-7xl font-black text-white tracking-tighter leading-none uppercase italic underline decoration-[#2ee0a7] decoration-[12px] underline-offset-[16px]">DAPATKAN DOMBA<br>TERBAIK ANDA.</h2>
-                <div class="flex flex-wrap justify-center gap-8 pt-12">
-                    <a href="{{ route('public.catalog') }}" class="px-14 py-7 bg-white text-[#03235b] font-black text-xs uppercase tracking-[0.4em] rounded-2xl shadow-xl hover:scale-105 transition-all">Lihat Katalog</a>
-                    <a href="https://wa.me/+6287708463586" class="px-14 py-7 bg-transparent text-white border-2 border-white/20 font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:bg-white/5 transition-all">Pesan Lewat WA</a>
+             <div class="relative z-10 space-y-8 md:space-y-12">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-none uppercase italic underline decoration-[#2ee0a7] decoration-[8px] md:decoration-[12px] underline-offset-[8px] md:underline-offset-[16px]">DAPATKAN DOMBA<br>TERBAIK ANDA.</h2>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 pt-8 md:pt-12">
+                    <a href="{{ route('public.catalog') }}" class="w-full sm:w-auto px-8 py-5 md:px-14 md:py-7 bg-white text-[#03235b] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] md:tracking-[0.4em] rounded-2xl shadow-xl hover:scale-105 transition-all">Lihat Katalog</a>
+                    <a href="https://wa.me/+6287708463586" class="w-full sm:w-auto px-8 py-5 md:px-14 md:py-7 bg-transparent text-white border-2 border-white/20 font-black text-[10px] md:text-xs uppercase tracking-[0.2em] md:tracking-[0.4em] rounded-2xl hover:bg-white/5 transition-all">Pesan Lewat WA</a>
                 </div>
              </div>
         </div>
@@ -825,6 +831,16 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
         feather.replace();
+    </script>
+    
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
     </script>
 </body>
 </html>
