@@ -164,7 +164,7 @@
                     <a href="{{ route('public.catalog') }}" class="group relative px-10 py-5 bg-[#03235b] text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-2xl transition-all hover:translate-y-[-4px]">
                         Pilih Domba Sekarang
                     </a>
-                    <a href="https://wa.me/6281234567890" target="_blank" class="px-10 py-5 bg-white text-[#03235b] border border-slate-200 font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-slate-50 transition-all flex items-center gap-4 group">
+                    <a href="https://wa.me/+6287708463586" target="_blank" class="px-10 py-5 bg-white text-[#03235b] border border-slate-200 font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-slate-50 transition-all flex items-center gap-4 group">
                         Konsultasi Pesanan
                         <svg class="w-5 h-5 text-[#2ee0a7] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-width="3" /></svg>
                     </a>
@@ -199,7 +199,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-[#03235b]/60 to-transparent"></div>
                         <div class="absolute bottom-12 left-12 right-12">
                             <p class="text-white/80 font-bold uppercase tracking-[0.3em] text-[10px] mb-2">Lokasi Kami</p>
-                            <h4 class="text-3xl font-black text-white tracking-tight">Kaki Gunung Gede, Cianjur.</h4>
+                            <h4 class="text-3xl font-black text-white tracking-tight">Desa Galudra, Kec Cugenang, Cianjur.</h4>
                         </div>
                     </div>
                 </div>
@@ -585,7 +585,7 @@
                 <h2 class="text-6xl lg:text-7xl font-black text-white tracking-tighter leading-none uppercase italic underline decoration-[#2ee0a7] decoration-[12px] underline-offset-[16px]">DAPATKAN DOMBA<br>TERBAIK ANDA.</h2>
                 <div class="flex flex-wrap justify-center gap-8 pt-12">
                     <a href="{{ route('public.catalog') }}" class="px-14 py-7 bg-white text-[#03235b] font-black text-xs uppercase tracking-[0.4em] rounded-2xl shadow-xl hover:scale-105 transition-all">Lihat Katalog</a>
-                    <a href="https://wa.me/6281234567890" class="px-14 py-7 bg-transparent text-white border-2 border-white/20 font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:bg-white/5 transition-all">Pesan Lewat WA</a>
+                    <a href="https://wa.me/+6287708463586" class="px-14 py-7 bg-transparent text-white border-2 border-white/20 font-black text-xs uppercase tracking-[0.4em] rounded-2xl hover:bg-white/5 transition-all">Pesan Lewat WA</a>
                 </div>
              </div>
         </div>
@@ -658,7 +658,7 @@
                                 <i data-feather="phone" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-black text-[#03235b] uppercase tracking-widest">
-                                +62 812 3456 7890
+                                +62 877 0846 3586
                             </p>
                         </div>
                         <div class="flex items-center gap-4">

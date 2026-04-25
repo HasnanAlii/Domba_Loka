@@ -200,7 +200,7 @@
                     <p class="text-slate-500 font-bold max-w-xl mx-auto">Jelajahi katalog domba pilihan kami atau konsultasikan kebutuhan kurban, aqiqah, dan suplai restoran Anda bersama kami.</p>
                     <div class="flex flex-wrap justify-center gap-6">
                         <a href="{{ route('public.catalog') }}" class="px-12 py-5 bg-[#03235b] text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-xl hover:scale-105 transition-all">Pilih Domba</a>
-                        <a href="https://wa.me/6281234567890" class="px-12 py-5 bg-white text-[#03235b] border-2 border-slate-100 font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-slate-50 transition-all">Hubungi Admin</a>
+                        <a href="https://wa.me/+6287708463586" class="px-12 py-5 bg-white text-[#03235b] border-2 border-slate-100 font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-slate-50 transition-all">Hubungi Admin</a>
                     </div>
                 </div>
             </div>

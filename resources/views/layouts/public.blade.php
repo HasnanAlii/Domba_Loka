@@ -183,7 +183,7 @@
                                 <i data-feather="map-pin" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-bold text-slate-600 leading-relaxed uppercase tracking-wider mt-1">
-                                Kec. Pacet, Cianjur,<br>Jawa Barat 43253
+                                Kec. Cugenang, Cianjur,<br>Jawa Barat
                             </p>
                         </div>
                         <div class="flex items-center gap-4">
@@ -191,7 +191,7 @@
                                 <i data-feather="phone" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-black text-[#03235b] uppercase tracking-widest">
-                                +62 812 3456 7890
+                                +62 877 0846 3586
                             </p>
                         </div>
                         <div class="flex items-center gap-4">

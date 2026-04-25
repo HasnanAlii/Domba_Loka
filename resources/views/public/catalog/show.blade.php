@@ -122,7 +122,7 @@
 
                     <!-- CTA Section -->
                     <div class="pt-8 flex flex-col sm:flex-row gap-6">
-                        <a href="https://wa.me/6281234567890?text=Halo Domba Loka, saya tertarik untuk memesan domba dengan kode {{ $sheep->code }} ({{ $sheep->sheepType->name }}). Mohon informasi ketersediaan dan cara pemesanannya. Terima kasih!" 
+                        <a href="https://wa.me/+6287708463586?text=Halo Domba Loka, saya tertarik untuk memesan domba dengan kode {{ $sheep->code }} ({{ $sheep->sheepType->name }}). Mohon informasi ketersediaan dan cara pemesanannya. Terima kasih!" 
                            target="_blank"
                            class="flex-1 flex items-center justify-center gap-4 py-6 bg-[#03235b] text-white text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] shadow-[0_25px_50px_-15px_rgba(3,35,91,0.3)] hover:bg-[#0c5197] hover:scale-105 transition-all">
                             Pesan Sekarang
