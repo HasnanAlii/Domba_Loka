@@ -9,7 +9,9 @@ class Growth extends Model
 {
     protected $fillable = [
         'sheep_id',
-        'weight',
+        'weight',       // Selisih berat (actual_weight - previous_weight)
+        'previous_weight',
+        'actual_weight',
         'target',
         'date',
     ];
@@ -17,9 +19,11 @@ class Growth extends Model
     protected function casts(): array
     {
         return [
-            'weight' => 'decimal:2',
-            'target' => 'decimal:2',
-            'date' => 'date',
+            'weight'          => 'decimal:2',
+            'previous_weight' => 'decimal:2',
+            'actual_weight'   => 'decimal:2',
+            'target'          => 'decimal:2',
+            'date'            => 'date',
         ];
     }
 

@@ -52,7 +52,9 @@
                         code: '',
                         type_id: '',
                         weight: '',
+                        age: '',
                         condition: 'Sehat',
+                        status: 'tersedia',
                         price: ''
                     },
                     isAddCustomerModalOpen: false,
@@ -72,14 +74,34 @@
                         try {
                             const token = document.querySelector('meta[name="csrf-token"]')
                                 .getAttribute('content');
+
+                            // Use FormData to support file uploads
+                            const fd = new FormData();
+                            fd.append('code', this.newSheep.code);
+                            fd.append('type_id', this.newSheep.type_id);
+                            fd.append('weight', this.newSheep.weight);
+                            fd.append('age', this.newSheep.age || 0);
+                            fd.append('condition', this.newSheep.condition);
+                            fd.append('status', this.newSheep.status);
+                            fd.append('price', String(this.newSheep.price).replace(/\D/g, ''));
+
+                            // Attach photos from sheepPhotoUpload component
+                            const photoComp = Alpine.$data(document.querySelector('[x-data="sheepPhotoUpload"]'));
+                            if (photoComp && photoComp.files && photoComp.files.length > 0) {
+                                // First photo = cover (photo field), rest = additional_photos[]
+                                fd.append('photo', photoComp.files[0]);
+                                for (let i = 1; i < photoComp.files.length; i++) {
+                                    fd.append('additional_photos[]', photoComp.files[i]);
+                                }
+                            }
+
                             const response = await fetch('{{ route('sheep.store') }}', {
                                 method: 'POST',
                                 headers: {
-                                    'Content-Type': 'application/json',
                                     'Accept': 'application/json',
                                     'X-CSRF-TOKEN': token
                                 },
-                                body: JSON.stringify(this.newSheep)
+                                body: fd
                             });
 
                             const data = await response.json();
@@ -111,9 +133,14 @@
                                     code: '',
                                     type_id: '',
                                     weight: '',
+                                    age: '',
                                     condition: 'Sehat',
+                                    status: 'tersedia',
                                     price: ''
                                 };
+                                // Reset photo upload component
+                                const photoComp = Alpine.$data(document.querySelector('[x-data="sheepPhotoUpload"]'));
+                                if (photoComp) { photoComp.previews = []; photoComp.files = []; }
                                 
                                 // Trigger modal success
                                 window.dispatchEvent(new CustomEvent('show-notification', { detail: { 
@@ -359,6 +386,37 @@
                         this.$refs.proofInput.value = '';
                     }
 
+                }));
+
+                Alpine.data('sheepPhotoUpload', () => ({
+                    previews: [],
+                    files: [],
+                    dragOver: false,
+
+                    handleFiles(fileList) {
+                        const newFiles = Array.from(fileList);
+                        newFiles.forEach(file => {
+                            if (!file.type.startsWith('image/')) return;
+                            this.files.push(file);
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                this.previews.push({ url: e.target.result });
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                        // Reset input so same file can be re-selected
+                        this.$refs.sheepPhotoInput.value = '';
+                    },
+
+                    handleDrop(event) {
+                        this.dragOver = false;
+                        this.handleFiles(event.dataTransfer.files);
+                    },
+
+                    removePhoto(index) {
+                        this.previews.splice(index, 1);
+                        this.files.splice(index, 1);
+                    }
                 }));
             });
             document.addEventListener('DOMContentLoaded', () => {

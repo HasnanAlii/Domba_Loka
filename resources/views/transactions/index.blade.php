@@ -37,23 +37,59 @@
                     <div class="p-6 lg:p-10">
 
 
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
+                        <div class="relative z-[250] flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
                             <div>
                                 <h3 class="text-xl font-bold text-slate-800">{{ $sectionTitle }}</h3>
                                 <p class="text-sm text-slate-500 mt-1">{{ $sectionDescription }}</p>
                             </div>
+                            <div class="flex items-center gap-3">
+                                <div class="relative" x-data="{ open: false }" :class="open ? 'z-[100]' : 'z-10'">
+                                    <button @click="open = !open" @click.outside="open = false" type="button"
+                                        class="group inline-flex items-center gap-2 px-5 py-3 bg-amber-400 text-black text-sm font-bold rounded-2xl shadow-lg shadow-amber-400/30 hover:bg-amber-500 hover:shadow-amber-500/40 transition-all duration-300 transform hover:-translate-y-0.5">
+                                        {{-- <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                        </svg> --}}
+                                        Export Laporan
+                                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
 
-                            <a href="{{ route('transactions.create', $selectedType ? ['type' => $selectedType] : []) }}"
-                                class="group inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 hover:shadow-blue-600/40 transition-all duration-300 transform hover:-translate-y-0.5">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 transition-transform group-hover:rotate-90" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ $createLabel }}
-                            </a>
+                                    <div x-show="open" x-cloak
+                                        x-transition:enter="transition ease-out duration-150"
+                                        x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                        x-transition:leave="transition ease-in duration-100"
+                                        x-transition:leave-start="opacity-100 scale-100"
+                                        x-transition:leave-end="opacity-0 scale-95"
+                                        class="absolute right-0 top-[calc(100%+8px)] z-[100] w-36 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden origin-top-right">
+                                        <!-- Excel -->
+                                        <a href="{{ route('transactions.index') }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'excel'])) }}"
+                                            class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors group/item">
+                                            Export Excel
+                                        </a>
+                                        <div class="border-t border-slate-50"></div>
+                                        <!-- PDF -->
+                                        <a href="{{ route('transactions.index') }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'pdf'])) }}"
+                                            class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700 transition-colors group/item">
+                                            Export PDF
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <a href="{{ route('transactions.create', $selectedType ? ['type' => $selectedType] : []) }}"
+                                    class="group inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 hover:shadow-blue-600/40 transition-all duration-300 transform hover:-translate-y-0.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5 transition-transform group-hover:rotate-90" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $createLabel }}
+                                </a>
+                            </div>
                         </div>
 
                         <div class="mb-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">

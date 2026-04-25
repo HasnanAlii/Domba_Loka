@@ -19,5 +19,21 @@
                 }
             });
         });
+
+        // Sync accumulated gallery files to file input before form submit
+        const form = document.querySelector('form[enctype="multipart/form-data"]');
+        if (form) {
+            form.addEventListener('submit', () => {
+                const galleryEl = document.querySelector('[x-ref="galleryInput"]');
+                if (!galleryEl) return;
+
+                const alpineComp = Alpine.$data(galleryEl.closest('[x-data]'));
+                if (!alpineComp || !alpineComp.files || alpineComp.files.length === 0) return;
+
+                const dt = new DataTransfer();
+                alpineComp.files.forEach(f => dt.items.add(f));
+                galleryEl.files = dt.files;
+            });
+        }
     });
 </script>

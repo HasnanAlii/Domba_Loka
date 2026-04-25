@@ -9,9 +9,11 @@ use App\Models\Sheep;
 use App\Models\SheepType;
 use App\Models\Supplier;
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -19,10 +21,16 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class TransactionController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|HttpResponse|StreamedResponse
     {
         $dateRange = $request->query('date_range');
         $selectedType = $this->resolveType($request->query('type'));
@@ -83,7 +91,216 @@ class TransactionController extends Controller
         $customerOptions = $this->customers();
         $supplierOptions = $this->suppliers();
 
+        // ── Build all-results query for export ─────────────────────────────────────────
+        if ($request->query('export') === 'pdf' || $request->query('export') === 'excel') {
+            $allTransactions = Transaction::with(['customer', 'supplier', 'details.sheep'])
+                ->when($dateRange, function ($query) use ($dateRange) {
+                    if (str_contains($dateRange, ' to ')) {
+                        [$start, $end] = explode(' to ', $dateRange);
+                        $query->whereBetween('created_at', [$start.' 00:00:00', $end.' 23:59:59']);
+                    } else {
+                        $query->whereDate('created_at', $dateRange);
+                    }
+                })
+                ->when($selectedType !== null, fn ($q) => $q->where('type', $selectedType))
+                ->when($totalPrice !== null, fn ($q) => $q->where('total_price', $totalPrice))
+                ->when($referenceNumber !== '', fn ($q) => $q->where('reference_number', 'like', "%{$referenceNumber}%"))
+                ->when($sheepId, fn ($q) => $q->whereHas('details', fn ($d) => $d->where('sheep_id', $sheepId)))
+                ->when($customerId, fn ($q) => $q->where('customer_id', $customerId))
+                ->when($supplierId, fn ($q) => $q->where('supplier_id', $supplierId))
+                ->latest()
+                ->get();
+
+            if ($request->query('export') === 'pdf') {
+                return $this->exportListPdf($allTransactions, $filters);
+            }
+
+            return $this->exportExcel($allTransactions, $filters);
+        }
+
         return view('transactions.index', compact('transactions', 'selectedType', 'filters', 'sheepOptions', 'customerOptions', 'supplierOptions'));
+    }
+
+    private function exportListPdf(Collection $transactions, array $filters): HttpResponse
+    {
+        $pdf = Pdf::loadView('transactions.export.pdf', compact('transactions', 'filters'))
+            ->setPaper('a4', 'landscape')
+            ->setOptions([
+                'isRemoteEnabled'      => true,
+                'isHtml5ParserEnabled' => true,
+                'defaultFont'          => 'Poppins',
+            ]);
+
+        $typeSuffix = $filters['type'] ? '-' . $filters['type'] : '';
+
+        return $pdf->download('laporan-transaksi' . $typeSuffix . '-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    private function exportExcel(Collection $transactions, array $filters): StreamedResponse
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $typeSuffix = $filters['type'] ? ' ' . strtoupper($filters['type']) : '';
+        $sheet->setTitle('Transaksi' . ($filters['type'] ? ' ' . ucfirst($filters['type']) : ''));
+
+        // ── Branding rows ─────────────────────────────────────────────────────
+        $sheet->mergeCells('A1:H1');
+        $sheet->setCellValue('A1', 'DOMBA LOKA — Sistem Manajemen Ternak');
+        $sheet->getStyle('A1')->applyFromArray([
+            'font'      => ['bold' => true, 'size' => 16, 'color' => ['argb' => 'FF1E40AF']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT, 'vertical' => Alignment::VERTICAL_CENTER],
+        ]);
+        $sheet->getRowDimension(1)->setRowHeight(28);
+
+        $sheet->mergeCells('A2:H2');
+        $sheet->setCellValue('A2', 'LAPORAN TRANSAKSI' . $typeSuffix);
+        $sheet->getStyle('A2')->applyFromArray([
+            'font'      => ['bold' => true, 'size' => 13, 'color' => ['argb' => 'FF0F172A']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT, 'vertical' => Alignment::VERTICAL_CENTER],
+        ]);
+        $sheet->getRowDimension(2)->setRowHeight(22);
+
+        $sheet->mergeCells('A3:H3');
+        $sheet->setCellValue('A3', 'Rekap Pembelian & Penjualan Ternak');
+        $sheet->getStyle('A3')->applyFromArray([
+            'font'      => ['size' => 10, 'color' => ['argb' => 'FF64748B']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT],
+        ]);
+
+        $sheet->mergeCells('A4:H4');
+        $meta = 'Tanggal Cetak: ' . now()->format('d/m/Y H:i') . '   |   Total Data: ' . $transactions->count() . ' transaksi';
+        if (!empty($filters['date_range'])) $meta .= '   |   Periode: ' . $filters['date_range'];
+        if (!empty($filters['type']))       $meta .= '   |   Tipe: ' . ucfirst($filters['type']);
+        $sheet->setCellValue('A4', $meta);
+        $sheet->getStyle('A4')->applyFromArray([
+            'font'      => ['size' => 10, 'color' => ['argb' => 'FF475569']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT],
+        ]);
+        $sheet->getRowDimension(4)->setRowHeight(18);
+        $sheet->getRowDimension(5)->setRowHeight(8);
+
+        // ── Table headers ─────────────────────────────────────────────────────
+        $headers = ['No', 'Tanggal', 'No. Referensi', 'Tipe', 'Pelanggan / Supplier', 'Metode Bayar', 'Total (Rp)', 'Sisa (Rp)'];
+        $cols    = range('A', 'H');
+        foreach ($headers as $i => $h) {
+            $sheet->setCellValue($cols[$i] . '6', $h);
+        }
+        $sheet->getStyle('A6:H6')->applyFromArray([
+            'font'      => ['bold' => true, 'size' => 11, 'color' => ['argb' => 'FFFFFFFF']],
+            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF1E3A8A']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true],
+            'borders'   => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => 'FF1E3A8A']]],
+        ]);
+        $sheet->getRowDimension(6)->setRowHeight(25);
+
+        // ── Data rows ─────────────────────────────────────────────────────────
+        foreach ($transactions as $i => $t) {
+            $row = $i + 7;
+            $isPenjualan = $t->type === 'penjualan';
+            $rowBg = ($i % 2 === 0) ? 'FFFFFFFF' : 'FFF8FAFC';
+            $party = $isPenjualan ? ($t->customer->name ?? '-') : ($t->supplier->name ?? '-');
+
+            $rowData = [
+                'A' => $i + 1,
+                'B' => $t->transaction_date->format('d/m/Y'),
+                'C' => $t->reference_number,
+                'D' => ucfirst($t->type),
+                'E' => $party,
+                'F' => $t->payment_method,
+                'G' => number_format($t->total_price, 0, ',', '.'),
+                'H' => $t->sisa > 0 ? number_format($t->sisa, 0, ',', '.') : 'LUNAS',
+            ];
+
+            foreach ($rowData as $col => $val) {
+                $sheet->setCellValue($col . $row, $val);
+            }
+
+            $sheet->getStyle("A{$row}:H{$row}")->applyFromArray([
+                'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $rowBg]],
+                'font'      => ['size' => 11],
+                'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
+                'borders'   => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => 'FFCBD5E1']]],
+            ]);
+
+            // No. Ref bold blue
+            $sheet->getStyle("C{$row}")->applyFromArray(['font' => ['bold' => true, 'color' => ['argb' => 'FF1E40AF']]]);
+
+            // Tipe badge colour
+            $sheet->getStyle("D{$row}")->applyFromArray([
+                'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $isPenjualan ? 'FFDCFCE7' : 'FFDBEAFE']],
+                'font'      => ['bold' => true, 'color' => ['argb' => $isPenjualan ? 'FF166534' : 'FF1E40AF']],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            ]);
+
+            // Total colour
+            $sheet->getStyle("G{$row}")->applyFromArray([
+                'font'      => ['bold' => true, 'color' => ['argb' => $isPenjualan ? 'FF15803D' : 'FF1E40AF']],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT],
+            ]);
+
+            // Sisa colour
+            $sisaColor = $t->sisa > 0 ? 'FFDC2626' : 'FF15803D';
+            $sheet->getStyle("H{$row}")->applyFromArray([
+                'font'      => ['bold' => true, 'color' => ['argb' => $sisaColor]],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT],
+            ]);
+
+            $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("B{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getRowDimension($row)->setRowHeight(20);
+        }
+
+        // ── Summary row ───────────────────────────────────────────────────────
+        $lastRow      = $transactions->count() + 7;
+        $totalJual    = $transactions->where('type', 'penjualan')->sum('total_price');
+        $totalBeli    = $transactions->where('type', 'pembelian')->sum('total_price');
+
+        $sheet->mergeCells("A{$lastRow}:H{$lastRow}");
+        $sheet->setCellValue("A{$lastRow}",
+            'Ringkasan: Penjualan Rp ' . number_format($totalJual, 0, ',', '.') .
+            ' | Pembelian Rp ' . number_format($totalBeli, 0, ',', '.')
+        );
+        $sheet->getStyle("A{$lastRow}:H{$lastRow}")->applyFromArray([
+            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFF1F5F9']],
+            'font'      => ['bold' => true, 'size' => 11, 'color' => ['argb' => 'FF334155']],
+            'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
+            'borders'   => ['outline' => ['borderStyle' => Border::BORDER_MEDIUM, 'color' => ['argb' => 'FF94A3B8']]],
+        ]);
+        $sheet->getRowDimension($lastRow)->setRowHeight(25);
+
+        // ── Column widths ─────────────────────────────────────────────────────
+        $widths = [
+            'A' => 8,   // No
+            'B' => 16,  // Tanggal
+            'C' => 24,  // Referensi
+            'D' => 14,  // Tipe
+            'E' => 30,  // Pelanggan / Supplier
+            'F' => 18,  // Metode Bayar
+            'G' => 22,  // Total
+            'H' => 20,  // Sisa
+        ];
+        foreach ($widths as $col => $width) {
+            $sheet->getColumnDimension($col)->setWidth($width);
+        }
+
+        $sheet->freezePane('A7');
+        $sheet->setAutoFilter('A6:H6');
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
+        $sheet->getPageSetup()->setFitToWidth(1);
+        $sheet->getPageSetup()->setFitToHeight(0);
+
+        $typeSuffix2 = $filters['type'] ? '-' . $filters['type'] : '';
+        $filename    = 'laporan-transaksi' . $typeSuffix2 . '-' . now()->format('Y-m-d') . '.xlsx';
+        $writer      = new Xlsx($spreadsheet);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Cache-Control'       => 'max-age=0',
+        ]);
     }
 
     public function create(Request $request): View
@@ -261,7 +478,7 @@ class TransactionController extends Controller
     {
         $transaction->load(['customer', 'supplier', 'details.sheep.sheepType', 'bankAccount']);
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('transactions.export.pdf', compact('transaction'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('transactions.export.struk', compact('transaction'));
         $pdf->setPaper('a4', 'landscape');
 
         return $pdf->download('Faktur-' . $transaction->reference_number . '.pdf');

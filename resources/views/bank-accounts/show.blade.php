@@ -19,7 +19,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
                 <div class="lg:col-span-1">
-                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 shadow-xl shadow-blue-500/30 rounded-3xl p-6 lg:p-8 relative overflow-hidden group hover:shadow-md transition-all text-white">
+                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 shadow-xl shadow-blue-500/30 rounded-3xl p-6 lg:p-8 relative group hover:shadow-md transition-all text-white">
                         <div class="absolute right-0 top-0 h-32 w-32 bg-white/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110 blur-2xl"></div>
                         <div class="relative">
                             <div class="flex items-center gap-4 mb-6">
@@ -47,8 +47,37 @@
                                     <span class="text-white font-bold text-xl leading-relaxed">Rp {{ number_format($bankAccount->saldo, 0, ',', '.') }}</span>
                                 </div>
                             </div>
-                            
                             <div class="mt-8 flex items-center gap-3">
+                                <div class="relative flex-1" x-data="{ open: false }" :class="open ? 'z-[100]' : 'z-10'">
+                                    <button @click="open = !open" @click.outside="open = false" type="button"
+                                        class="w-full inline-flex justify-center items-center gap-2 py-2.5 bg-amber-400 text-black text-sm font-bold rounded-xl shadow-lg shadow-amber-400/30 hover:bg-amber-500 hover:shadow-amber-500/40 transition-all duration-300 transform hover:-translate-y-0.5">
+                                        Export Laporan
+                                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+
+                                    <div x-show="open" x-cloak
+                                        x-transition:enter="transition ease-out duration-150"
+                                        x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                        x-transition:leave="transition ease-in duration-100"
+                                        x-transition:leave-start="opacity-100 scale-100"
+                                        x-transition:leave-end="opacity-0 scale-95"
+                                        class="absolute right-0 top-[calc(100%+8px)] z-[100] w-full bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden origin-top-right">
+                                        <!-- Excel -->
+                                        <a href="{{ route('bank-accounts.show', $bankAccount) }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'excel'])) }}"
+                                            class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors group/item">
+                                            Export Excel
+                                        </a>
+                                        <div class="border-t border-slate-50"></div>
+                                        <!-- PDF -->
+                                        <a href="{{ route('bank-accounts.show', $bankAccount) }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'pdf'])) }}"
+                                            class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700 transition-colors group/item">
+                                            Export PDF
+                                        </a>
+                                    </div>
+                                </div>
                                 <a href="{{ route('bank-accounts.edit', $bankAccount) }}" 
                                    class="flex-1 text-center py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold rounded-xl transition-colors ring-1 ring-white/50">
                                     Edit Rekening

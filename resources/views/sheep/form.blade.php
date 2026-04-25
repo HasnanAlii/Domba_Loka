@@ -76,62 +76,119 @@
 
                             <!-- Additional Gallery -->
                             <div x-data="{
+                                files: [],
                                 previews: [],
+                                dragOver: false,
                                 existingPhotos: [
                                     @foreach ($sheep->photos as $p)
-                                        { id: {{ $p->id }}, path: '{{ asset('storage/' . $p->path) }}' }, @endforeach
+                                        { id: {{ $p->id }}, path: '{{ asset('storage/' . $p->path) }}', deleting: false },
+                                    @endforeach
                                 ],
-                                handleUpload(e) {
-                                    const files = Array.from(e.target.files);
-                                    this.previews = [];
-                                    files.forEach(file => {
+                                addFiles(fileList) {
+                                    Array.from(fileList).forEach(file => {
+                                        if (!file.type.startsWith('image/')) return;
+                                        this.files.push(file);
                                         const reader = new FileReader();
-                                        reader.onload = (e) => {
-                                            this.previews.push(e.target.result);
-                                        };
+                                        reader.onload = (e) => this.previews.push(e.target.result);
                                         reader.readAsDataURL(file);
                                     });
+                                    this.$refs.galleryInput.value = '';
+                                },
+                                removeNew(index) {
+                                    this.files.splice(index, 1);
+                                    this.previews.splice(index, 1);
+                                },
+                                async deleteExisting(photo) {
+                                    if (!confirm('Hapus foto ini?')) return;
+                                    photo.deleting = true;
+                                    try {
+                                        const token = document.querySelector('meta[name=csrf-token]').content;
+                                        const res = await fetch(`/sheep-photos/${photo.id}`, {
+                                            method: 'DELETE',
+                                            headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' }
+                                        });
+                                        const data = await res.json();
+                                        if (data.success) {
+                                            this.existingPhotos = this.existingPhotos.filter(p => p.id !== photo.id);
+                                        }
+                                    } catch(e) {
+                                        alert('Gagal menghapus foto.');
+                                    } finally {
+                                        photo.deleting = false;
+                                    }
                                 }
-                            }" class="space-y-6">
-                                <label
-                                    class="block text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Galeri
-                                    Foto Tambahan</label>
+                            }" class="space-y-4"
+                            @dragover.prevent="dragOver = true"
+                            @dragleave.prevent="dragOver = false"
+                            @drop.prevent="dragOver = false; addFiles($event.dataTransfer.files)">
+                                <label class="block text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                                    Galeri Foto Tambahan
+                                </label>
 
-                                <div class="relative group h-32 w-full border-2 border-dashed border-slate-100 rounded-[2rem] overflow-hidden bg-slate-50/50 transition-all hover:border-emerald-400 hover:bg-emerald-50/30 cursor-pointer flex flex-col items-center justify-center space-y-2"
-                                    @click="$refs.galleryInput.click()">
-
-                                    <input type="file" name="additional_photos[]" x-ref="galleryInput" class="hidden"
-                                        accept="image/*" multiple @change="handleUpload">
-
-                                    <div
-                                        class="p-2 bg-white rounded-xl shadow-sm text-slate-300 group-hover:text-emerald-500 transition-all">
+                                <!-- Drop Zone -->
+                                <div @click="$refs.galleryInput.click()"
+                                    :class="dragOver ? 'border-emerald-400 bg-emerald-50/40' : 'border-slate-100 bg-slate-50/50 hover:border-emerald-400 hover:bg-emerald-50/30'"
+                                    class="relative group h-32 w-full border-2 border-dashed rounded-[2rem] overflow-hidden transition-all cursor-pointer flex flex-col items-center justify-center space-y-2">
+                                    <input type="file" name="additional_photos[]" x-ref="galleryInput"
+                                        class="hidden" accept="image/*" multiple
+                                        @change="addFiles($event.target.files)">
+                                    <div class="p-2 bg-white rounded-xl shadow-sm text-slate-300 group-hover:text-emerald-500 transition-all">
                                         <i data-feather="plus" class="w-5 h-5"></i>
                                     </div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tambah ke
-                                        Galeri</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Klik atau drag &amp; drop foto</p>
+                                    <p class="text-[10px] text-slate-300">JPG, PNG, WEBP • Maks 4MB per foto</p>
                                 </div>
 
+                                <!-- Count info -->
+                                <p x-show="files.length > 0" class="text-[11px] text-emerald-600 font-bold text-center">
+                                    <span x-text="files.length"></span> foto baru akan diupload
+                                </p>
+
                                 <!-- Grid View -->
-                                <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-4">
+                                <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3">
                                     <!-- Existing -->
-                                    <template x-for="photo in existingPhotos" :key="photo.id">
-                                        <div
-                                            class="relative aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm group/edit">
+                                    <template x-for="(photo, i) in existingPhotos" :key="photo.id">
+                                        <div class="relative aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm group/edit"
+                                            :class="photo.deleting ? 'opacity-40 pointer-events-none' : ''">
                                             <img :src="photo.path" class="h-full w-full object-cover">
-                                            <div
-                                                class="absolute inset-0 bg-black/40 opacity-0 group-hover/edit:opacity-100 transition-opacity flex items-center justify-center">
-                                                <i data-feather="check" class="text-white w-5 h-5"></i>
+                                            <!-- Cover badge -->
+                                            <div x-show="i === 0"
+                                                class="absolute top-1 left-1 bg-blue-600 text-white text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md leading-none">
+                                                Cover
+                                            </div>
+                                            <!-- Delete overlay -->
+                                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/edit:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button type="button" @click.stop="deleteExisting(photo)"
+                                                    class="w-7 h-7 bg-rose-500 hover:bg-rose-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <!-- Loading spinner -->
+                                            <div x-show="photo.deleting"
+                                                class="absolute inset-0 bg-white/60 flex items-center justify-center">
+                                                <svg class="animate-spin w-5 h-5 text-rose-500" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                                                </svg>
                                             </div>
                                         </div>
                                     </template>
 
                                     <!-- New Previews -->
                                     <template x-for="(src, index) in previews" :key="'new-' + index">
-                                        <div
-                                            class="relative aspect-square rounded-2xl overflow-hidden border-2 border-emerald-100 shadow-inner">
+                                        <div class="relative aspect-square rounded-2xl overflow-hidden border-2 border-emerald-200 shadow-inner group/new">
                                             <img :src="src" class="h-full w-full object-cover">
-                                            <div
-                                                class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse">
+                                            <div class="absolute top-1 left-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                            <!-- Remove new -->
+                                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/new:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button type="button" @click.stop="removeNew(index)"
+                                                    class="w-7 h-7 bg-rose-500 hover:bg-rose-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                                                    </svg>
+                                                </button>
                                             </div>
                                         </div>
                                     </template>
@@ -141,6 +198,7 @@
                                     <p class="mt-2 text-center text-xs text-rose-500">{{ $message }}</p>
                                 @enderror
                             </div>
+
                         </div>
 
                         <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">

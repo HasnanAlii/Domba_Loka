@@ -19,7 +19,7 @@
                 
                 <div class="bg-white shadow-xl shadow-slate-200/60 rounded-3xl border border-slate-100">
                     <div class="p-6 lg:p-10">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-6">
+                        <div class="relative z-[250] flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-6">
                             <div>
                                 <h3 class="text-xl font-bold text-slate-800">Data Populasi Domba</h3>
                                 <p class="text-sm text-slate-500 mt-1">Kelola data dan informasi domba di peternakan.</p>
@@ -32,6 +32,50 @@
                                     </svg>
                                     Jenis Domba
                                 </a>
+                                <div class="relative" x-data="{ open: false }" :class="open ? 'z-[100]' : 'z-10'">
+                                    <button @click="open = !open" @click.outside="open = false" type="button"
+                                        class="group inline-flex items-center gap-2 px-5 py-3 bg-amber-400 text-black text-sm font-bold rounded-2xl shadow-lg shadow-amber-400/30 hover:bg-amber-500 hover:shadow-amber-500/40 transition-all duration-300 transform hover:-translate-y-0.5">
+                                        {{-- <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                        </svg> --}}
+                                        Export Laporan
+                                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+
+                                    <div x-show="open" x-cloak
+                                        x-transition:enter="transition ease-out duration-150"
+                                        x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                        x-transition:leave="transition ease-in duration-100"
+                                        x-transition:leave-start="opacity-100 scale-100"
+                                        x-transition:leave-end="opacity-0 scale-95"
+                                        class="absolute right-0 top-[calc(100%+8px)] z-[100] w-36 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden origin-top-right">
+                                        <!-- Excel -->
+                                        <a href="{{ route('growths.index') }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'excel'])) }}"
+                                            class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors group/item">
+                                            {{-- <span class="flex items-center justify-center w-7 h-7 bg-emerald-100 group-hover/item:bg-emerald-200 rounded-lg transition-colors">
+                                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            </span> --}}
+                                            Export Excel
+                                        </a>
+                                        <div class="border-t border-slate-50"></div>
+                                        <!-- PDF -->
+                                        <a href="{{ route('growths.index') }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'pdf'])) }}"
+                                            class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700 transition-colors group/item">
+                                            {{-- <span class="flex items-center justify-center w-7 h-7 bg-rose-100 group-hover/item:bg-rose-200 rounded-lg transition-colors">
+                                                <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                </svg>
+                                            </span> --}}
+                                            Export PDF
+                                        </a>
+                                    </div>
+                                </div>
                                 <a href="{{ route('sheep.create') }}" 
                                    class="group inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 hover:shadow-blue-600/40 transition-all duration-300 transform hover:-translate-y-0.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:rotate-90" viewBox="0 0 20 20" fill="currentColor">
@@ -297,7 +341,7 @@
                                         </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="px-6 py-16 text-center">
+                                                <td colspan="10" class="px-6 py-16 text-center">
                                                     <div class="flex flex-col items-center justify-center">
                                                         <div class="bg-slate-50 p-4 rounded-full mb-4">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -762,22 +762,31 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-3 gap-4">
                                 <!-- Weight -->
                                 <div>
                                     <label
                                         class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Berat
                                         (Kg)</label>
-                                    <input type="number" x-model.number="newSheep.weight" min="1"
+                                    <input type="number" x-model.number="newSheep.weight" min="0.1" step="0.1"
                                         class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
-                                        placeholder="Misal: 45">
+                                        placeholder="Kg">
+                                </div>
+                                <!-- Age -->
+                                <div>
+                                    <label
+                                        class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Umur
+                                        (Bulan)</label>
+                                    <input type="number" x-model.number="newSheep.age" min="0"
+                                        class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
+                                        placeholder="Bulan">
                                 </div>
                                 <!-- Condition -->
                                 <div>
                                     <label
                                         class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Kondisi
                                         Fisik</label>
-                                    <div class="relative" x-data="{ open: false, options: ['Sehat', 'Sakit', 'Dalam Masa Rawat'] }">
+                                    <div class="relative" x-data="{ open: false, options: ['Sehat', 'Sakit Ringan', 'Sakit Parah', 'Cacat'] }">
                                         <div @click="open = !open" @click.outside="open = false"
                                             class="w-full rounded-xl border border-gray-200 bg-slate-50 px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-white hover:border-blue-500 hover:ring-4 hover:ring-blue-500/10 transition-all text-sm font-bold text-gray-700">
                                             <div class="flex flex-col">
@@ -815,6 +824,108 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Status -->
+                            <div>
+                                <label
+                                    class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Status
+                                    Domba</label>
+                                <div class="relative" x-data="{ open: false, statusOptions: [{ value: 'tersedia', label: 'Tersedia' }, { value: 'dalam perawatan', label: 'Dalam Perawatan' }] }">
+                                    <div @click="open = !open" @click.outside="open = false"
+                                        class="w-full rounded-xl border border-gray-200 bg-slate-50 px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-white hover:border-blue-500 hover:ring-4 hover:ring-blue-500/10 transition-all text-sm font-bold text-gray-700">
+                                        <div class="flex items-center gap-2">
+                                            <span class="inline-block w-2 h-2 rounded-full"
+                                                :class="{
+                                                    'bg-emerald-500': newSheep.status === 'tersedia',
+                                                    'bg-orange-400': newSheep.status === 'dalam perawatan'
+                                                }"></span>
+                                            <span x-text="statusOptions.find(s => s.value === newSheep.status)?.label || 'Pilih Status'"></span>
+                                        </div>
+                                        <svg class="w-4 h-4 text-slate-400 transition-transform duration-300"
+                                            :class="open ? 'rotate-180 text-blue-500' : ''" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+
+                                    <div x-show="open" x-cloak
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-y-1"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        class="absolute z-[110] w-full mt-1.5 bg-white border border-slate-100 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/[0.02]">
+                                        <div class="py-1">
+                                            <template x-for="opt in statusOptions" :key="opt.value">
+                                                <div @click="newSheep.status = opt.value; open = false"
+                                                    class="px-4 py-2.5 cursor-pointer hover:bg-slate-50 transition-all duration-200 flex items-center justify-between group">
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="inline-block w-2 h-2 rounded-full"
+                                                            :class="{
+                                                                'bg-emerald-500': opt.value === 'tersedia',
+                                                                'bg-orange-400': opt.value === 'dalam perawatan'
+                                                            }"></span>
+                                                        <span class="text-[13px] font-bold tracking-tight text-slate-700 group-hover:text-blue-600"
+                                                            :class="newSheep.status === opt.value ? 'text-blue-600' : ''"
+                                                            x-text="opt.label"></span>
+                                                    </div>
+                                                    <div x-show="newSheep.status === opt.value"
+                                                        class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                                                        <svg class="w-2.5 h-2.5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Photos -->
+                            <div x-data="sheepPhotoUpload">
+                                <label
+                                    class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Foto
+                                    Domba <span class="text-gray-300 normal-case font-medium">(opsional, bisa banyak)</span></label>
+
+                                <!-- Drop Zone -->
+                                <div @click="$refs.sheepPhotoInput.click()"
+                                    @dragover.prevent="dragOver = true"
+                                    @dragleave.prevent="dragOver = false"
+                                    @drop.prevent="handleDrop($event)"
+                                    :class="dragOver ? 'border-blue-400 bg-blue-50/40' : 'border-gray-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/20'"
+                                    class="relative w-full border-2 border-dashed rounded-xl py-5 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all">
+                                    <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Klik atau drag &amp; drop foto</p>
+                                    <p class="text-[10px] text-gray-300 font-medium">JPG, PNG, WEBP • Maks 4MB per foto</p>
+                                    <input type="file" x-ref="sheepPhotoInput" multiple accept="image/*"
+                                        class="hidden" @change="handleFiles($event.target.files)">
+                                </div>
+
+                                <!-- Preview Grid -->
+                                <div x-show="previews.length > 0" class="mt-3 grid grid-cols-4 gap-2">
+                                    <template x-for="(item, i) in previews" :key="i">
+                                        <div class="relative group aspect-square rounded-xl overflow-hidden border border-slate-100 shadow-sm">
+                                            <img :src="item.url" class="w-full h-full object-cover">
+                                            <!-- Cover badge -->
+                                            <div x-show="i === 0"
+                                                class="absolute top-1 left-1 bg-blue-600 text-white text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md">
+                                                Cover
+                                            </div>
+                                            <!-- Remove button -->
+                                            <button type="button" @click.stop="removePhoto(i)"
+                                                class="absolute top-1 right-1 bg-white/90 text-rose-500 rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </template>
+                                </div>
+                                <p x-show="previews.length > 0" class="mt-1.5 text-[10px] text-blue-500 font-bold">
+                                    <span x-text="previews.length"></span> foto dipilih · Foto pertama jadi cover utama
+                                </p>
+                            </div>
                             <!-- Price -->
                             <div>
                                 <label
@@ -823,7 +934,7 @@
                                 <input type="text" x-model="newSheep.price"
                                     x-mask:dynamic="$money($input, ',', '.')"
                                     class="w-full rounded-xl border-gray-200 text-sm font-bold text-gray-700 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none py-2.5 px-4"
-                                    placeholder="Masukan Harga dlm Rupiah">
+                                    placeholder="Masukan Harga Domba">
                             </div>
                         </div>
                     </div>

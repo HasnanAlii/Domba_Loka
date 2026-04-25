@@ -112,7 +112,7 @@ class SheepController extends Controller
             'weight' => ['required', 'numeric', 'min:0'],
             'condition' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:255', 'unique:sheep,code'],
-            'status' => ['required', 'string', 'in:tersedia,terjual,sakit,mati,hilang'],
+            'status' => ['required', 'string', 'in:tersedia,terjual,sakit,mati,hilang,dalam perawatan'],
             'photo' => ['nullable', 'image', 'max:2048'],
             'additional_photos' => ['nullable', 'array'],
             'additional_photos.*' => ['image', 'max:4096'],
@@ -173,7 +173,7 @@ class SheepController extends Controller
             'weight' => ['required', 'numeric', 'min:0'],
             'condition' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:255', 'unique:sheep,code,'.$sheep->id],
-            'status' => ['required', 'string', 'in:tersedia,terjual,sakit,mati,hilang'],
+            'status' => ['required', 'string', 'in:tersedia,terjual,sakit,mati,hilang,dalam perawatan'],
             'photo' => ['nullable', 'image', 'max:2048'],
             'additional_photos' => ['nullable', 'array'],
             'additional_photos.*' => ['image', 'max:4096'],
@@ -229,5 +229,13 @@ class SheepController extends Controller
         }
 
         return redirect()->route('sheep.index')->with('success', 'Domba berhasil dihapus.');
+    }
+
+    public function destroyPhoto(\App\Models\SheepPhoto $photo): \Illuminate\Http\JsonResponse
+    {
+        Storage::disk('public')->delete($photo->path);
+        $photo->delete();
+
+        return response()->json(['success' => true, 'message' => 'Foto berhasil dihapus.']);
     }
 }

@@ -93,24 +93,55 @@
             <!-- Main Table Card -->
             <div class="rounded-[32px] bg-white shadow-sm shadow-blue-900/5 ring-1 ring-gray-100">
                 <div class="p-8 lg:p-12">
-                    <div class="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+                    <div class="relative z-[250] mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
                         <div>
                             <h3 class="text-xl font-black text-[#0f172a] tracking-tight">Riwayat Transaksi Keuangan</h3>
-                            <p class="mt-1.5 text-sm font-medium text-gray-400">Arus kas masuk dan keluar peternakan
-                                secara real-time.</p>
+                            <p class="mt-1.5 text-sm font-medium text-gray-400">Arus kas masuk dan keluar peternakan secara real-time.</p>
                         </div>
+                        <div class="flex items-center gap-3">
+                            <div class="relative" x-data="{ open: false }" :class="open ? 'z-[100]' : 'z-10'">
+                                <button @click="open = !open" @click.outside="open = false" type="button"
+                                    class="group inline-flex items-center gap-2 px-5 py-3 bg-amber-400 text-black text-sm font-bold rounded-2xl shadow-lg shadow-amber-400/30 hover:bg-amber-500 hover:shadow-amber-500/40 transition-all duration-300 transform hover:-translate-y-0.5">
+                                    Export Laporan
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
 
-                        <a href="{{ route('finances.create') }}"
-                            class="group inline-flex items-center gap-2.5 rounded-2xl bg-blue-600 px-7 py-3.5 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:bg-[#03235b] hover:shadow-blue-900/40 hover:-translate-y-0.5">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="h-5 w-5 transition-transform group-hover:rotate-90" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Catat Transaksi Kas
-                        </a>
+                                <div x-show="open" x-cloak
+                                    x-transition:enter="transition ease-out duration-150"
+                                    x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                    x-transition:leave="transition ease-in duration-100"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95"
+                                    class="absolute right-0 top-[calc(100%+8px)] z-[100] w-36 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden origin-top-right">
+                                    <!-- Excel -->
+                                    <a href="{{ route('finances.index') }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'excel'])) }}"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors group/item">
+                                        Export Excel
+                                    </a>
+                                    <div class="border-t border-slate-50"></div>
+                                    <!-- PDF -->
+                                    <a href="{{ route('finances.index') }}?{{ http_build_query(array_merge(request()->query(), ['export' => 'pdf'])) }}"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700 transition-colors group/item">
+                                        Export PDF
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ route('finances.create') }}"
+                                class="group inline-flex items-center gap-2.5 rounded-2xl bg-blue-600 px-7 py-3.5 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:bg-[#03235b] hover:shadow-blue-900/40 hover:-translate-y-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 transition-transform group-hover:rotate-90" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Catat Transaksi Kas
+                            </a>
+                        </div>
                     </div>
 
                     <div

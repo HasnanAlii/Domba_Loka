@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('sheep', SheepController::class);
+    Route::delete('sheep-photos/{photo}', [SheepController::class, 'destroyPhoto'])->name('sheep-photos.destroy');
     Route::resource('sheep-types', SheepTypeController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('suppliers', SupplierController::class);
