@@ -8,11 +8,11 @@
 
     <title>Domba Loka - Sistem Manajemen Peternakan</title>
 
-    {{-- Favicon --}}
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo.png">
-    <link rel="apple-touch-icon" href="/assets/logo.png">
-    <meta name="msapplication-TileImage" content="/assets/logo.png">
+    <!-- Favicon lengkap -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/icon/logo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/icon/logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/icon/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/icon/logo.png') }}">
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.bunny.net">

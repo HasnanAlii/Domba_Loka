@@ -12,6 +12,12 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 
+        <!-- Favicon lengkap -->
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/icon/logo.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/icon/logo.png') }}">
+        <link rel="shortcut icon" href="{{ asset('images/icon/logo.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/icon/logo.png') }}">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 

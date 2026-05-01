@@ -10,6 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Favicon lengkap -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/icon/logo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/icon/logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/icon/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/icon/logo.png') }}">
+
     <!-- Tailwind CSS (via Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -136,15 +142,13 @@
                 <!-- Brand Section -->
                 <div class="space-y-8">
                      <div class="flex items-center gap-4">
-                        <div class=" border-slate-100">
-                            <x-application-logo class="w-10 h-10 text-[#03235b]" />
-                        </div>
+                        <x-application-logo class="w-10 h-10 text-[#03235b]" />
                         <span class="text-3xl font-black text-[#03235b] tracking-tighter uppercase">DombaLoka</span>
                     </div>
                     <p class="text-slate-400 font-bold leading-relaxed italic pr-4">
                         "Pusat domba premium Jawa Barat. Fokus pada kualitas, kesehatan, dan kepuasan pelanggan di setiap transaksi."
                     </p>
-                    <div class="flex items-center gap-4">
+                    {{-- <div class="flex items-center gap-4">
                         <a href="#" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#03235b] hover:bg-[#03235b] hover:text-white transition-all">
                             <i data-feather="instagram" class="w-4 h-4"></i>
                         </a>
@@ -154,21 +158,21 @@
                         <a href="#" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#03235b] hover:bg-[#03235b] hover:text-white transition-all">
                             <i data-feather="youtube" class="w-4 h-4"></i>
                         </a>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <!-- Navigation Section -->
                 <div class="space-y-8">
                     <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Navigasi</h4>
                     <ul class="space-y-4">
-                        <li><a href="{{ route('public.about') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Tentang Kami</a></li>
-                        <li><a href="{{ route('public.catalog') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Katalog Domba</a></li>
-                        <li><a href="#services" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Layanan Kami</a></li>
-                        <li><a href="#testimonials" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors flex items-center gap-2 group"><span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] scale-0 group-hover:scale-100 transition-transform"></span> Testimoni</a></li>
+                        <li><a href="{{ route('public.about') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors">Tentang Kami</a></li>
+                        <li><a href="{{ route('public.catalog') }}" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors">Katalog Domba</a></li>
+                        <li><a href="#services" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors">Layanan Kami</a></li>
+                        <li><a href="#testimonials" class="text-xs font-black text-slate-900 uppercase tracking-widest hover:text-[#0c5197] transition-colors">Testimoni</a></li>
                     </ul>
                 </div>
 
-                <!-- Products/Services Section -->
+                <!-- Services Section -->
                 <div class="space-y-8">
                     <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Layanan Kami</h4>
                     <ul class="space-y-4">
@@ -188,7 +192,7 @@
                                 <i data-feather="map-pin" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-bold text-slate-600 leading-relaxed uppercase tracking-wider mt-1">
-                                Kec. Cugenang, Cianjur,<br>Jawa Barat
+                                Desa Galudra, Kec Cugenang, Kab Cianjur, Jawa Barat
                             </p>
                         </div>
                         <div class="flex items-center gap-4">
@@ -199,14 +203,14 @@
                                 +62 877 0846 3586
                             </p>
                         </div>
-                        <div class="flex items-center gap-4">
+                        {{-- <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#fbbf24] shrink-0">
                                 <i data-feather="mail" class="w-4 h-4"></i>
                             </div>
                             <p class="text-[11px] font-black text-[#03235b] uppercase tracking-widest">
                                 hello@dombaloka.com
                             </p>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

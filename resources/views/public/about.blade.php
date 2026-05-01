@@ -48,17 +48,32 @@
                     <div class="absolute -inset-20 bg-[#fbbf24]/5 rounded-full blur-[100px] animate-pulse"></div>
                     
                     <!-- Image Container -->
-                    <div class="relative bg-white rounded-[3rem] md:rounded-[5rem] p-6 md:p-8 lg:p-16 shadow-[0_50px_100px_-20px_rgba(3,35,91,0.1)] border border-slate-50 flex items-center justify-center overflow-hidden group">
-                        <!-- Background Decorative Circles -->
-                        <div class="absolute top-0 right-0 w-64 h-64 bg-[#03235b]/5 rounded-full -mr-32 -mt-32 transition-transform group-hover:scale-110 duration-700"></div>
-                        <div class="absolute bottom-0 left-0 w-48 h-48 bg-[#fbbf24]/5 rounded-full -ml-24 -mb-24 transition-transform group-hover:scale-110 duration-700"></div>
+                    {{-- Image Container --}}
+                    <div class="relative flex items-center justify-center overflow-hidden group
+                                bg-white border border-slate-50
+                                rounded-[3rem] md:rounded-[5rem]
+                                p-6 md:p-8 lg:p-16
+                                shadow-[0_50px_100px_-20px_rgba(3,35,91,0.1)]">
 
-                        <!-- Real Sheep PNG Image -->
-                        <img src="/images/domba.png" alt="DombaLoka Premium" class="relative z-10 w-full h-auto max-w-[450px] drop-shadow-2xl transform transition-transform group-hover:scale-110 duration-700">
+                        {{-- Background Decorative Circles --}}
+                        <div class="absolute top-0 right-0 w-64 h-64 -mr-32 -mt-32
+                                    bg-[#03235b]/5 rounded-full
+                                    transition-transform duration-700 group-hover:scale-110"></div>
+                        <div class="absolute bottom-0 left-0 w-48 h-48 -ml-24 -mb-24
+                                    bg-[#fbbf24]/5 rounded-full
+                                    transition-transform duration-700 group-hover:scale-110"></div>
 
-                        <!-- Quote Overlay -->
+                        {{-- Logo --}}
+                        <img src="/images/icon/logo.png" alt="DombaLoka Premium"
+                             class="relative z-10 w-full h-auto max-w-[450px]
+                                    -translate-y-8 md:-translate-y-12
+                                    drop-shadow-2xl transition-all duration-700
+                                    group-hover:scale-110 group-hover:-translate-y-10 md:group-hover:-translate-y-14">
+
+                        {{-- Quote Overlay --}}
                         <div class="absolute bottom-10 left-10 right-10 z-20">
-                            <div class="bg-white/10 backdrop-blur-md p-6 rounded-[2rem] border border-white/20 text-center shadow-xl">
+                            <div class="bg-white/10 backdrop-blur-md border border-white/20
+                                        p-6 rounded-[2rem] text-center shadow-xl">
                                 <p class="text-[#03235b] text-sm font-black italic leading-relaxed">
                                     "Pusat domba kualitas warisan yang kami jaga setiap harinya."
                                 </p>
@@ -183,9 +198,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="order-1 lg:order-2 bg-slate-100 rounded-[3rem] md:rounded-[4rem] h-[400px] md:h-[550px] flex items-center justify-center p-8 md:p-12 border border-slate-200 overflow-hidden group" data-aos="fade-left">
+                    <div class="order-1 lg:order-2 bg-slate-100 rounded-[3rem] md:rounded-[4rem] h-[500px] md:h-[650px] flex items-center justify-center p-8 md:p-12 border border-slate-200 overflow-hidden group" data-aos="fade-left">
                         <div class="text-center space-y-6 transition-transform group-hover:scale-105 duration-700">
-                            <img src="/images/kirim.png" alt="Pengiriman DombaLoka" class="w-full h-auto max-w-[420px] mx-auto drop-shadow-2xl">
+                            <img src="/images/delivery_sheep.png" alt="Pengiriman DombaLoka" class="w-full h-auto max-w-[800px] mx-auto drop-shadow-2xl rounded-[3rem]">
                             <p class="text-slate-400 font-black uppercase tracking-widest text-xs">Jaminan Pengiriman Aman & Tepat Waktu</p>
                         </div>
                     </div>
